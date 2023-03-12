@@ -60,7 +60,7 @@ export const PlaySpace = () => {
     const group = 1;
 
     const [result, setGetResult] = useState<IGroup>({ name: '', words: [] });
-    // const [word, setWord] = useState<IWord>(Word.newWord());
+    const [word, setWord] = useState<IWord>(Word.newWord());
 
     const getData = async () => {
         const { data } = await queryGroupEdit();
