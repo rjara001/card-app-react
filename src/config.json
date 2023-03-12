@@ -1,0 +1,12 @@
+{
+    "grupos":{
+        "host" : "https://localhost:7443/"
+        , "url" : "groups"
+        , "method" : "get"
+    },
+    "grupo":{
+        "host" : "https://localhost:7443/"
+        , "url" : "group"
+        , "method" : "get"
+    }
+}
