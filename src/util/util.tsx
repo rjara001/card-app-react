@@ -27,17 +27,22 @@ export const calculateSummary = (group: IGroup): IGlobalSummary => {
     let Discovered: number = 0;
 
     group.words.forEach((word) => {
-        if (word.isKnowed && word.cycles === 1)
-            Learned++;
+        if (word) {
+            if (word.isKnowed && word.cycles === 0)
+                Learned++;
 
-        if (word.isKnowed && word.cycles === 2)
-            Recongnized++;
+            if (word.isKnowed && word.cycles === 1)
+                Recongnized++;
 
-        if (word.isKnowed && word.cycles === 3)
-            Known++;
+            if (word.isKnowed && word.cycles === 2)
+                Known++;
 
-        if (word.isKnowed && word.cycles === 4)
-            Discovered++;
+            if (word.isKnowed && word.cycles === 3)
+                Discovered++;
+        }
+        else{
+            console.log('paso');
+        }
     });
     return {
         Learned, Recongnized, Known, Discovered, Total: group.words.length, Unknow: group.words.length - (Learned + Recongnized + Known + Discovered)

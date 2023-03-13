@@ -1,24 +1,42 @@
-import { CardContent, Typography, CardActions, Button, Box, Card, TextField, Grid, Badge, Divider, Stack } from "@mui/material";
+import { CardContent, Typography, CardActions, Button, Box, Card, TextField, Grid, Badge, Divider, Stack, Chip } from "@mui/material";
 import React, { createContext, FC, useContext } from "react";
 import { useGlobalStyles } from "../../global.style";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
+import StarIcon from '@mui/icons-material/Star';
 import { IWord, IWordProps } from "../../interfaces/IWord";
 import { ofuscator } from "../../util/util";
 
 import { PlayContext } from "../../context/context.create";
 
 const Score = () => {
-    const {summary} = useContext(PlayContext);
-    
-    return <Stack spacing={2} direction="row">
-        <Badge badgeContent={summary.ok} color="primary">
-            <ThumbUpAltIcon color="action" style={{ paddingBottom: '5px' }} />
-        </Badge>
-        <Badge badgeContent={summary.bad} color="warning">
-            <ThumbDownAltIcon color="action" style={{ paddingBottom: '5px' }} />
-        </Badge>
-        
+    const { summary } = useContext(PlayContext);
+
+    return <Stack spacing={2} direction="row" style={{
+        width: '100%', display: 'flex',
+        justifyContent: 'space-between',
+    }}>
+
+        <div>
+            <Stack spacing={2} direction="row">
+                <Badge badgeContent={summary.ok} color="primary">
+                    <ThumbUpAltIcon color="action" style={{ paddingBottom: '5px' }} />
+                </Badge>
+                <Badge badgeContent={summary.bad} color="warning">
+                    <ThumbDownAltIcon color="action" style={{ paddingBottom: '5px' }} />
+                </Badge>
+            </Stack>
+
+        </div>
+
+        <div>
+            <Badge badgeContent={6} color="success">
+                    <StarIcon color="action" style={{ paddingBottom: '5px' }} />
+            </Badge>
+
+        </div>
+
+
     </Stack>
 };
 
@@ -55,11 +73,11 @@ const Actions = (next: any, revel: any, correct: any) => <div style={{
 const card = (word: IWord, next: any, revel: any, correct: any) => (
     <React.Fragment>
         <CardContent>
-          <>
-            {Score()}
-            <Divider />
-            {Text(word)}
-          </>  
+            <>
+                {Score()}
+                <Divider />
+                {Text(word)}
+            </>
 
         </CardContent>
 

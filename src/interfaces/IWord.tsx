@@ -14,6 +14,7 @@ export interface IWordsProps {
 
 export interface IGlobalSummaryProps {
     value: IGlobalSummary
+    currentCycle: number
 }
 
 export interface IWordProps {
