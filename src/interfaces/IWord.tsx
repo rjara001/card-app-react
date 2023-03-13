@@ -1,3 +1,5 @@
+import { IGlobalSummary } from "./IGlobalSummary.js"
+
 export interface IWord {
     name:string
     value: string
@@ -8,6 +10,10 @@ export interface IWord {
 
 export interface IWordsProps {
     words: IWord[]
+}
+
+export interface IGlobalSummaryProps {
+    value: IGlobalSummary
 }
 
 export interface IWordProps {

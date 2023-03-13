@@ -1,7 +1,7 @@
 import { CardContent, Typography, CardActions, Button, Box, Card, TextField, Grid, Badge, Divider, Stack } from "@mui/material";
 import React, { createContext, FC, useContext } from "react";
 import { useGlobalStyles } from "../../global.style";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import { IWord, IWordProps } from "../../interfaces/IWord";
 import { ofuscator } from "../../util/util";
@@ -12,12 +12,13 @@ const Score = () => {
     const {summary} = useContext(PlayContext);
     
     return <Stack spacing={2} direction="row">
-        <Badge badgeContent={summary.bad} color="primary">
-            <CheckCircleIcon color="action" style={{ paddingBottom: '5px' }} />
+        <Badge badgeContent={summary.ok} color="primary">
+            <ThumbUpAltIcon color="action" style={{ paddingBottom: '5px' }} />
         </Badge>
-        <Badge badgeContent={summary.ok} color="warning">
+        <Badge badgeContent={summary.bad} color="warning">
             <ThumbDownAltIcon color="action" style={{ paddingBottom: '5px' }} />
         </Badge>
+        
     </Stack>
 };
 
