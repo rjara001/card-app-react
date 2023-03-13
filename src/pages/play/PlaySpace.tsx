@@ -1,14 +1,11 @@
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { GlobalSummary } from "../../components/GlobalSummary";
 import { PlayContext } from "../../context/context.create";
 
 import { queryGroupEdit } from "../../hooks/group.hook";
 import { IGroup } from "../../interfaces/IGroup";
-import { ISummary, ISummaryContext } from "../../interfaces/ISummary";
-import { IWord } from "../../interfaces/IWord";
 import { Word } from "../../models/Word";
 import { calculateSummary, countSummary } from "../../util/util";
 import { Play } from "./Play";
@@ -20,19 +17,17 @@ const getRandomArbitrary = (min: number, max: number, currentIndex: number): num
     } while (index == currentIndex && max > 1)
 
     return index;
-
-
 }
 
 export const PlaySpace = () => {
     const { summary, updateValue } = useContext(PlayContext);
-
     const [result, setGetResult] = useState<IGroup>({ name: '', words: [] });
     const [indexWord, setIndexWord] = useState<number>(-1);
     const [hasChanged, setHasChanged] = useState(true);
     const [isEndedCycle, setIsEndedCycle] = useState(false);
     const [isVeryEndedCycle, setIsVeryEndedCycle] = useState(false);
     const [currentCycle, setCurrentCycle] = useState<number>(0);
+    // const [globalSummary, setGlobalSummary] = useState<IGlobalSummary>(globalSummaryDefault);
 
     const nextValue = () => {
         setHasChanged(false);
@@ -129,9 +124,8 @@ export const PlaySpace = () => {
         if (result.words.length > 0 && hasChanged)
             nextValue();
 
-        let newValue = countSummary(result);
+        updateValue(calculateSummary(result, countSummary(result)));
 
-        updateValue(newValue);
     }, [result])
 
     useEffect(() => {
@@ -139,7 +133,6 @@ export const PlaySpace = () => {
 
 
     }, []);
-
 
     if (indexWord < 0)
         return <div>Loading..</div>
@@ -165,7 +158,7 @@ export const PlaySpace = () => {
                 revel={() => revel()}
                 correct={() => { correct(); }}></Play>
 
-            <GlobalSummary currentCycle={currentCycle} value={calculateSummary(result)}></GlobalSummary>
+            <GlobalSummary currentCycle={currentCycle} value={summary}></GlobalSummary>
 
             {/* <div>
                 {

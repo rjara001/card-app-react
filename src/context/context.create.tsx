@@ -1,4 +1,5 @@
 import { createContext } from 'react';
-import { ISummary } from '../interfaces/ISummary';
+import { IGlobalSummary } from '../interfaces/IGlobalSummary';
+import { globalSummaryDefault } from '../util/util';
 
-export const PlayContext = createContext({summary:{ok:0, bad:0}, updateValue:(newObj: ISummary)=>{}});
+export const PlayContext = createContext({summary:globalSummaryDefault, updateValue:(newObj: IGlobalSummary)=>{}});

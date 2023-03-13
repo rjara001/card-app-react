@@ -10,17 +10,19 @@ import { GroupEdit } from './pages/groups/GroupEdit';
 import { PlaySpace } from './pages/play/PlaySpace';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { ISummary } from './interfaces/ISummary';
+
 import { PlayContext } from './context/context.create';
+import { globalSummaryDefault } from './util/util';
+import { IGlobalSummary } from './interfaces/IGlobalSummary';
 
 function App() {
 
   // Create a client
   const queryClient = new QueryClient()
 
-  const [summary, setSummary] = useState({ok:0, bad:0});
+  const [summary, setSummary] = useState(globalSummaryDefault);
 
-  const updateValue = (newObj: ISummary) => {
+  const updateValue = (newObj: IGlobalSummary) => {
     setSummary(prevState => ({ ...prevState, ...newObj }));
   };
   

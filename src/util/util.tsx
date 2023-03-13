@@ -19,15 +19,18 @@ export const countSummary = (group: IGroup): ISummary => {
     },
         { ok: 0, bad: 0 });
 }
+export const globalSummaryDefault = {
+        Learned:0, Recongnized:0, Known:0, Discovered:0, Total:0, Unknow:0, Summary: {ok:0, bad:0}
+}
 
-export const calculateSummary = (group: IGroup): IGlobalSummary => {
+export const calculateSummary = (group: IGroup, summary:ISummary): IGlobalSummary => {
     let Learned: number = 0;
     let Recongnized: number = 0;
     let Known: number = 0;
     let Discovered: number = 0;
 
     group.words.forEach((word) => {
-        if (word) {
+      
             if (word.isKnowed && word.cycles === 0)
                 Learned++;
 
@@ -39,43 +42,15 @@ export const calculateSummary = (group: IGroup): IGlobalSummary => {
 
             if (word.isKnowed && word.cycles === 3)
                 Discovered++;
-        }
-        else{
-            console.log('paso');
-        }
     });
     return {
-        Learned, Recongnized, Known, Discovered, Total: group.words.length, Unknow: group.words.length - (Learned + Recongnized + Known + Discovered)
+        Learned
+        , Recongnized
+        , Known
+        , Discovered
+        , Total: group.words.length
+        , Unknow: group.words.length - (Learned + Recongnized + Known + Discovered)
+        , Summary: summary
     }
-    // return group.words.reduce<IGlobalSummary>((accum, curr) => {
 
-    //     let Learned: number = accum.Learned;
-    //     let Recongnized: number = accum.Recongnized;
-    //     let Known: number = accum.Known;
-    //     let Discovered: number = accum.Discovered;
-
-    //     if (curr.isKnowed && curr.cycles == 1)
-    //         Learned = accum.Learned + 1;
-
-    //     if (curr.isKnowed && curr.cycles == 2)
-    //     Recongnized = accum.Recongnized + 1;
-
-    //     if (curr.isKnowed && curr.cycles == 3)
-    //     Known = accum.Known + 1;
-
-    //     if (curr.isKnowed && curr.cycles == 4)
-    //     Discovered = accum.Discovered + 1;
-
-    //     return {
-    //         Learned, Recongnized, Known, Discovered, total: group.words.length, unknow: group.words.length - (Learned + Recongnized + Known + Discovered)
-    //     }
-    // },
-    //     {
-    //         Learned: 0
-    //         , Recongnized: 0
-    //         , Known: 0
-    //         , Discovered: 0
-    //         , Total: group.words.length
-    //         , Unknow: 0
-    //     });
 }

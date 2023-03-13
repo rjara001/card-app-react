@@ -1,3 +1,4 @@
+import { ISummary } from "./ISummary.js"
 
 export interface IGlobalSummary {
     Unknow: number
@@ -6,4 +7,5 @@ export interface IGlobalSummary {
     Known: number
     Discovered: number
     Total: number
+    Summary: ISummary
 }

@@ -19,10 +19,10 @@ const Score = () => {
 
         <div>
             <Stack spacing={2} direction="row">
-                <Badge badgeContent={summary.ok} color="primary">
+                <Badge badgeContent={summary.Summary.ok} color="primary">
                     <ThumbUpAltIcon color="action" style={{ paddingBottom: '5px' }} />
                 </Badge>
-                <Badge badgeContent={summary.bad} color="warning">
+                <Badge badgeContent={summary.Summary.bad} color="warning">
                     <ThumbDownAltIcon color="action" style={{ paddingBottom: '5px' }} />
                 </Badge>
             </Stack>
@@ -30,7 +30,7 @@ const Score = () => {
         </div>
 
         <div>
-            <Badge badgeContent={6} color="success">
+            <Badge badgeContent={summary.Learned} color="success">
                     <StarIcon color="action" style={{ paddingBottom: '5px' }} />
             </Badge>
 
