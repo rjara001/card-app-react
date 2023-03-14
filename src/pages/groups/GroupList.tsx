@@ -1,16 +1,33 @@
 import { Avatar, Box, Button, Divider, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid/DataGrid';
 import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef.js';
-import React from 'react';
+import React, { FC, useContext } from 'react';
 import { useEffect, useState } from 'react';
 
 import { queryGroupList } from '../../hooks/group.hook';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-const ItemGroup = ({ item }: any) => {
+import { Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { IGroup, IGroupProps } from '../../interfaces/IGroup';
+import { UserContext } from "../../context/context.create";
+
+
+const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
+
+    const { userInfo, updateValue } = useContext(UserContext);
+    const navigate = useNavigate();
+    const handlePlayClick = (id:number)=>{
+        
+        userInfo.PlayingGroup = id;
+
+        updateValue(userInfo);
+
+        navigate(`/play`);
+    }
+    
     return (
         <ListItem alignItems="flex-start">
             <ListItemAvatar>
@@ -27,19 +44,26 @@ const ItemGroup = ({ item }: any) => {
                             color="text.primary"
                         >
                         </Typography>
-                        {/* <Button variant="outlined" startIcon={<DeleteIcon />}>
-                            
-                        </Button> */}
-                         <Link to="/group"
-                            >
+
+                        <Link to="/group"
+                        >
                             <DeleteIcon />
                         </Link>
-                        <Link to="/group">
+                        <Link to={`/group/${item.id.toString()}`}>
                             <EditIcon />
                         </Link>
+
+
                     </React.Fragment>
                 }
             />
+            {userInfo.PlayingGroup !== item.id && <div style={{ alignSelf: 'center' }}>
+                <Button variant="outlined" 
+                    onClick={()=>handlePlayClick(item.id)}
+                    startIcon={<PlayArrowIcon />}>
+                    Play
+                </Button>
+            </div>}
         </ListItem>
     )
 }
@@ -62,24 +86,27 @@ function GroupListComponent(groupList: any[]) {
 
 export const GroupList = () => {
 
-    const [result, setGetResult] = useState<any[]>([]);
+    const [result, setGetResult] = useState<IGroup[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>();
 
-    // const { isLoading, refetch: getResult } = useQuery("groups", queryGroupList, {
-    //     onSuccess: (res) => {
-    //         setGetResult(res.data);
-    //     }
-    // });
+    const getData = async () => {
+        setIsLoading(true);
 
-    // useEffect(() => {
-    //     getResult();
-    // }, [])
+        const { data } = await queryGroupList();
+        let groups = data as IGroup[];
 
+        setGetResult(groups);
+    };
 
-    const { isLoading, error, data, isFetching } = useQuery({ queryKey: ["groups"],  queryFn: queryGroupList });
-    
-    if (isLoading) return (<div>Loading...</div>);
-  
-    if (error) return (<div>An error has occurred: " + error</div>)
+    useEffect(() => {
+        getData();
+    }, []);
+
+    useEffect(() => {
+        if (result)
+            setIsLoading(false);
+
+    }, [result])
 
     return (<div>
 

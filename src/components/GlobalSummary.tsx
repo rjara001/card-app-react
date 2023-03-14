@@ -9,55 +9,57 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
     return <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         <nav aria-label="main mailbox folders">
             <List>
-                <ListItem>
+                {value.Unknow > 0 && <ListItem>
 
                     <ListItemIcon>
-                        <Chip label={value.Unknow} />
+                        {currentCycle == 0 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Unknow" />
-                    {currentCycle == 0 && <AdjustIcon />}
-                </ListItem>
+                    <Chip label={value.Unknow} />
 
-                <ListItem>
-
-                    <ListItemIcon>
-                        <Chip label={value.Recongnized} />
-                    </ListItemIcon>
-                    <ListItemText primary="Recongnized" />
-                    {currentCycle == 1 && <AdjustIcon />}
-                </ListItem>
-                <ListItem>
+                </ListItem>}
+                {value.Discovered + value.Unknow > 0 && <ListItem>
 
                     <ListItemIcon>
-                        <Chip label={value.Known} />
-                    </ListItemIcon>
-                    <ListItemText primary="Known" />
-                    {currentCycle == 2 && <AdjustIcon />}
-                </ListItem>
-                <ListItem>
-
-                    <ListItemIcon>
-                        <Chip label={value.Discovered} />
+                        {currentCycle == 1 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Discovered" />
-                    {currentCycle == 3 && <AdjustIcon />}
-                </ListItem>
+                    <Chip label={value.Discovered} />
+                </ListItem>}
+                {value.Recongnized + value.Discovered + value.Unknow > 0 && <ListItem>
+
+                    <ListItemIcon>
+                        {currentCycle == 2 && <AdjustIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary="Recongnized" />
+                    <Chip label={value.Recongnized} />
+                </ListItem>}
+                {value.Known + value.Recongnized + value.Discovered + value.Unknow >0 && <ListItem>
+
+                    <ListItemIcon>
+                        {currentCycle == 3 && <AdjustIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary="Known" />
+
+                    <Chip label={value.Known} />
+                </ListItem>}
+
                 <Divider />
                 <ListItem>
 
                     <ListItemIcon>
-                        <Chip label={value.Learned} />
+
                     </ListItemIcon>
                     <ListItemText primary="Learned" />
-
+                    <Chip label={value.Learned} />
                 </ListItem>
                 <ListItem>
 
                     <ListItemIcon>
-                        <Chip label={value.Total} />
+
                     </ListItemIcon>
                     <ListItemText primary="Total" />
-
+                    <Chip label={value.Total} />
                 </ListItem>
             </List>
         </nav>

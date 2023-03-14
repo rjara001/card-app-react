@@ -1,34 +1,42 @@
 import TextField from "@mui/material/TextField"
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import BackButton from "../../components/BackButton";
 
 import { WordList } from "../../components/WordList"
 import { BoxShadow } from "../../elements/BoxShadows/BoxShadows";
 import { queryGroupEdit } from "../../hooks/group.hook";
 import { IGroup } from "../../interfaces/IGroup";
+import { Word } from "../../models/Word";
+import { groupDefault } from "../../util/util";
 
 export const GroupEdit = () => {
+    let { id } = useParams();
+ 
+    const [result, setGetResult] = useState<IGroup>(groupDefault);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [result, setGetResult] = useState<IGroup>({ name: '', words: [] });
-
-    // const { isLoading, refetch: getResult } = useQuery("group", queryGroupEdit, {
-    //     onSuccess: (res) => {
-    //         setGetResult(res.data);
-    //     }
-    // });
-
-    // useEffect(() => {
-    //     getResult();
-    // }, [])
-
-    const { isLoading, error, data, isFetching } = useQuery({ queryKey: ["group"],  queryFn: queryGroupEdit });
+    const getData = async () => {
+        setIsLoading(true);
+        const { data } = await queryGroupEdit(id as string);
+        let group = data as IGroup;
+        group.words = group.words.map(_ => new Word(_.name, _.value));
+        setGetResult(group);
+    };
     
-    if (isLoading) return (<div>Loading...</div>);
-  
-    if (error) return (<div>An error has occurred: " + error</div>)
+    useEffect(()=>{
+        getData();
+    }, []);
 
+    useEffect(()=>{
+        if (result)
+            setIsLoading(false);
+
+    }, [result])
     return (
         <BoxShadow>
+            <BackButton />
             <TextField id="name" label="Name Group" variant="outlined" >{result.name}</TextField>
 
             <WordList words={result.words}></WordList>

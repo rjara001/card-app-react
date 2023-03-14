@@ -1,13 +1,13 @@
 import { CardContent, Typography, CardActions, Button, Box, Card, TextField, Grid, Badge, Divider, Stack, Chip } from "@mui/material";
 import React, { createContext, FC, useContext } from "react";
-import { useGlobalStyles } from "../../global.style";
+import { useGlobalStyles } from "../global.style";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import StarIcon from '@mui/icons-material/Star';
-import { IWord, IWordProps } from "../../interfaces/IWord";
-import { ofuscator } from "../../util/util";
+import { IWord, IWordProps } from "../interfaces/IWord";
+import { ofuscator } from "../util/util";
 
-import { PlayContext } from "../../context/context.create";
+import { PlayContext } from "../context/context.create";
 
 const Score = () => {
     const { summary } = useContext(PlayContext);
