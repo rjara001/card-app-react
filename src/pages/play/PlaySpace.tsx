@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GlobalSummary } from "../../components/GlobalSummary";
 import { PlayContext, UserContext } from "../../context/context.create";
 
-import { queryGroupEdit } from "../../hooks/group.hook";
+import { queryGroupEdit, queryGroupEdit2 } from "../../hooks/group.hook";
 import { IGroup } from "../../interfaces/IGroup";
 import { IUserInfo } from "../../interfaces/IUserInfo.js";
 import { Word } from "../../models/Word";
@@ -45,7 +45,7 @@ export const PlaySpace = () => {
         updateWords.forEach(_ => {
             _.reveled = false;
             _.isKnowed = false;
-            _.cycles=0;
+            _.cycles = 0;
         })
 
         setCurrentCycle(0);
@@ -93,7 +93,6 @@ export const PlaySpace = () => {
             }
         }
     }
-
     const revel = () => {
         const updateWords = [...result.words];
 
@@ -119,8 +118,6 @@ export const PlaySpace = () => {
 
         nextValue();
     }
-    const group = 1;
-
     const getData = async () => {
         const { data } = await queryGroupEdit(userInfo.PlayingGroup.toString());
         let group = data as IGroup;
@@ -145,7 +142,7 @@ export const PlaySpace = () => {
     useEffect(() => {
 
 
-        if (result.words.length > 0 && hasChanged)
+        if (result.words.length > 0 && hasChanged || isEndedCycle)
             nextValue();
 
         updateValue(calculateSummary(result, countSummary(result)));
@@ -153,16 +150,15 @@ export const PlaySpace = () => {
 
     }, [result])
 
-    useEffect(()=>{
+    useEffect(() => {
 
-        if (summary.Total>0 && summary.Total === summary.Learned)
-        {
+        if (summary.Total > 0 && summary.Total === summary.Learned) {
             setIsEndedCycle(false);
             setIsVeryEndedCycle(true);
         }
-           
-            
-    },[summary]);
+
+
+    }, [summary]);
 
     useEffect(() => {
 
@@ -186,16 +182,20 @@ export const PlaySpace = () => {
                 <Title>Play</Title>
             </div>
             <div>
-                <Subtitle>Grupo "{result.name}"</Subtitle>
+                <Subtitle>Group "{result.name}"</Subtitle>
             </div>
-           
+
             <div>
 
                 <Play word={result.words[indexWord]}
                     next={() => nextValue()}
                     revel={() => revel()}
                     correct={() => { correct(); }}></Play>
-
+            </div>
+            <div>
+                <Subtitle>Progress</Subtitle>
+            </div>
+            <div>
                 <GlobalSummary currentCycle={currentCycle} value={summary}></GlobalSummary>
 
                 {/* <div>
@@ -213,12 +213,12 @@ export const PlaySpace = () => {
                     <Alert severity="info">
                         <AlertTitle>God Job!</AlertTitle>
                         You have came at the end — <strong>keep it up!</strong>
-              
+
                     </Alert>}
                 {
                     isVeryEndedCycle &&
                     <Alert severity="success">
-                        <AlertTitle>Great Gig!</AlertTitle>
+                        <AlertTitle>Great Gig!, you learned {summary.Learned} and attain an {Math.ceil(summary.Learned/summary.Total*100)} of progress</AlertTitle>
                         <strong>You have finalized!</strong>
 
                         <Box>
@@ -226,7 +226,7 @@ export const PlaySpace = () => {
                                 Restart
                             </Button>
                         </Box>
-        
+
                     </Alert>}
             </div>
         </div>)

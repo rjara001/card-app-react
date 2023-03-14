@@ -8,5 +8,10 @@
         "host" : "https://localhost:7443/"
         , "url" : "group"
         , "method" : "get"
+    },
+    "grupoByText":{
+        "host" : "https://localhost:7443/"
+        , "url" : "groupText"
+        , "method" : "get"
     }
 }

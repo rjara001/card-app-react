@@ -1,6 +1,7 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
+import { CsvToJson } from "./csvToJson";
 
 export const ofuscator = (text: string) => {
     return String('').padStart(text.length - 1, 'x');
@@ -60,4 +61,9 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
         , Summary: summary
     }
 
+}
+
+export const Base64ToJson = (base64:string) =>{
+    let text = decodeURIComponent(escape(atob(base64)));
+    return CsvToJson(text);
 }
