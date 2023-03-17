@@ -8,11 +8,11 @@ export const ofuscator = (text: string) => {
 }
 
 export const countSummary = (group: IGroup): ISummary => {
-    return group.words.reduce<ISummary>((accum, curr) => {
+    return group.Words.reduce<ISummary>((accum, curr) => {
         let ok: number = accum.ok, bad: number = accum.bad;
-        if (curr.isKnowed)
+        if (curr.IsKnowed)
             ok = accum.ok + 1;
-        if (curr.reveled && !curr.isKnowed)
+        if (curr.Reveled && !curr.IsKnowed)
             bad = accum.bad + 1;
         return {
             ok, bad
@@ -29,7 +29,7 @@ export const globalUserDefault = {
     , PlayingGroup: 0
 }
 
-export const groupDefault = { id: 0, name: '', words: [] }
+export const groupDefault = { Id: 0, Name: '', Words: [] }
 
 export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSummary => {
     let Learned: number = 0;
@@ -37,18 +37,18 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
     let Known: number = 0;
     let Discovered: number = 0;
 
-    group.words.forEach((word) => {
+    group.Words.forEach((word) => {
 
-        if (word.isKnowed && word.cycles === 0)
+        if (word.IsKnowed && word.Cycles === 0)
             Learned++;
 
-        if (word.isKnowed && word.cycles === 1)
+        if (word.IsKnowed && word.Cycles === 1)
             Discovered++;
 
-        if (word.isKnowed && word.cycles === 2)
+        if (word.IsKnowed && word.Cycles === 2)
             Recongnized++;
 
-        if (word.isKnowed && word.cycles === 3)
+        if (word.IsKnowed && word.Cycles === 3)
             Known++;
     });
     return {
@@ -56,8 +56,8 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
         , Recongnized
         , Known
         , Discovered
-        , Total: group.words.length
-        , Unknow: group.words.length - (Learned + Recongnized + Known + Discovered)
+        , Total: group.Words.length
+        , Unknow: group.Words.length - (Learned + Recongnized + Known + Discovered)
         , Summary: summary
     }
 

@@ -1,11 +1,11 @@
 import { IGlobalSummary } from "./IGlobalSummary.js"
 
 export interface IWord {
-    name:string
-    value: string
-    cycles: number
-    isKnowed: boolean
-    reveled: boolean
+    Name:string
+    Value: string
+    Cycles: number
+    IsKnowed: boolean
+    Reveled: boolean
 }
 
 export interface IWordsProps {

@@ -13,7 +13,7 @@ const ItemGroup = ({ item }: any) => {
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
             </ListItemAvatar>
             <ListItemText
-                primary={item.name}
+                primary={item.Name}
                 secondary={
                     <React.Fragment>
                         <Typography
@@ -23,7 +23,7 @@ const ItemGroup = ({ item }: any) => {
                             color="text.primary"
                         >
                         </Typography>
-                        {item.value}
+                        {item.Value}
                     </React.Fragment>
                 }
             />

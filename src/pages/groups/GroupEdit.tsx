@@ -21,7 +21,7 @@ export const GroupEdit = () => {
         setIsLoading(true);
         const { data } = await queryGroupEdit(id as string);
         let group = data as IGroup;
-        group.words = group.words.map(_ => new Word(_.name, _.value));
+        group.Words = group.Words.map(_ => new Word(_.Name, _.Value));
         setGetResult(group);
     };
     
@@ -37,9 +37,9 @@ export const GroupEdit = () => {
     return (
         <BoxShadow>
             <BackButton />
-            <TextField id="name" label="Name Group" variant="outlined" >{result.name}</TextField>
+            <TextField id="name" label="Name Group" variant="outlined" >{result.Name}</TextField>
 
-            <WordList words={result.words}></WordList>
+            <WordList words={result.Words}></WordList>
         </BoxShadow>
 
     )

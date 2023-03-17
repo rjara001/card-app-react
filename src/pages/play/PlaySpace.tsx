@@ -40,88 +40,88 @@ export const PlaySpace = () => {
     const navigate = useNavigate();
 
     const handleRefreshClick = () => {
-        const updateWords = [...result.words];
+        const updateWords = [...result.Words];
 
         updateWords.forEach(_ => {
-            _.reveled = false;
-            _.isKnowed = false;
-            _.cycles = 0;
+            _.Reveled = false;
+            _.IsKnowed = false;
+            _.Cycles = 0;
         })
 
         setCurrentCycle(0);
-        setGetResult({ ...result, words: updateWords });
+        setGetResult({ ...result, Words: updateWords });
         setIsVeryEndedCycle(false);
     }
 
     const nextValue = () => {
         setHasChanged(false);
 
-        let wordsFilterd = result.words.filter(_ => !_.isKnowed && !_.reveled && _.cycles == currentCycle);
+        let wordsFilterd = result.Words.filter(_ => !_.IsKnowed && !_.Reveled && _.Cycles == currentCycle);
         let arbitraryIndex = getRandomArbitrary(0, wordsFilterd.length, indexWord);
 
         let nextElement = wordsFilterd[arbitraryIndex];
 
         if (nextElement) {
             // nextElement.cycles++;
-            arbitraryIndex = result.words.findIndex(_ => _.name === nextElement.name);
+            arbitraryIndex = result.Words.findIndex(_ => _.Name === nextElement.Name);
 
             setIndexWord(arbitraryIndex);
 
-            const updateWords = [...result.words];
+            const updateWords = [...result.Words];
 
             updateWords[arbitraryIndex] = nextElement;
 
-            setGetResult({ ...result, words: updateWords });
+            setGetResult({ ...result, Words: updateWords });
         }
         else {
             if (currentCycle >= 3) {
                 setIsVeryEndedCycle(true);
             }
             else {
-                const updateWords = [...result.words];
+                const updateWords = [...result.Words];
 
-                updateWords.filter(_ => _.cycles === currentCycle && !_.isKnowed).forEach(_ => {
-                    _.reveled = false;
-                    _.cycles++;
+                updateWords.filter(_ => _.Cycles === currentCycle && !_.IsKnowed).forEach(_ => {
+                    _.Reveled = false;
+                    _.Cycles++;
                 })
 
 
                 setIsEndedCycle(true);
                 setCurrentCycle((prev) => prev = prev + 1);
-                setGetResult({ ...result, words: updateWords });
+                setGetResult({ ...result, Words: updateWords });
 
             }
         }
     }
     const revel = () => {
-        const updateWords = [...result.words];
+        const updateWords = [...result.Words];
 
         const item = updateWords[indexWord];
 
-        item.reveled = true;
+        item.Reveled = true;
 
         updateWords[indexWord] = item;
 
-        setGetResult({ ...result, words: updateWords });
+        setGetResult({ ...result, Words: updateWords });
     }
     const correct = () => {
 
-        const updateWords = [...result.words];
+        const updateWords = [...result.Words];
 
         const item = updateWords[indexWord];
 
-        item.isKnowed = true;
+        item.IsKnowed = true;
 
         updateWords[indexWord] = item;
 
-        setGetResult({ ...result, words: updateWords });
+        setGetResult({ ...result, Words: updateWords });
 
         nextValue();
     }
     const getData = async () => {
         const { data } = await queryGroupEdit(userInfo.PlayingGroup.toString());
         let group = data as IGroup;
-        group.words = group.words.map(_ => new Word(_.name, _.value));
+        group.Words = group.Words.map(_ => new Word(_.Name, _.Value));
         setGetResult(group);
     };
 
@@ -133,7 +133,7 @@ export const PlaySpace = () => {
     }, [isEndedCycle]);
 
     useEffect(() => {
-        if (result.words.length > 0 && hasChanged)
+        if (result.Words.length > 0 && hasChanged)
             nextValue();
 
 
@@ -142,7 +142,7 @@ export const PlaySpace = () => {
     useEffect(() => {
 
 
-        if (result.words.length > 0 && hasChanged || isEndedCycle)
+        if (result.Words.length > 0 && hasChanged || isEndedCycle)
             nextValue();
 
         updateValue(calculateSummary(result, countSummary(result)));
@@ -182,12 +182,12 @@ export const PlaySpace = () => {
                 <Title>Play</Title>
             </div>
             <div>
-                <Subtitle>Group "{result.name}"</Subtitle>
+                <Subtitle>Group "{result.Name}"</Subtitle>
             </div>
 
             <div>
 
-                <Play word={result.words[indexWord]}
+                <Play word={result.Words[indexWord]}
                     next={() => nextValue()}
                     revel={() => revel()}
                     correct={() => { correct(); }}></Play>

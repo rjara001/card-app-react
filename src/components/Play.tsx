@@ -43,11 +43,11 @@ const Score = () => {
 
 const Text = (word: IWord) => <Box>
     <Typography variant="h6" component="div" style={{ paddingTop: '10px' }}>
-        {word.name}
+        {word.Name}
     </Typography>
     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        {word.reveled && word.value}
-        {!word.reveled && ofuscator(word.value)}
+        {word.Reveled && word.Value}
+        {!word.Reveled && ofuscator(word.Value)}
     </Typography>
 </Box>;
 const Actions = (next: any, revel: any, correct: any) => <div style={{

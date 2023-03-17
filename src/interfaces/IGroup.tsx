@@ -1,9 +1,9 @@
 import { IWord } from "./IWord"
 
 export interface IGroup {
-    id: number
-    name: string
-    words: IWord[]
+    Id: number
+    Name: string
+    Words: IWord[]
 }
 
 export interface IGroupProps {

@@ -39,7 +39,11 @@ export const queryGroupEdit = async (id: string) => {
         },
         data: null
     };
-    let { data } = await axios.get(getUrl(config.grupoByText) + '/' + id, axiosConfig);
+    // let { data } = await axios.get(getUrl(config.grupoByText) + '/' + id, axiosConfig);
 
-    return { data: {...data, words: Base64ToJson(data.text)} };
+    // return { data: {...data, words: Base64ToJson(data.text)} };
+
+    let { data } = await axios.get(getUrl(config.grupo) + '/' + id, axiosConfig);
+
+    return { data: data[0] } ;
 }

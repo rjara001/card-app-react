@@ -34,7 +34,7 @@ const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
             </ListItemAvatar>
             <ListItemText
-                primary={item.name}
+                primary={item.Name}
                 secondary={
                     <React.Fragment>
                         <Typography
@@ -49,7 +49,7 @@ const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
                         >
                             <DeleteIcon />
                         </Link>
-                        <Link to={`/group/${item.id.toString()}`}>
+                        <Link to={`/group/${item.Id.toString()}`}>
                             <EditIcon />
                         </Link>
 
@@ -57,9 +57,9 @@ const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
                     </React.Fragment>
                 }
             />
-            {userInfo.PlayingGroup !== item.id && <div style={{ alignSelf: 'center' }}>
+            {userInfo.PlayingGroup !== item.Id && <div style={{ alignSelf: 'center' }}>
                 <Button variant="outlined" 
-                    onClick={()=>handlePlayClick(item.id)}
+                    onClick={()=>handlePlayClick(item.Id)}
                     startIcon={<PlayArrowIcon />}>
                     Play
                 </Button>

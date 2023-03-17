@@ -1,21 +1,21 @@
 import { IWord } from "../interfaces/IWord.js";
 
 export class Word implements IWord {
-     name: string;
-     value: string;
-     cycles: number;
-     isKnowed: boolean;
-     reveled: boolean;
+     Name: string;
+     Value: string;
+     Cycles: number;
+     IsKnowed: boolean;
+     Reveled: boolean;
 
      constructor(name:string, value:string) {
-        this.name = name
-        this.value = value
-        this.cycles = 0;
-        this.isKnowed = false;
-        this.reveled = false;
+        this.Name = name
+        this.Value = value
+        this.Cycles = 0;
+        this.IsKnowed = false;
+        this.Reveled = false;
      }
     
      static newWord():IWord {
-        return {name:'', value:'', cycles:0, isKnowed:false, reveled:false}
+        return {Name:'', Value:'', Cycles:0, IsKnowed:false, Reveled:false}
      }
 }

@@ -1,16 +1,16 @@
 {
     "grupos":{
-        "host" : "https://localhost:7443/"
+        "host" : " https://xui96jjdki.execute-api.us-east-1.amazonaws.com/dev/"
         , "url" : "groups"
         , "method" : "get"
     },
     "grupo":{
-        "host" : "https://localhost:7443/"
-        , "url" : "group"
+        "host" : " https://xui96jjdki.execute-api.us-east-1.amazonaws.com/dev/"
+        , "url" : "groups"
         , "method" : "get"
     },
     "grupoByText":{
-        "host" : "https://localhost:7443/"
+        "host" : " https://xui96jjdki.execute-api.us-east-1.amazonaws.com/dev/"
         , "url" : "groupText"
         , "method" : "get"
     }
