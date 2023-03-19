@@ -7,7 +7,9 @@ export interface IWord {
     IsKnowed: boolean
     Reveled: boolean
 
-    getText(FirstShowed:boolean): string
+    getName(FirstShowed:boolean): string
+
+    getValue(FirstShowed:boolean): string
 }
 
 export interface IWordsProps {

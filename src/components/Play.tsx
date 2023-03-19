@@ -47,11 +47,11 @@ const Text = (word: Word) => {
 
     return (    <Box>
             <Typography variant="h6" component="div" style={{ paddingTop: '10px' }}>
-                {word.getText(userInfo.FirstShowed)}
+                {word.getName(userInfo.FirstShowed)}
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {word.Reveled && word.getText(userInfo.FirstShowed)}
-                {!word.Reveled && ofuscator(word.getText(userInfo.FirstShowed))}
+                {word.Reveled && word.getValue(userInfo.FirstShowed)}
+                {!word.Reveled && ofuscator(word.getValue(userInfo.FirstShowed))}
             </Typography>
         </Box>)
 };

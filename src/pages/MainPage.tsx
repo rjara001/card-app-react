@@ -1,26 +1,34 @@
 import Button from "@mui/material/Button"
+import { useContext, useEffect, useState } from "react";
+
+import { UserContext } from "../context/context.create";
+import { gapi } from 'gapi-script';
 import { useNavigate } from "react-router-dom";
 
-
-
-
 export const MainPage = () => {
-    const navigate = useNavigate();
+    // const { userInfo } = useContext(UserContext);
+    // const navigate = useNavigate();
 
-    const handleGroupClick = () => {
-
-        navigate('/groups', { replace: true });
-    }
-    const handlePlayClick = () => {
-       
-        navigate('/play', { replace: true });
-    }
+    // useEffect(() => {
+    //     function start() {
+    //       gapi.client.init({
+    //         clientId: process.env.REACT_APP_PUBLIC_GOOGLE_CLIENT_ID,
+    //         scope: 'email',
+    //       });
+    //     }
     
-    return (
+    //     gapi.load('client:auth2', start);
+    //   }, []);
 
+
+    // var CLIENT_ID = process.env.REACT_APP_PUBLIC_GOOGLE_CLIENT_ID || '';
+
+    return (
         <>
-        <Button variant="text" onClick={handleGroupClick}>Groups</Button>
-        <Button variant="text" onClick={handlePlayClick}>Play</Button>
-        </>
-    )
+            {/* <GoogleLogout
+                clientId={CLIENT_ID}
+                onLogoutSuccess={onLogoutSuccess} />
+                 */}
+                </>
+    );
 }

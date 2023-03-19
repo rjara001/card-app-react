@@ -29,10 +29,17 @@ export class Word implements IWord {
    //      return {Name:'', Value:'', Cycles:0, IsKnowed:false, Reveled:false}
    //   }
 
-     getText(FirstShowed:boolean):string {
+     getName(FirstShowed:boolean):string {
       if (FirstShowed)
          return this.Name;
       else
          return this.Value
+    }
+    
+    getValue(FirstShowed:boolean):string {
+      if (FirstShowed)
+         return this.Value;
+      else
+         return this.Name
     }
 }

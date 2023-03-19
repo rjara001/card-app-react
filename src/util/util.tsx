@@ -25,9 +25,12 @@ export const globalSummaryDefault = {
 }
 
 export const globalUserDefault = {
-    UserId: 'rjara001@gmail.com'
+    UserId: 'User'
     , PlayingGroup: 0
     , FirstShowed: false
+    , UserName: ''
+    , UserEmail: ''
+    , IsInLogin: false
 }
 
 export const groupDefault = { Id: 0, Name: '', Words: [] }
