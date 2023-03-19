@@ -27,6 +27,7 @@ export const globalSummaryDefault = {
 export const globalUserDefault = {
     UserId: 'rjara001@gmail.com'
     , PlayingGroup: 0
+    , FirstShowed: false
 }
 
 export const groupDefault = { Id: 0, Name: '', Words: [] }

@@ -1,21 +1,38 @@
 import { IWord } from "../interfaces/IWord.js";
 
 export class Word implements IWord {
+
      Name: string;
      Value: string;
      Cycles: number;
      IsKnowed: boolean;
      Reveled: boolean;
 
-     constructor(name:string, value:string) {
+     constructor(name:string, value:string, cycles:number, isKnowed:boolean, reveled: boolean) {
         this.Name = name
         this.Value = value
-        this.Cycles = 0;
-        this.IsKnowed = false;
-        this.Reveled = false;
+        this.Cycles = cycles;
+        this.IsKnowed = isKnowed;
+        this.Reveled = reveled;
+     }
+
+     static newWord(word:IWord): IWord {
+         return new Word(word.Name, word.Value, word.Cycles, word.IsKnowed, word.Reveled);
      }
     
-     static newWord():IWord {
-        return {Name:'', Value:'', Cycles:0, IsKnowed:false, Reveled:false}
-     }
+     static newWord2(name:string, value:string): IWord {
+      return new Word(name, value, 0, false, false);
+  }
+ 
+
+   //   static newWord():IWord {
+   //      return {Name:'', Value:'', Cycles:0, IsKnowed:false, Reveled:false}
+   //   }
+
+     getText(FirstShowed:boolean):string {
+      if (FirstShowed)
+         return this.Name;
+      else
+         return this.Value
+    }
 }

@@ -7,7 +7,7 @@ import { PlayContext, UserContext } from "../../context/context.create";
 
 import { queryGroupEdit, queryGroupEdit2 } from "../../hooks/group.hook";
 import { IGroup } from "../../interfaces/IGroup";
-import { IUserInfo } from "../../interfaces/IUserInfo.js";
+import { IUserInfo } from "../../interfaces/IUserInfo";
 import { Word } from "../../models/Word";
 import { calculateSummary, countSummary, groupDefault } from "../../util/util";
 import { Play } from "../../components/Play";
@@ -121,7 +121,7 @@ export const PlaySpace = () => {
     const getData = async () => {
         const { data } = await queryGroupEdit(userInfo.PlayingGroup.toString());
         let group = data as IGroup;
-        group.Words = group.Words.map(_ => new Word(_.Name, _.Value));
+        group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
         setGetResult(group);
     };
 

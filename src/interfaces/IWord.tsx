@@ -6,6 +6,8 @@ export interface IWord {
     Cycles: number
     IsKnowed: boolean
     Reveled: boolean
+
+    getText(FirstShowed:boolean): string
 }
 
 export interface IWordsProps {

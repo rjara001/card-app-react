@@ -21,7 +21,7 @@ export const GroupEdit = () => {
         setIsLoading(true);
         const { data } = await queryGroupEdit(id as string);
         let group = data as IGroup;
-        group.Words = group.Words.map(_ => new Word(_.Name, _.Value));
+        group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
         setGetResult(group);
     };
     

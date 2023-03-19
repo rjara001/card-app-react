@@ -24,6 +24,7 @@ import { MENU } from './constants/menu';
 import ScrollTopButton from './components/BackButton';
 import BackButton from './components/BackButton';
 import { IUserInfo } from './interfaces/IUserInfo.js';
+import {SettingsPage} from './pages/settings/Settings';
 
 function App() {
 
@@ -58,9 +59,10 @@ function App() {
               <Routes>
                 <Route path='/' element={<HomePage></HomePage>}></Route>
                 <Route path='/groups' element={<GroupList></GroupList>}></Route>
-                <Route path='/settings' element={<GroupEdit></GroupEdit>}></Route>
+                <Route path='/settings' element={<SettingsPage></SettingsPage>}></Route>
                 <Route path='/play' element={<PlaySpace></PlaySpace>}></Route>
                 <Route path='/group/:id' element={<GroupEdit></GroupEdit>}></Route>
+                
               </Routes>
               <MainMenu value={MENU.Home}></MainMenu>
 

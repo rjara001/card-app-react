@@ -7,7 +7,8 @@ import StarIcon from '@mui/icons-material/Star';
 import { IWord, IWordProps } from "../interfaces/IWord";
 import { ofuscator } from "../util/util";
 
-import { PlayContext } from "../context/context.create";
+import { PlayContext, UserContext } from "../context/context.create";
+import { Word } from "../models/Word";
 
 const Score = () => {
     const { summary } = useContext(PlayContext);
@@ -31,7 +32,7 @@ const Score = () => {
 
         <div>
             <Badge badgeContent={summary.Learned} color="success">
-                    <StarIcon color="action" style={{ paddingBottom: '5px' }} />
+                <StarIcon color="action" style={{ paddingBottom: '5px' }} />
             </Badge>
 
         </div>
@@ -41,15 +42,19 @@ const Score = () => {
 };
 
 
-const Text = (word: IWord) => <Box>
-    <Typography variant="h6" component="div" style={{ paddingTop: '10px' }}>
-        {word.Name}
-    </Typography>
-    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        {word.Reveled && word.Value}
-        {!word.Reveled && ofuscator(word.Value)}
-    </Typography>
-</Box>;
+const Text = (word: Word) => {
+    const { userInfo } = useContext(UserContext);
+
+    return (    <Box>
+            <Typography variant="h6" component="div" style={{ paddingTop: '10px' }}>
+                {word.getText(userInfo.FirstShowed)}
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {word.Reveled && word.getText(userInfo.FirstShowed)}
+                {!word.Reveled && ofuscator(word.getText(userInfo.FirstShowed))}
+            </Typography>
+        </Box>)
+};
 const Actions = (next: any, revel: any, correct: any) => <div style={{
     width: '100%', display: 'flex',
     justifyContent: 'space-between',
@@ -76,7 +81,7 @@ const card = (word: IWord, next: any, revel: any, correct: any) => (
             <>
                 {Score()}
                 <Divider />
-                {Text(word)}
+                {Text(Word.newWord(word))}
             </>
 
         </CardContent>

@@ -2,8 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import AnimationIcon from '@mui/icons-material/Animation';
 import HomeIcon from '@mui/icons-material/Menu';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { makeStyles } from '@material-ui/styles';
@@ -61,8 +61,8 @@ export const MainMenu = (props: Props) => {
                 onChange={handleChange}
             >
                 <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-                <BottomNavigationAction label="Jugar" icon={<RestoreIcon />} />
-                <BottomNavigationAction label="Groups" icon={<FavoriteIcon />} />
+                <BottomNavigationAction label="Jugar" icon={<PlayArrowIcon />} />
+                <BottomNavigationAction label="Groups" icon={<AnimationIcon />} />
                 <BottomNavigationAction label="Settings" icon={<LocationOnIcon />} />
             </BottomNavigation>
         </Box>
