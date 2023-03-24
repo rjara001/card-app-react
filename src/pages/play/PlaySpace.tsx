@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GlobalSummary } from "../../components/GlobalSummary";
 import { PlayContext, UserContext } from "../../context/context.create";
 
-import { queryGroupEdit, queryGroupEdit2 } from "../../hooks/group.hook";
+import { queryGroupEdit } from "../../hooks/group.hook";
 import { IGroup } from "../../interfaces/IGroup";
 import { IUserInfo } from "../../interfaces/IUserInfo";
 import { Word } from "../../models/Word";
@@ -16,6 +16,9 @@ import Subtitle from "../../molecule/SubTitle";
 import Button from "@mui/material/Button";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Box from "@mui/material/Box";
+import { IWord } from "../../interfaces/IWord";
+import { setLocalGroup } from "../../locals/group.local";
+import { Adapter } from "../../locals/adapter";
 
 const getRandomArbitrary = (min: number, max: number, currentIndex: number): number => {
     let index = -1;
@@ -24,6 +27,13 @@ const getRandomArbitrary = (min: number, max: number, currentIndex: number): num
     } while (index == currentIndex && max > 1)
 
     return index;
+}
+
+const saveGroup = (setGetResult:any, group:IGroup, updateWords:IWord[]) => {
+    const _group = { ...group, Words: updateWords };
+
+    setLocalGroup(_group);
+    setGetResult(_group);
 }
 
 export const PlaySpace = () => {
@@ -49,7 +59,9 @@ export const PlaySpace = () => {
         })
 
         setCurrentCycle(0);
-        setGetResult({ ...result, Words: updateWords });
+
+        saveGroup(setGetResult, result, updateWords);
+
         setIsVeryEndedCycle(false);
     }
 
@@ -71,7 +83,8 @@ export const PlaySpace = () => {
 
             updateWords[arbitraryIndex] = nextElement;
 
-            setGetResult({ ...result, Words: updateWords });
+            saveGroup(setGetResult, result, updateWords);
+            // setGetResult({ ...result, Words: updateWords });
         }
         else {
             if (currentCycle >= 3) {
@@ -88,7 +101,9 @@ export const PlaySpace = () => {
 
                 setIsEndedCycle(true);
                 setCurrentCycle((prev) => prev = prev + 1);
-                setGetResult({ ...result, Words: updateWords });
+
+                saveGroup(setGetResult, result, updateWords);
+                // setGetResult({ ...result, Words: updateWords });
 
             }
         }
@@ -102,7 +117,8 @@ export const PlaySpace = () => {
 
         updateWords[indexWord] = item;
 
-        setGetResult({ ...result, Words: updateWords });
+        saveGroup(setGetResult, result, updateWords);
+        // setGetResult({ ...result, Words: updateWords });
     }
     const correct = () => {
 
@@ -114,13 +130,14 @@ export const PlaySpace = () => {
 
         updateWords[indexWord] = item;
 
-        setGetResult({ ...result, Words: updateWords });
+        saveGroup(setGetResult, result, updateWords);
+        // setGetResult({ ...result, Words: updateWords });
 
         nextValue();
     }
     const getData = async () => {
-        const { data } = await queryGroupEdit(userInfo.PlayingGroup.toString());
-        let group = data as IGroup;
+        let group = await Adapter.getGroup(userInfo.PlayingGroup.toString()) as IGroup;
+
         group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
         setGetResult(group);
     };

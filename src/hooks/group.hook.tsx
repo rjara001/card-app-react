@@ -19,17 +19,17 @@ export const queryGroupList = async () => {
     return await axios.get(getUrl(config.grupos), axiosConfig);
 }
 
-export const queryGroupEdit2 = async (id: string) => {
-    let axiosConfig = {
-        headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            "Access-Control-Allow-Origin": "*",
-        },
-        data: null
-    };
+// export const queryGroupEdit2 = async (id: string) => {
+//     let axiosConfig = {
+//         headers: {
+//             'Content-Type': 'application/json;charset=UTF-8',
+//             "Access-Control-Allow-Origin": "*",
+//         },
+//         data: null
+//     };
 
-    return await axios.get(getUrl(config.grupo) + '/' + id, axiosConfig);
-}
+//     return await axios.get(getUrl(config.grupo) + '/' + id, axiosConfig);
+// }
 
 export const queryGroupEdit = async (id: string) => {
     let axiosConfig = {

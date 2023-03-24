@@ -25,6 +25,9 @@ import { useNavigate } from 'react-router-dom';
 import GoogleLogin, { GoogleLogout } from "react-google-login";
 import { gapi } from 'gapi-script';
 
+import { PublicClientApplication } from "@azure/msal-browser";
+import { MsalProvider, useMsal } from "@azure/msal-react";
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         padding: 2,
@@ -43,24 +46,29 @@ interface ProfileProps {
     email: string;
     avatarUrl: string;
 }
-
+// Configuration object constructed.
+const config = {
+    auth: {
+        clientId: '3d5f5d7f-f9a1-47a8-9363-5d5a826ff716'
+    }
+};
 export function SettingsPage() {
     const classes = useStyles();
     const navigate = useNavigate();
 
     var CLIENT_ID = process.env.REACT_APP_PUBLIC_GOOGLE_CLIENT_ID || '';
 
-    
-      useEffect(() => {
+
+    useEffect(() => {
         function start() {
-          gapi.client.init({
-            clientId: process.env.REACT_APP_PUBLIC_GOOGLE_CLIENT_ID,
-            scope: 'email',
-          });
+            gapi.client.init({
+                clientId: process.env.REACT_APP_PUBLIC_GOOGLE_CLIENT_ID,
+                scope: 'email',
+            });
         }
-    
+
         gapi.load('client:auth2', start);
-      }, []);
+    }, []);
 
     const { userInfo, updateValue } = useContext(UserContext);
     //   const [isToggled, setIsToggled] = useState(false);
@@ -70,7 +78,7 @@ export function SettingsPage() {
         userInfo.FirstShowed = !userInfo.FirstShowed;
         updateValue(userInfo);
     };
- 
+
     const onSuccess = (response: any) => {
 
         userInfo.UserName = response.profileObj.name;
@@ -82,35 +90,64 @@ export function SettingsPage() {
     const onFailure = (err: any) => {
         console.error(err);
     };
+
+    const handleUploadFile = () => {
+        navigate('/upload');
+    }
     
+    // function signInClickHandler(instance) {
+    //     instance.loginPopup();
+    //   }
+      
+    // create PublicClientApplication instance
+    const publicClientApplication = new PublicClientApplication(config);
+
+        // SignInButton Component returns a button that invokes a popup login when clicked
+    // function SignInButton() {
+    //     // useMsal hook will return the PublicClientApplication instance you provided to MsalProvider
+    //     const { instance } = useMsal();
+    
+    //     return <button onClick={() => signInClickHandler(instance)}>Sign In</button>;
+    // }
+  
     return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            <ListItem>
-                <ListItemAvatar>
+        <MsalProvider instance={publicClientApplication}>
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                <ListItem>
+                    <ListItemAvatar>
 
-                    {!userInfo.IsInLogin && <GoogleLogin
-                        clientId={CLIENT_ID} // "967034721711-20e7u0gm5bqr2ic1intjer5agfs35a5n.apps.googleusercontent.com"
-                        buttonText="Login with Google"
-                        onSuccess={onSuccess}
-                        onFailure={onFailure}
-                        cookiePolicy={'single_host_origin'}
-                        isSignedIn={true} />}
-                    <Avatar>
+                        {!userInfo.IsInLogin && <GoogleLogin
+                            clientId={CLIENT_ID} // "967034721711-20e7u0gm5bqr2ic1intjer5agfs35a5n.apps.googleusercontent.com"
+                            buttonText="Login with Google"
+                            onSuccess={onSuccess}
+                            onFailure={onFailure}
+                            cookiePolicy={'single_host_origin'}
+                            isSignedIn={true} />}
 
-                    </Avatar>
-                </ListItemAvatar>
-                {userInfo.IsInLogin && <ListItemText primary={userInfo.UserName} secondary={userInfo.UserEmail} sx={{ paddingLeft: '10px' }} />}
-            </ListItem>
-            <Divider />
-            <ListItem>
-                <ListItemIcon>
-                    <ChangeCircleIcon />
-                </ListItemIcon>
-                <ListItemText id="switch-list-label-wifi" primary="Turn Card" />
-                <Switch checked={userInfo.FirstShowed} onChange={handleToggle} color="primary" />
-            </ListItem>
+                            {/* <SignInButton /> */}
+                        <Avatar>
 
-        </List>
+                        </Avatar>
+                    </ListItemAvatar>
+                    {userInfo.IsInLogin && <ListItemText primary={userInfo.UserName} secondary={userInfo.UserEmail} sx={{ paddingLeft: '10px' }} />}
+                </ListItem>
+                <Divider />
+                <ListItem>
+                    <ListItemIcon>
+                        <ChangeCircleIcon />
+                    </ListItemIcon>
+                    <ListItemText id="switch-list-label-wifi" primary="Turn Card" />
+                    <Switch checked={userInfo.FirstShowed} onChange={handleToggle} color="primary" />
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon>
+                        <ChangeCircleIcon />
+                    </ListItemIcon>
+                    <ListItemText id="switch-list-label-wifi" primary="Turn Card" />
+                    <button onClick={handleUploadFile}>UpLoad File</button>
+                </ListItem>
+
+            </List></ MsalProvider>
     );
 
     // return (

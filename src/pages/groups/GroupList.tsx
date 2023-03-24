@@ -5,6 +5,8 @@ import React, { FC, useContext } from 'react';
 import { useEffect, useState } from 'react';
 
 import { queryGroupList } from '../../hooks/group.hook';
+import { localGroups, setLocalGroups } from '../../locals/group.local';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -13,6 +15,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { IGroup, IGroupProps } from '../../interfaces/IGroup';
 import { UserContext } from "../../context/context.create";
+import { Adapter } from '../../locals/adapter';
 
 
 const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
@@ -92,9 +95,10 @@ export const GroupList = () => {
     const getData = async () => {
         setIsLoading(true);
 
-        const { data } = await queryGroupList();
-        let groups = data as IGroup[];
+        let groups = await Adapter.getGroups() as IGroup[];
 
+        setLocalGroups(groups);
+        
         setGetResult(groups);
     };
 
