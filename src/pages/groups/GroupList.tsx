@@ -1,36 +1,54 @@
-import { Avatar, Box, Button, Divider, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid/DataGrid';
-import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef.js';
+import { Avatar, Button, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
 import React, { FC, useContext } from 'react';
 import { useEffect, useState } from 'react';
 
-import { queryGroupList } from '../../hooks/group.hook';
-import { localGroups, setLocalGroups } from '../../locals/group.local';
+import { setLocalGroups } from '../../locals/group.local';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { IGroup, IGroupProps } from '../../interfaces/IGroup';
 import { UserContext } from "../../context/context.create";
 import { Adapter } from '../../locals/adapter';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import BackupIcon from '@mui/icons-material/Backup';
 
+import { makeStyles } from '@material-ui/styles';
+import Header from '../../components/Header';
+
+
+const useStyles = makeStyles({
+    button: {
+        margin: '8px 8px 8px 0'
+        , textAlign: 'right'
+    },
+});
 
 const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
 
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
-    const handlePlayClick = (id:number)=>{
-        
+    const handlePlayClick = (id: string) => {
+
         userInfo.PlayingGroup = id;
 
         updateValue(userInfo);
 
         navigate(`/play`);
     }
-    
+
+    function handleButtonSave(item: IGroup): void {
+        Adapter.setGroup(userInfo.UserId, item);
+    }
+
+    function handleSaveButtonDelete(item: IGroup): void {
+        // Adapter.setGroup(userInfo.UserId, item);
+    }
+    function handleSaveButtonEdit(item: IGroup): void {
+        navigate(`/group/${item.Id.toString()}`)
+    }
     return (
         <ListItem alignItems="flex-start">
             <ListItemAvatar>
@@ -45,24 +63,26 @@ const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
                             component="span"
                             variant="body2"
                             color="text.primary"
-                        >
-                        </Typography>
+                        />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+      
+                            <IconButton onClick={() => handleSaveButtonDelete(item)}>
+                                <DeleteIcon  />
+                            </IconButton>
+                            <IconButton onClick={() => handleSaveButtonEdit(item)}>
+                                <EditIcon  />
+                            </IconButton>
+                            <IconButton onClick={() => handleButtonSave(item)}>
+                                <BackupIcon />
+                            </IconButton>
 
-                        <Link to="/group"
-                        >
-                            <DeleteIcon />
-                        </Link>
-                        <Link to={`/group/${item.Id.toString()}`}>
-                            <EditIcon />
-                        </Link>
-
-
+                        </div>
                     </React.Fragment>
                 }
             />
             {userInfo.PlayingGroup !== item.Id && <div style={{ alignSelf: 'center' }}>
-                <Button variant="outlined" 
-                    onClick={()=>handlePlayClick(item.Id)}
+                <Button variant="outlined"
+                    onClick={() => handlePlayClick(item.Id)}
                     startIcon={<PlayArrowIcon />}>
                     Play
                 </Button>
@@ -74,31 +94,31 @@ function GroupListComponent(groupList: any[]) {
     return (
         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
             {
-                groupList.map((item) => {
+                groupList.map((item, i) => {
                     return (
-                        <><ItemGroup item={item}></ItemGroup><Divider variant="inset" component="li" /></>
+                        <><ItemGroup key="{i}" item={item}></ItemGroup><Divider variant="inset" component="li" /></>
                     )
                 })
             }
-
-
         </List>
     );
 }
 
 
 export const GroupList = () => {
-
+    const classes = useStyles();
+    const { userInfo, updateValue } = useContext(UserContext);
+    const navigate = useNavigate();
     const [result, setGetResult] = useState<IGroup[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>();
 
     const getData = async () => {
         setIsLoading(true);
 
-        let groups = await Adapter.getGroups() as IGroup[];
+        let groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
 
         setLocalGroups(groups);
-        
+
         setGetResult(groups);
     };
 
@@ -110,11 +130,16 @@ export const GroupList = () => {
         if (result)
             setIsLoading(false);
 
-    }, [result])
+    }, [result]);
+
+
+    function handleAddClick(): void {
+        navigate('/group');
+    }
 
     return (<div>
 
-        <h1>Searching Groups</h1>
+        <Header title="Groups" />
 
         <TextField id="standard-basic" label="Group" variant="standard" />
 
@@ -126,6 +151,13 @@ export const GroupList = () => {
                     {GroupListComponent(result)}
                 </div>
             )}
+        </div>
+        <div>
+            <div className={classes.button}>
+                <IconButton aria-label="add" size="large" color="success">
+                    <AddCircleIcon fontSize="inherit" sx={{ fontSize: 40 }} onClick={handleAddClick} />
+                </IconButton>
+            </div>
         </div>
     </div>)
 }

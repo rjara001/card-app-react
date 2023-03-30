@@ -1,25 +1,40 @@
-import { queryGroupEdit, queryGroupList } from "../hooks/group.hook";
+import { mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
 import { IGroup } from "../interfaces/IGroup";
+import { IUser } from "../interfaces/IUser";
+import { User } from "../models/User";
 import { localGroups } from "./group.local";
 
-const getGroup = async (idGroup: string) => {
-    const data = (localGroups() || []).find(_=>_.Id.toString() === idGroup);
 
-    let group = (data || (await queryGroupEdit(idGroup))?.data) as IGroup;
+const getUserFromAPI = async (idUser: string) => {
+    const resp = (await queryGetUser(idUser)).data;
 
-    return group;
-    // const { data } = await queryGroupEdit(userInfo.PlayingGroup.toString());
+    return User.newUser(resp);
 }
 
-const getGroups = async () => {
+const getGroup = async (idUser:string, idGroup: string) => {
+    if (idGroup)
+        return (await getGroups(idUser)).find(_=>_.Id.toString() === idGroup);
+    return undefined;
+}
+
+const getGroups = async (idUser:string) => {
     const data = localGroups();
-        
-    let groups = (data || (await queryGroupList())?.data) as IGroup[];
+
+    let groups = (data || (await getUserFromAPI(idUser) as IUser).Groups);
 
     return groups;
 }
 
-export const Adapter = {
+const setGroup = async (idUser:string, group:IGroup) => {
+    const groups = localGroups().filter(_=>_.Id !==group.Id);
+
+    groups.push(group);
+
+    await mutationPutUser(new User(idUser, groups));
+}
+
+export const Adapter =  {
     getGroup
     , getGroups
+    , setGroup
 }

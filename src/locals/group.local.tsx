@@ -4,7 +4,10 @@ import { IGroup } from "../interfaces/IGroup.js";
 export const setLocalGroup = (group:IGroup) => {
     let groups = localGroups();
 
-    let newGroups = groups.filter(_=>_.Name !== group.Name);
+    if (group.Id==="0")
+        group.Id = (groups.length+1).toString();
+
+    let newGroups = groups.filter(_=>_.Id !== group.Id);
 
     newGroups.push(group);
 

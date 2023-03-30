@@ -25,7 +25,6 @@ import ScrollTopButton from './components/BackButton';
 import BackButton from './components/BackButton';
 import { IUserInfo } from './interfaces/IUserInfo.js';
 import {SettingsPage} from './pages/settings/Settings';
-import {FileUpload} from './pages/upload/Update';
 
 function App() {
 
@@ -62,8 +61,8 @@ function App() {
                 <Route path='/groups' element={<GroupList></GroupList>}></Route>
                 <Route path='/settings' element={<SettingsPage></SettingsPage>}></Route>
                 <Route path='/play' element={<PlaySpace></PlaySpace>}></Route>
-                <Route path='/group/:id' element={<GroupEdit></GroupEdit>}></Route>
-                <Route path='/upload' element={<FileUpload></FileUpload>}></Route>
+                <Route path='/group/:id?' element={<GroupEdit></GroupEdit>}></Route>
+                {/* <Route path='/upload' element={<FileUpload></FileUpload>}></Route> */}
                 
               </Routes>
               <MainMenu value={MENU.Home}></MainMenu>

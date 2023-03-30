@@ -1,7 +1,7 @@
 import { IWord } from "./IWord"
 
 export interface IGroup {
-    Id: number
+    Id: string
     Name: string
     Words: IWord[]
 }

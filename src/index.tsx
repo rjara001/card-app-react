@@ -11,9 +11,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
-      <Container maxWidth="sm">
+     
         <App />
-      </Container>
+
     </StyledEngineProvider>
   </React.StrictMode>
 );

@@ -1,6 +1,6 @@
 export interface IUserInfo {
     UserId: string
-    PlayingGroup : number
+    PlayingGroup : string
     FirstShowed: boolean
     UserName: string
     UserEmail: string

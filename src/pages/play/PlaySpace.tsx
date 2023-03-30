@@ -1,14 +1,10 @@
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { GlobalSummary } from "../../components/GlobalSummary";
 import { PlayContext, UserContext } from "../../context/context.create";
-
-import { queryGroupEdit } from "../../hooks/group.hook";
 import { IGroup } from "../../interfaces/IGroup";
-import { IUserInfo } from "../../interfaces/IUserInfo";
-import { Word } from "../../models/Word";
 import { calculateSummary, countSummary, groupDefault } from "../../util/util";
 import { Play } from "../../components/Play";
 import Title from "../../molecule/Title";
@@ -136,9 +132,8 @@ export const PlaySpace = () => {
         nextValue();
     }
     const getData = async () => {
-        let group = await Adapter.getGroup(userInfo.PlayingGroup.toString()) as IGroup;
+        let group = await Adapter.getGroup(userInfo.UserId, userInfo.PlayingGroup.toString()) as IGroup;
 
-        group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
         setGetResult(group);
     };
 
@@ -179,15 +174,12 @@ export const PlaySpace = () => {
 
     useEffect(() => {
 
-        if (userInfo.PlayingGroup == 0)
+        if (userInfo.PlayingGroup == "0")
             navigate(`/groups`);
         else {
             setCurrentCycle(0);
             getData();
         }
-
-
-
     }, []);
 
     if (indexWord < 0)

@@ -1,7 +1,6 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
-import { CsvToJson } from "./csvToJson";
 
 export const ofuscator = (text: string) => {
     return String('').padStart(text.length - 1, 'x');
@@ -25,15 +24,15 @@ export const globalSummaryDefault = {
 }
 
 export const globalUserDefault = {
-    UserId: 'User'
-    , PlayingGroup: 0
+    UserId: 'rjara'
+    , PlayingGroup: "0"
     , FirstShowed: false
     , UserName: ''
     , UserEmail: ''
     , IsInLogin: false
 }
 
-export const groupDefault = { Id: 0, Name: '', Words: [] }
+export const groupDefault = { Id: "0", Name: '', Words: [] }
 
 export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSummary => {
     let Learned: number = 0;
@@ -67,7 +66,7 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
 
 }
 
-export const Base64ToJson = (base64:string) =>{
-    let text = decodeURIComponent(escape(atob(base64)));
-    return CsvToJson(text);
-}
+// export const Base64ToJson = (base64:string) =>{
+//     let text = decodeURIComponent(escape(atob(base64)));
+//     return CsvToJson(text);
+// }

@@ -1,13 +1,14 @@
 import axios from "axios"
-import config from "../config.json"
+import config from "./config.json"
 import { IApiConfig } from "../interfaces/api.config";
-import { Base64ToJson } from "../util/util";
+import { IUser } from "../interfaces/IUser";
+import { Group } from "../models/Group";
 
 function getUrl(item: IApiConfig): string {
     return item.host + item.url;
 }
 
-export const queryGroupList = async () => {
+export const queryGetUser = async (id: string) => {
     let axiosConfig = {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -16,34 +17,33 @@ export const queryGroupList = async () => {
         data: null
     };
 
-    return await axios.get(getUrl(config.grupos), axiosConfig);
+    return await axios.get(getUrl(config.getUser) + '/' + id, axiosConfig);
 }
 
-// export const queryGroupEdit2 = async (id: string) => {
-//     let axiosConfig = {
-//         headers: {
-//             'Content-Type': 'application/json;charset=UTF-8',
-//             "Access-Control-Allow-Origin": "*",
-//         },
-//         data: null
-//     };
-
-//     return await axios.get(getUrl(config.grupo) + '/' + id, axiosConfig);
-// }
-
-export const queryGroupEdit = async (id: string) => {
-    let axiosConfig = {
+export const mutationPutUser = async (user:IUser) => {
+    const axiosConfig = {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
         },
-        data: null
+
     };
-    // let { data } = await axios.get(getUrl(config.grupoByText) + '/' + id, axiosConfig);
 
-    // return { data: {...data, words: Base64ToJson(data.text)} };
+    const data = {... user, Groups: user.Groups.map(_=>Group.toFlatGroup(_))}
 
-    let { data } = await axios.get(getUrl(config.grupo) + '/' + id, axiosConfig);
+    await axios.put(getUrl(config.postUser) + '/' + user.IdUser, data, axiosConfig);
+}
 
-    return { data: data[0] } ;
+export const mutationPostUser = async (user:IUser) => {
+    const axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+        },
+
+    };
+
+    const data = {... user, Groups: user.Groups.map(_=>Group.toFlatGroup(_))}
+
+    await axios.post(getUrl(config.postUser) + '/' + user.IdUser, data, axiosConfig);
 }
