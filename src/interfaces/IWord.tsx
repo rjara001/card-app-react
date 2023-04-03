@@ -14,6 +14,7 @@ export interface IWord {
 
 export interface IWordsProps {
     words: IWord[]
+    , setGroup: any
 }
 
 export interface IGlobalSummaryProps {

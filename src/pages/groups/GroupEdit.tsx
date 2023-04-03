@@ -78,6 +78,7 @@ export const GroupEdit = () => {
 
 
     const handleSaveClick = async () => {
+        
         setGroup((prev: IGroup) => {
             return { ...prev, Words: [...group.Words, word] }
         });
@@ -178,7 +179,7 @@ export const GroupEdit = () => {
                         {editIndividualWay()}
 
                         <Divider></Divider>
-                        <WordList words={group.Words}></WordList>
+                        <WordList words={group.Words} setGroup={setGroup}></WordList>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1}>
                         {editBatch()}

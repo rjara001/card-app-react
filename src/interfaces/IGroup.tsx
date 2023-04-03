@@ -8,5 +8,6 @@ export interface IGroup {
 
 export interface IGroupProps {
     item: IGroup
+    , deleteGroup: (item:IGroup)=> void
 }
 

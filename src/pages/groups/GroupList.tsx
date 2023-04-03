@@ -17,6 +17,7 @@ import BackupIcon from '@mui/icons-material/Backup';
 
 import { makeStyles } from '@material-ui/styles';
 import Header from '../../components/Header';
+import DeleteButton from '../../elements/DeleteButton/Index';
 
 
 const useStyles = makeStyles({
@@ -24,9 +25,13 @@ const useStyles = makeStyles({
         margin: '8px 8px 8px 0'
         , textAlign: 'right'
     },
+
+    list:{
+        maxWidth:'none'
+    }
 });
 
-const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
+const ItemGroup: FC<IGroupProps> = ({ item, deleteGroup }: IGroupProps): JSX.Element => {
 
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
@@ -43,14 +48,17 @@ const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
         Adapter.setGroup(userInfo.UserId, item);
     }
 
-    function handleSaveButtonDelete(item: IGroup): void {
-        // Adapter.setGroup(userInfo.UserId, item);
+    function handleButtonDelete(item: IGroup): void {
+
+        Adapter.deleteGroup(userInfo.UserId, item);
+        deleteGroup(item);
+    
     }
     function handleSaveButtonEdit(item: IGroup): void {
         navigate(`/group/${item.Id.toString()}`)
     }
     return (
-        <ListItem alignItems="flex-start">
+        <ListItem alignItems="flex-start" id="list-group">
             <ListItemAvatar>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
             </ListItemAvatar>
@@ -64,11 +72,12 @@ const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
                             variant="body2"
                             color="text.primary"
                         />
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div>
+                            {item.Words.length} total
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'right' }}>
       
-                            <IconButton onClick={() => handleSaveButtonDelete(item)}>
-                                <DeleteIcon  />
-                            </IconButton>
+                            <DeleteButton handleDeleteItem={handleButtonDelete} item={item}></DeleteButton>
                             <IconButton onClick={() => handleSaveButtonEdit(item)}>
                                 <EditIcon  />
                             </IconButton>
@@ -90,13 +99,15 @@ const ItemGroup: FC<IGroupProps> = ({ item }: IGroupProps): JSX.Element => {
         </ListItem>
     )
 }
-function GroupListComponent(groupList: any[]) {
+function GroupListComponent(groupList: any[], deleteGroup: (item:IGroup)=> void) {
+    
     return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {
                 groupList.map((item, i) => {
                     return (
-                        <><ItemGroup key="{i}" item={item}></ItemGroup><Divider variant="inset" component="li" /></>
+                        <>
+                        <ItemGroup key="{i}" item={item} deleteGroup={deleteGroup}></ItemGroup><Divider variant="inset" component="li" /></>
                     )
                 })
             }
@@ -109,17 +120,17 @@ export const GroupList = () => {
     const classes = useStyles();
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
-    const [result, setGetResult] = useState<IGroup[]>([]);
+    const [groups, setGroups] = useState<IGroup[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>();
 
     const getData = async () => {
         setIsLoading(true);
 
-        let groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
+        let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
 
-        setLocalGroups(groups);
+        setLocalGroups(_groups);
 
-        setGetResult(groups);
+        setGroups(_groups);
     };
 
     useEffect(() => {
@@ -127,14 +138,20 @@ export const GroupList = () => {
     }, []);
 
     useEffect(() => {
-        if (result)
+        if (groups)
             setIsLoading(false);
 
-    }, [result]);
+    }, [groups]);
 
 
     function handleAddClick(): void {
         navigate('/group');
+    }
+
+    const deleteGroup = (item:IGroup) => {
+        setGroups((prev)=>{
+            return [...prev.filter((_) => _.Id !== item.Id)];
+        })
     }
 
     return (<div>
@@ -148,7 +165,7 @@ export const GroupList = () => {
                 'Loading groups...'
             ) : (
                 <div>
-                    {GroupListComponent(result)}
+                    {GroupListComponent(groups, deleteGroup)}
                 </div>
             )}
         </div>

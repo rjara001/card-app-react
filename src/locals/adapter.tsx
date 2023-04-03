@@ -33,8 +33,15 @@ const setGroup = async (idUser:string, group:IGroup) => {
     await mutationPutUser(new User(idUser, groups));
 }
 
+const deleteGroup = async (idUser:string, group:IGroup) => {
+    const groups = localGroups().filter(_=>_.Id !==group.Id);
+
+    await mutationPutUser(new User(idUser, groups));
+}
+
 export const Adapter =  {
     getGroup
     , getGroups
     , setGroup
+    , deleteGroup
 }
