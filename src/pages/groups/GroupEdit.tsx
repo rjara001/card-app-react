@@ -21,6 +21,8 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import EditIcon from '@mui/icons-material/Edit'
 import Header from "../../components/Header";
 import { parseCsvBySeparator } from "../../util/csvToJson";
+import { IndividualEdit } from "./IIndividualProps";
+import EditBatch from "./EditBatch";
 
 const useStyles = makeStyles({
     rigthButton: {
@@ -30,9 +32,10 @@ const useStyles = makeStyles({
 
 
 export const GroupEdit = () => {
+    const classes = useStyles();
     const { userInfo, updateValue } = useContext(UserContext);
     let { id } = useParams();
-    const classes = useStyles();
+
 
     const [group, setGroup] = useState<IGroup>(groupDefault);
     const [word, setWord] = useState<IWord>(Word.newWord3());
@@ -54,10 +57,6 @@ export const GroupEdit = () => {
         setGroup(group);
     };
 
-    // useEffect(()=>{
-
-    // }, [textBatch]);
-
     useEffect(() => {
         if (group.Words.length === 0)
             getData();
@@ -66,6 +65,8 @@ export const GroupEdit = () => {
     useEffect(() => {
         if (group)
             setIsLoading(false);
+
+        Adapter.setGroup(userInfo.UserId, group);
 
     }, [group])
 
@@ -77,32 +78,30 @@ export const GroupEdit = () => {
     }, [newGroupElement])
 
 
-    const handleSaveClick = async () => {
-        
+    const handleSaveClick = async (word:IWord) => {
+  
         setGroup((prev: IGroup) => {
-            return { ...prev, Words: [...group.Words, word] }
+            const _words = prev.Words.filter(_=>_.Name !== word.Name);
+            return { ...prev, Words: [..._words, word] }
         });
 
-        setNewGroupElement(true);
+        // setNewGroupElement(true);
     }
 
-    const handleChangeWordName = (e: any) => {
-        setWord((prev) => {
-            return { ...prev, Name: e.target.value }
-        })
-    }
-
-    const handleChangeWordValue = (e: any) => {
-        setWord((prev) => {
-            return { ...prev, Value: e.target.value }
-        })
-    }
+    // const handleChangeWord = (e: any) => {
+    //     const { name, value } = e.target;
+    //     setWord((prevState) => ({
+    //       ...prevState,
+    //       [name]: value,
+    //     }));
+    // }
 
     const handleChangeGroupName = (e: any) => {
         setGroup((prev) => {
             return { ...prev, Name: e.target.value }
         })
     }
+
     const handleEditGroupNameClick = () => {
         setIsEditingGroupName(true);
     };
@@ -111,26 +110,31 @@ export const GroupEdit = () => {
         setIsEditingGroupName(false);
     }
 
-    const handleSaveBatchClick = () => {
+    const handleSaveBatchClick = (text:string) => {
         setGroup((prev: IGroup) => {
-            return { ...prev, Words: parseCsvBySeparator(textBatch, ';') }
+            return { ...prev, Words: parseCsvBySeparator(text, ';') }
         });
-
     }
 
-    const editBatch = () => <Grid>
-        <TextareaAutosize
-            maxRows={100}
-            aria-label="maximum height"
-            placeholder="Word1;Word2&#10;Word1;Word2"
-            defaultValue=""
-            onChange={(e) => setTextBatch(e.target.value)}
-            value={textBatch}
-            style={{ height: '400px', width: '100%' }} />
-        <Grid item className={classes.rigthButton}>
-            <Button onClick={handleSaveBatchClick}>Save</Button>
-        </Grid>
-    </Grid>;
+    const handleDeleteWord = (item:IWord)=> {
+        setGroup((prev: IGroup) => {
+            return { ...prev, Words: prev.Words.filter(_=>_.Name !== item.Name) }
+        });
+    }
+
+    // const editBatch = () => <Grid>
+    //     <TextareaAutosize
+    //         maxRows={100}
+    //         aria-label="maximum height"
+    //         placeholder="Word1;Word2&#10;Word1;Word2"
+    //         defaultValue=""
+    //         onChange={(e) => setTextBatch(e.target.value)}
+    //         value={textBatch}
+    //         style={{ height: '400px', width: '100%' }} />
+    //     <Grid item className={classes.rigthButton}>
+    //         <Button onClick={handleSaveBatchClick}>Save</Button>
+    //     </Grid>
+    // </Grid>;
 
     return (
 
@@ -176,13 +180,13 @@ export const GroupEdit = () => {
                 </Tabs>
                 <div>
                     <TabPanel value={tabValue} index={0}>
-                        {editIndividualWay()}
-
+                        <IndividualEdit word={word} handleSaveClick={handleSaveClick}></IndividualEdit>
+                        
                         <Divider></Divider>
-                        <WordList words={group.Words} setGroup={setGroup}></WordList>
+                        <WordList words={group.Words} onHandleClickDeleteItem={handleDeleteWord}></WordList>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1}>
-                        {editBatch()}
+                       <EditBatch handleSaveBatchClick={handleSaveBatchClick}></EditBatch>
 
                     </TabPanel>
 
@@ -220,23 +224,4 @@ export const GroupEdit = () => {
         );
     }
 
-    function editIndividualWay() {
-        return <Grid container spacing={3}>
-
-            <Grid container item spacing={1} direction="column" justifyContent="center">
-                {/* Word name text field */}
-                <Grid item>
-                    <TextField sx={{ width: '100%' }} placeholder="Text" onChange={handleChangeWordName} value={word.Name} id="name" label="Word Name" variant="outlined" />
-                </Grid>
-                {/* Word value text field */}
-                <Grid item>
-                    <TextField sx={{ width: '100%' }} placeholder="Value" onChange={handleChangeWordValue} value={word.Value} id="value" label="Word Value" variant="outlined" />
-                </Grid>
-                {/* Save button */}
-                <Grid item className={classes.rigthButton}>
-                    <Button onClick={handleSaveClick}>Save</Button>
-                </Grid>
-            </Grid>
-        </Grid>;
-    }
 }

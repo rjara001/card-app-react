@@ -15,6 +15,7 @@ import Box from "@mui/material/Box";
 import { IWord } from "../../interfaces/IWord";
 import { setLocalGroup } from "../../locals/group.local";
 import { Adapter } from "../../locals/adapter";
+import Header from "../../components/Header";
 
 const getRandomArbitrary = (min: number, max: number, currentIndex: number): number => {
     let index = -1;
@@ -188,7 +189,7 @@ export const PlaySpace = () => {
     return (
         <div>
             <div>
-                <Title>Play</Title>
+                <Header title="Play" />
             </div>
             <div>
                 <Subtitle>Group "{result.Name}"</Subtitle>

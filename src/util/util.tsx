@@ -1,6 +1,7 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
+import { Word } from "../models/Word";
 
 export const ofuscator = (text: string) => {
     return String('').padStart(text.length - 1, 'x');
@@ -64,6 +65,12 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
         , Summary: summary
     }
 
+}
+
+export const checkGroupConsistency = (group:IGroup | undefined) => {
+    if (!group)
+        return undefined;
+    return {... group, Words:group.Words.filter(_=>_!=undefined).map(_=>Word.newWord(_))}
 }
 
 // export const Base64ToJson = (base64:string) =>{
