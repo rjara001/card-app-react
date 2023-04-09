@@ -34,7 +34,7 @@ export const globalUserDefault = {
     , IsInLogin: false
 }
 
-export const groupDefault = { Id: "0", Name: '', Words: [] }
+export const groupDefault = Group.NewGroup();
 
 export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSummary => {
     let Learned: number = 0;

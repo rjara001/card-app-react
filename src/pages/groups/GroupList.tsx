@@ -14,11 +14,12 @@ import { UserContext } from "../../context/context.create";
 import { Adapter } from '../../locals/adapter';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BackupIcon from '@mui/icons-material/Backup';
-
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { makeStyles } from '@material-ui/styles';
 import Header from '../../components/Header';
 import DeleteButton from '../../elements/DeleteButton/Index';
 import ConfirmationDialog from '../../elements/Messages/ConfirmationDialog';
+import { MessageDialog } from '../../elements/Messages/MessageDialog';
 
 const useStyles = makeStyles({
     button: {
@@ -116,6 +117,7 @@ export const GroupList = () => {
     const [groups, setGroups] = useState<IGroup[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isActiveMessageSaveData, setIsActiveMessageSaveData] = useState<boolean>(false);
+    const [isSyncSuccessful, setIsSyncSuccessful] = useState<boolean>(false);
 
     const getData = async () => {
         setIsLoading(true);
@@ -153,15 +155,37 @@ export const GroupList = () => {
         setIsActiveMessageSaveData(false);
     }
 
+    const handleSync = async () => {
+        await Adapter.setSync(userInfo.UserId);
+
+        let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
+
+        setGroups(_groups);
+        
+        setIsSyncSuccessful(true);
+    }
+
     return (<div>
 
         <Header title="Groups" />
+
+        <MessageDialog
+                open={isSyncSuccessful}
+                // title="Sync successful!"
+                message="The sync process was complete succesfull."
+                onClose={() => setIsSyncSuccessful(false)}
+            />
 
         <ConfirmationDialog message="Are you sure you want to save your data in the cloud?" onConfirm={handleSaveAction} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
 
         <Grid container spacing={2} alignItems="center" justifyContent="space-between">
             <Grid item sx={{ width: '80%' }}>
                 <TextField id="standard-basic" label="Group" variant="standard" style={{ width: '100%' }} />
+            </Grid>
+            <Grid item>
+                <IconButton onClick={() => handleSync()}>
+                    <CloudDownloadIcon />
+                </IconButton>
             </Grid>
             <Grid item>
                 <IconButton onClick={() => setIsActiveMessageSaveData(true)}>

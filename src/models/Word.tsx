@@ -17,7 +17,11 @@ export class Word implements IWord {
    }
 
    static newWord(word: IWord): IWord {
-      return new Word(word.Name, word.Value, word.Cycles===undefined?0:word.Cycles, word.IsKnowed===undefined?false:word.IsKnowed, word.Reveled===undefined?false:word.Reveled);
+      return new Word(word.Name
+               , word.Value
+               , word.Cycles===undefined?0:word.Cycles
+               , word.IsKnowed===undefined?false:word.IsKnowed
+               , word.Reveled===undefined?false:word.Reveled);
    }
 
    static newWord2(name: string, value: string): IWord {

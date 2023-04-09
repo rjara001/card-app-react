@@ -30,6 +30,7 @@ const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false)
     if (group != null && group.Name != undefined && group.Name != '') {
         const groups = localGroups().filter(_ => _.Id !== group.Id);
 
+        group.LastModified = new Date();
         groups.push(group);
 
         setLocalGroups(groups);
@@ -37,6 +38,41 @@ const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false)
         if (doCloud)
             await mutationPutUser(new User(idUser, groups));
     }
+}
+
+const setSync = async (idUser: string) => {
+    let groupsFromCoud = (await getUserFromAPI(idUser) as IUser).Groups;
+
+    let groupsLocal = localGroups();
+
+    if (groupsFromCoud.length >= groupsLocal.length) {
+        groupsFromCoud.forEach(groupCloud => {
+            groupCloud.LastModified = groupCloud.LastModified===undefined?new Date():groupCloud.LastModified;
+
+            const _local = groupsLocal.find(_ => _.Id === groupCloud.Id);
+
+            if (_local === undefined)
+                groupsLocal.push(groupCloud);
+            else
+                if (_local.LastModified < groupCloud.LastModified)
+                    {
+                        groupsLocal = groupsLocal.filter(_=>_.Id!==groupCloud.Id);
+                        groupsLocal.push(groupCloud);
+                    }
+        });
+    }
+    else
+        groupsLocal.forEach(groupLocal => {
+            const _cloud = groupsFromCoud.find(_ => _.Id === groupLocal.Id);
+
+            if (_cloud !== undefined && _cloud.LastModified < groupLocal.LastModified)
+            {
+                groupsLocal = groupsLocal.filter(_=>_.Id!==groupLocal.Id);
+                groupsLocal.push(_cloud);
+            }
+        });
+
+    setLocalGroups(groupsLocal);
 }
 
 const setGroups = async (idUser: string) => {
@@ -60,4 +96,5 @@ export const Adapter = {
     , setGroup
     , deleteGroup
     , setGroups
+    , setSync
 }
