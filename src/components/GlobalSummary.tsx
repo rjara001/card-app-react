@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }): JSX.Element => {
     const classes = useStyles();
     
-    return <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    return <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <nav aria-label="main mailbox folders">
             <List>
                 {value.Unknow > 0 && <ListItem className={classes.listItem}>

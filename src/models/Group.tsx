@@ -8,8 +8,8 @@ export class Group implements IGroup {
     Name: string;
     Words: IWord[];
 
-    constructor() {
-        this.Id="0";
+    constructor(Id:string) {
+        this.Id=Id;
         this.Name = 'New Group';
         this.Words = []
     }

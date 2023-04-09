@@ -53,7 +53,7 @@ export const IndividualEdit: React.FC<IIndividualProps> = ({ word, handleSaveCli
 
   return (
   
-      <Grid container spacing={3}>
+      <Grid container spacing={3} id="paso1">
         <Grid container item spacing={1} direction="column" justifyContent="center">
           <Grid item>
             <TextField

@@ -7,7 +7,7 @@ import { WordList } from "../../components/WordList"
 import { BoxShadow } from "../../elements/BoxShadows/BoxShadows";
 import { IGroup } from "../../interfaces/IGroup";
 import { Word } from "../../models/Word";
-import { groupDefault } from "../../util/util";
+import { getLastGroupId, groupDefault } from "../../util/util";
 import { Adapter } from "../../locals/adapter";
 import { Group } from "../../models/Group";
 import { IWord } from "../../interfaces/IWord.js";
@@ -51,7 +51,9 @@ export const GroupEdit = () => {
 
     const getData = async () => {
         setIsLoading(true);
-        const group = await Adapter.getGroup(userInfo.UserId, id as string) as IGroup || new Group();
+        const groups = await Adapter.getGroups(userInfo.UserId);
+
+        const group = await Adapter.getGroup(userInfo.UserId, id as string) as IGroup || new Group(getLastGroupId(groups));
 
         group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
         setGroup(group);
@@ -151,6 +153,7 @@ export const GroupEdit = () => {
                                     label="Group Name"
                                     variant="outlined"
                                     value={group.Name}
+                                    sx={{width:'100%'}}
                                     onChange={handleChangeGroupName} />
                             </Grid>
                             <Grid item xs={2}>

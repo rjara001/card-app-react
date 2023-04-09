@@ -44,7 +44,7 @@ export const WordList:FC<IWordListProps> = ({words: Words, onHandleClickDeleteIt
 
     return (
         <div style={{ height: 300, width: '100%' }}>
-          <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {
                 Words.map((item) => {
                     return (

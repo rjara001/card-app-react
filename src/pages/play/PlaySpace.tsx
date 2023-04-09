@@ -191,10 +191,16 @@ export const PlaySpace = () => {
             <div>
                 <Header title="Play" />
             </div>
+    
+            <div>
+                <Subtitle>Progress</Subtitle>
+            </div>
+            <div>
+                <GlobalSummary currentCycle={currentCycle} value={summary}></GlobalSummary>
+            </div>
             <div>
                 <Subtitle>Group "{result.Name}"</Subtitle>
             </div>
-
             <div>
 
                 <Play word={result.Words[indexWord]}
@@ -202,21 +208,7 @@ export const PlaySpace = () => {
                     revel={() => revel()}
                     correct={() => { correct(); }}></Play>
             </div>
-            <div>
-                <Subtitle>Progress</Subtitle>
-            </div>
-            <div>
-                <GlobalSummary currentCycle={currentCycle} value={summary}></GlobalSummary>
-
-                {/* <div>
-                {
-                    result.words.map((item, i) => (
-
-                        <div key={i}>{`${item.name} isKnowed:${item.isKnowed} Revealed:${item.reveled}`}</div>
-
-                    ))}
-            </div> */}
-            </div>
+ 
             <div>
                 {
                     isEndedCycle &&

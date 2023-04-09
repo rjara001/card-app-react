@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Grid, TextareaAutosize, Button } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 
@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   },
 });
 
-const EditBatch: React.FC<IEditBatchProps> = ({ handleSaveBatchClick }) => {
+const EditBatch: React.FC<IEditBatchProps> = memo(({ handleSaveBatchClick }) => {
   const [textBatch, setTextBatch] = useState('');
   const classes = useStyles();
 
@@ -36,6 +36,6 @@ const EditBatch: React.FC<IEditBatchProps> = ({ handleSaveBatchClick }) => {
       </Grid>
     </Grid>
   );
-};
+});
 
 export default EditBatch;

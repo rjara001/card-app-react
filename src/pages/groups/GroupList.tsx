@@ -1,4 +1,4 @@
-import { Avatar, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
+import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
 import React, { FC, useContext } from 'react';
 import { useEffect, useState } from 'react';
 
@@ -19,7 +19,6 @@ import { makeStyles } from '@material-ui/styles';
 import Header from '../../components/Header';
 import DeleteButton from '../../elements/DeleteButton/Index';
 import ConfirmationDialog from '../../elements/Messages/ConfirmationDialog';
-
 
 const useStyles = makeStyles({
     button: {
@@ -95,16 +94,17 @@ const ItemGroup: FC<IGroupProps> = ({ item, deleteGroup }: IGroupProps): JSX.Ele
 function GroupListComponent(groupList: any[], deleteGroup: (item: IGroup) => void) {
 
     return (
-        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-            {
-                groupList.map((item, i) => {
-                    return (
-                        <>
-                            <ItemGroup key="{i}" item={item} deleteGroup={deleteGroup}></ItemGroup><Divider variant="inset" component="li" /></>
-                    )
-                })
-            }
-        </List>
+        <Box style={{ height: 'calc(100vh - 260px)', overflow: 'auto' }}>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                {
+                    groupList.map((item, i) => {
+                        return (
+                            <>
+                                <ItemGroup key="{i}" item={item} deleteGroup={deleteGroup}></ItemGroup><Divider variant="inset" component="li" /></>
+                        )
+                    })
+                }
+            </List></Box>
     );
 }
 
@@ -157,14 +157,14 @@ export const GroupList = () => {
 
         <Header title="Groups" />
 
-        <ConfirmationDialog message="Are you sure you want to save your data in the cloud?"  onConfirm={handleSaveAction} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
+        <ConfirmationDialog message="Are you sure you want to save your data in the cloud?" onConfirm={handleSaveAction} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
 
         <Grid container spacing={2} alignItems="center" justifyContent="space-between">
             <Grid item sx={{ width: '80%' }}>
-                <TextField id="standard-basic" label="Group" variant="standard" style={{ width: '100%' }}/>
+                <TextField id="standard-basic" label="Group" variant="standard" style={{ width: '100%' }} />
             </Grid>
             <Grid item>
-                <IconButton onClick={()=>setIsActiveMessageSaveData(true)}>
+                <IconButton onClick={() => setIsActiveMessageSaveData(true)}>
                     <BackupIcon />
                 </IconButton>
             </Grid>

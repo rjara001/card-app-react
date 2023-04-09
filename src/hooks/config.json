@@ -1,11 +1,11 @@
 {
     "getUser":{
-        "host" : "https://asfld0ga74.execute-api.us-east-1.amazonaws.com/dev/"
+        "host" : "https://us-central1-fladycard.cloudfunctions.net/api/"
         , "url" : "user"
         , "method" : "get"
     },
     "postUser":{
-        "host" : "https://asfld0ga74.execute-api.us-east-1.amazonaws.com/dev/"
+        "host" : "https://us-central1-fladycard.cloudfunctions.net/api/"
         , "url" : "user"
         , "method" : "post"
     }
