@@ -161,7 +161,7 @@ export const GroupList = () => {
         let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
 
         setGroups(_groups);
-        
+
         setIsSyncSuccessful(true);
     }
 
@@ -170,28 +170,31 @@ export const GroupList = () => {
         <Header title="Groups" />
 
         <MessageDialog
-                open={isSyncSuccessful}
-                // title="Sync successful!"
-                message="The sync process was complete succesfull."
-                onClose={() => setIsSyncSuccessful(false)}
-            />
+            open={isSyncSuccessful}
+            // title="Sync successful!"
+            message="The sync process was complete succesfull."
+            onClose={() => setIsSyncSuccessful(false)}
+        />
 
         <ConfirmationDialog message="Are you sure you want to save your data in the cloud?" onConfirm={handleSaveAction} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
 
         <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-            <Grid item sx={{ width: '80%' }}>
+            <Grid item xs={9} sm={9} >
                 <TextField id="standard-basic" label="Group" variant="standard" style={{ width: '100%' }} />
             </Grid>
-            <Grid item>
-                <IconButton onClick={() => handleSync()}>
-                    <CloudDownloadIcon />
-                </IconButton>
+            <Grid container xs={3} sm={3}>
+                <Grid item xs={6} sm={6}>
+                    <IconButton onClick={() => handleSync()}>
+                        <CloudDownloadIcon />
+                    </IconButton>
+                </Grid>
+                <Grid item>
+                    <IconButton onClick={() => setIsActiveMessageSaveData(true)}>
+                        <BackupIcon />
+                    </IconButton>
+                </Grid>
             </Grid>
-            <Grid item>
-                <IconButton onClick={() => setIsActiveMessageSaveData(true)}>
-                    <BackupIcon />
-                </IconButton>
-            </Grid>
+
         </Grid>
 
 
