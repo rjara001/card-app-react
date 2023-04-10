@@ -6,7 +6,7 @@ import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import StarIcon from '@mui/icons-material/Star';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { IWord, IWordProps } from "../interfaces/IWord";
-import { ofuscator } from "../util/util";
+import { getCurrentLearned, ofuscator } from "../util/util";
 
 import { PlayContext, UserContext } from "../context/context.create";
 
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     }
 });
 
-const Score = () => {
+const Score = (currentCycle:number) => {
     const { summary } = useContext(PlayContext);
 
     return <Stack spacing={2} direction="row" style={{
@@ -49,7 +49,7 @@ const Score = () => {
         </div>
 
         <div>
-            <Badge badgeContent={summary.Learned} color="success">
+            <Badge badgeContent={getCurrentLearned(summary, currentCycle)} color="success">
                 <StarIcon color="action" style={{ paddingBottom: '5px' }} />
             </Badge>
 
@@ -92,11 +92,11 @@ const Actions = (next: any, revel: any, correct: any, userInfo: any) => <div sty
         }}>Correct</Button>
     </div>
 </div>;
-const card = (word: IWord, next: any, revel: any, correct: any, userInfo: any) => (
+const card = (word: IWord, next: any, revel: any, correct: any, userInfo: any, currentCycle:number) => (
     <React.Fragment>
         <CardContent>
             <>
-                {Score()}
+                {Score(currentCycle)}
                 <Divider />
                 {Text(Word.newWord(word))}
             </>
@@ -108,7 +108,7 @@ const card = (word: IWord, next: any, revel: any, correct: any, userInfo: any) =
     </React.Fragment>
 );
 
-export const Play: FC<IWordProps> = ({ word, next, revel, correct }): JSX.Element => {
+export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle }): JSX.Element => {
     const global = useGlobalStyles();
     const classes = useStyles();
     const [textMatch, setTextMatch] = useState('')
@@ -147,7 +147,7 @@ export const Play: FC<IWordProps> = ({ word, next, revel, correct }): JSX.Elemen
 
             <Grid className={global.p10}>
                 <Box sx={{ minWidth: 275 }}>
-                    <Card variant="outlined">{card(word, next, revel, correct, userInfo)}</Card>
+                    <Card variant="outlined">{card(word, next, revel, correct, userInfo, currentCycle)}</Card>
                     {userInfo.PromptActived && <div style={{ paddingTop: '10px' }}>
                         <Grid container>
                             <Grid xs={10} sm={10}>

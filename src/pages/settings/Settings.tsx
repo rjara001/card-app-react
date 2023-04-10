@@ -81,6 +81,16 @@ export function SettingsPage() {
 
     const handleToggleActivePrompt = () => {
         userInfo.PromptActived = !userInfo.PromptActived;
+        if (userInfo.TimeOutActived>0)
+            userInfo.TimeOutActived = -1;
+
+        updateValue(userInfo);
+    }
+
+    const handleToggleActiveTimeOut = () => {
+        userInfo.TimeOutActived = (userInfo.TimeOutActived<0?5:-1);
+        if (userInfo.TimeOutActived>0)
+            userInfo.PromptActived = false;
         updateValue(userInfo);
     }
 
@@ -118,25 +128,7 @@ export function SettingsPage() {
     return (
         <MsalProvider instance={publicClientApplication}>
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <ListItem>
-                    <ListItemAvatar>
-
-                        {!userInfo.IsInLogin && <GoogleLogin
-                            clientId={CLIENT_ID} // "967034721711-20e7u0gm5bqr2ic1intjer5agfs35a5n.apps.googleusercontent.com"
-                            buttonText="Login with Google"
-                            onSuccess={onSuccess}
-                            onFailure={onFailure}
-                            cookiePolicy={'single_host_origin'}
-                            isSignedIn={true} />}
-
-                            {/* <SignInButton /> */}
-                        <Avatar>
-
-                        </Avatar>
-                    </ListItemAvatar>
-                    {userInfo.IsInLogin && <ListItemText primary={userInfo.UserName} secondary={userInfo.UserEmail} sx={{ paddingLeft: '10px' }} />}
-                </ListItem>
-                <Divider />
+                
                 <ListItem>
                     <ListItemIcon>
                         <ChangeCircleIcon />
@@ -151,7 +143,13 @@ export function SettingsPage() {
                     <ListItemText id="switch-list-label-wifi" primary="Active Prompt" />
                     <Switch checked={userInfo.PromptActived} onChange={handleToggleActivePrompt} color="primary" />
                 </ListItem>
-
+                <ListItem>
+                    <ListItemIcon>
+                        <ChangeCircleIcon />
+                    </ListItemIcon>
+                    <ListItemText id="switch-list-label-wifi" primary="Active Timeout (5s)" />
+                    <Switch checked={(userInfo.TimeOutActived>0?true:false)} onChange={handleToggleActiveTimeOut} color="primary" />
+                </ListItem>
             </List></ MsalProvider>
     );
 

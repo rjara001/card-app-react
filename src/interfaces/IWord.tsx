@@ -27,6 +27,7 @@ export interface IWordProps {
     next: (words:IWord[]) => void
     revel: (word:IWord) => void
     correct: (word:IWord) => void
+    currentCycle: number
 }
 
 

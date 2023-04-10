@@ -8,8 +8,8 @@ export const ofuscator = (text: string) => {
     return String('').padStart(text.length - 1, 'x');
 }
 
-export const countSummary = (group: IGroup): ISummary => {
-    return group.Words.reduce<ISummary>((accum, curr) => {
+export const countSummary = (group: IGroup, currentCycle: number): ISummary => {
+    return group.Words.filter(_ => _.Cycles === currentCycle).reduce<ISummary>((accum, curr) => {
         let ok: number = accum.ok, bad: number = accum.bad;
         if (curr.IsKnowed)
             ok = accum.ok + 1;
@@ -24,6 +24,18 @@ export const countSummary = (group: IGroup): ISummary => {
 export const globalSummaryDefault = {
     Learned: 0, Recongnized: 0, Known: 0, Discovered: 0, Total: 0, Unknow: 0, Summary: { ok: 0, bad: 0 }
 }
+export const getCurrentLearned = (summary: IGlobalSummary, currentCycle: number) => {
+    switch (currentCycle) {
+        case 0:
+            return summary.Learned;
+        case 1:
+            return summary.Discovered;
+        case 2:
+            return summary.Recongnized;
+        case 3:
+            return summary.Known;
+    }
+}
 
 export const globalUserDefault = {
     UserId: 'rjara'
@@ -33,6 +45,7 @@ export const globalUserDefault = {
     , UserEmail: ''
     , IsInLogin: false
     , PromptActived: false
+    , TimeOutActived: -1
 }
 
 export const groupDefault = Group.NewGroup();
