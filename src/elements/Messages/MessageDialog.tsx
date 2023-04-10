@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from "@mui/material";
+import { Alert, AlertColor, Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 
 interface ToastProps {
@@ -6,10 +6,11 @@ interface ToastProps {
     message: string;
     onClose?: (event: any, reason?: string) => void;
     autoHideDuration?: number;
+    severity?:AlertColor;
   }
   
 
-export const MessageDialog: React.FC<ToastProps> = ({ open, message, onClose, autoHideDuration = 3000 }) => {
+export const MessageDialog: React.FC<ToastProps> = ({ open, message, onClose, autoHideDuration = 3000, severity = 'success' }) => {
 
     const [show, setShow] = useState(open);
   
@@ -31,7 +32,7 @@ export const MessageDialog: React.FC<ToastProps> = ({ open, message, onClose, au
   
       return (
         <Snackbar open={show} autoHideDuration={autoHideDuration} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="success">
+          <Alert onClose={handleClose} severity={severity}>
             {message}
           </Alert>
         </Snackbar>

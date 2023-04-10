@@ -7,9 +7,9 @@ import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
-      paddingTop: '2px',
-      paddingBottom: '2px',
-      paddingLeft: '6px'
+      paddingTop: '0px',
+      paddingBottom: '0px',
+      paddingLeft: '2px'
     },
   }));
 
@@ -25,7 +25,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                         {currentCycle == 0 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Unknow" />
-                    <Chip label={value.Unknow} />
+                    <div>{value.Unknow}</div>
 
                 </ListItem>}
                 {value.Discovered + value.Unknow > 0 &&  <ListItem className={classes.listItem}>
@@ -34,7 +34,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                         {currentCycle == 1 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Discovered" />
-                    <Chip label={value.Discovered} />
+                    <div>{value.Discovered}</div>
                 </ListItem>}
                 {value.Recongnized + value.Discovered + value.Unknow > 0 &&  <ListItem className={classes.listItem}>
 
@@ -42,7 +42,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                         {currentCycle == 2 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Recongnized" />
-                    <Chip label={value.Recongnized} />
+                    <div>{value.Recongnized}</div>
                 </ListItem>}
                 {value.Known + value.Recongnized + value.Discovered + value.Unknow >0 &&  <ListItem className={classes.listItem}>
 
@@ -51,7 +51,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                     </ListItemIcon>
                     <ListItemText primary="Known" />
 
-                    <Chip label={value.Known} />
+                    <div>{value.Known}</div>
                 </ListItem>}
 
                 <Divider />
@@ -61,7 +61,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
 
                     </ListItemIcon>
                     <ListItemText primary="Learned" />
-                    <Chip label={value.Learned} />
+                    <div>{value.Learned}</div>
                 </ListItem>
                  <ListItem className={classes.listItem}>
 
@@ -69,7 +69,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
 
                     </ListItemIcon>
                     <ListItemText primary="Total" />
-                    <Chip label={value.Total} />
+                    <div>{value.Total}</div>
                 </ListItem>
             </List>
         </nav>

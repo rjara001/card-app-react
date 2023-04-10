@@ -1,6 +1,10 @@
-import { IWord } from "../interfaces/IWord.js";
+import { IWord } from "../interfaces/IWord";
+import stringSimilarity from 'string-similarity';
 
 export class Word implements IWord {
+   static similarity(key:string, value:string) {
+      return stringSimilarity.compareTwoStrings(key, value);
+   }
 
    Name: string;
    Value: string;
