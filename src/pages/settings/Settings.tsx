@@ -73,11 +73,16 @@ export function SettingsPage() {
     const { userInfo, updateValue } = useContext(UserContext);
     //   const [isToggled, setIsToggled] = useState(false);
 
-    const handleToggle = () => {
+    const handleToggleTurnCard = () => {
         // setIsToggled(!isToggled);
         userInfo.FirstShowed = !userInfo.FirstShowed;
         updateValue(userInfo);
     };
+
+    const handleToggleActivePrompt = () => {
+        userInfo.PromptActived = !userInfo.PromptActived;
+        updateValue(userInfo);
+    }
 
     const onSuccess = (response: any) => {
 
@@ -137,14 +142,14 @@ export function SettingsPage() {
                         <ChangeCircleIcon />
                     </ListItemIcon>
                     <ListItemText id="switch-list-label-wifi" primary="Turn Card" />
-                    <Switch checked={userInfo.FirstShowed} onChange={handleToggle} color="primary" />
+                    <Switch checked={userInfo.FirstShowed} onChange={handleToggleTurnCard} color="primary" />
                 </ListItem>
                 <ListItem>
                     <ListItemIcon>
                         <ChangeCircleIcon />
                     </ListItemIcon>
-                    <ListItemText id="switch-list-label-wifi" primary="Turn Card" />
-                    <button onClick={handleUploadFile}>UpLoad File</button>
+                    <ListItemText id="switch-list-label-wifi" primary="Active Prompt" />
+                    <Switch checked={userInfo.PromptActived} onChange={handleToggleActivePrompt} color="primary" />
                 </ListItem>
 
             </List></ MsalProvider>

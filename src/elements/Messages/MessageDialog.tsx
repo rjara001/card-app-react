@@ -6,35 +6,37 @@ interface ToastProps {
     message: string;
     onClose?: (event: any, reason?: string) => void;
     autoHideDuration?: number;
-    severity?:AlertColor;
-  }
-  
+    severity?: AlertColor;
+}
+
 
 export const MessageDialog: React.FC<ToastProps> = ({ open, message, onClose, autoHideDuration = 3000, severity = 'success' }) => {
 
     const [show, setShow] = useState(open);
-  
+
     useEffect(() => {
-      setShow(open);
+        setShow(open);
     }, [open]);
-  
+
     const handleClose = (event: any, reason?: string) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
-      
+
         setShow(false);
-      
+
         if (onClose) {
-          onClose(event, reason);
+            onClose(event, reason);
         }
-      };
-  
-      return (
-        <Snackbar open={show} autoHideDuration={autoHideDuration} onClose={handleClose}>
-          <Alert onClose={handleClose} severity={severity}>
-            {message}
-          </Alert>
-        </Snackbar>
+    };
+
+    return (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Snackbar open={show} autoHideDuration={autoHideDuration} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={severity} style={{ position: 'fixed', top: 30, width: '100%' }}>
+                {message}
+            </Alert>
+            </Snackbar>
+        </div >
       );
 }

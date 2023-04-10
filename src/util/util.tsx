@@ -32,6 +32,7 @@ export const globalUserDefault = {
     , UserName: ''
     , UserEmail: ''
     , IsInLogin: false
+    , PromptActived: false
 }
 
 export const groupDefault = Group.NewGroup();
