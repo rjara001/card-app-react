@@ -11,12 +11,14 @@ import Title from "../../molecule/Title";
 import Subtitle from "../../molecule/SubTitle";
 import Button from "@mui/material/Button";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import CallSplitIcon from '@mui/icons-material/CallSplit';
 import Box from "@mui/material/Box";
 import { IWord } from "../../interfaces/IWord";
 import { setLocalGroup } from "../../locals/group.local";
 import { Adapter } from "../../locals/adapter";
 import Header from "../../components/Header";
-import { Word } from "../../models/Word.js";
+import ConfirmationDialog from "../../elements/Messages/ConfirmationDialog";
+
 
 const getRandomArbitrary = (min: number, max: number, currentIndex: number): number => {
     let index = -1;
@@ -46,6 +48,8 @@ export const PlaySpace = () => {
     const [isVeryEndedCycle, setIsVeryEndedCycle] = useState(false);
     const [currentCycle, setCurrentCycle] = useState<number>(0);
     const intervalIdRef = useRef<NodeJS.Timer | null>(null);
+    const [isHistorifyMessageEnable, setIsHistorifyMessageEnable] = useState<boolean>(false);
+    const [isHistorified, setIsHistorified] = useState(false);
     // const [globalSummary, setGlobalSummary] = useState<IGlobalSummary>(globalSummaryDefault);
     const navigate = useNavigate();
 
@@ -63,6 +67,12 @@ export const PlaySpace = () => {
         saveGroup(setGetResult, result, updateWords);
 
         setIsVeryEndedCycle(false);
+    }
+
+    const handleHistorifyClick = () => {
+        Adapter.historify(userInfo.UserId, result);
+        setIsHistorifyMessageEnable(false);
+        setIsHistorified(true);
     }
 
     const nextValue = () => {
@@ -88,6 +98,8 @@ export const PlaySpace = () => {
         else {
             if (currentCycle >= 3) {
                 setIsVeryEndedCycle(true);
+                
+
             }
             else {
                 const updateWords = [...result.Words];
@@ -203,7 +215,7 @@ export const PlaySpace = () => {
         };
     }, [userInfo.TimeOutActived, result]);
 
-    if (indexWord < 0)
+    if (indexWord < 0 && !isVeryEndedCycle)
         return <div>Loading..</div>
 
     return (
@@ -221,16 +233,19 @@ export const PlaySpace = () => {
             <div>
                 <Subtitle>Group "{result.Name}"</Subtitle>
             </div>
-            <div>
+            {indexWord>0 && <div>
 
                 <Play word={result.Words[indexWord]}
                     currentCycle={currentCycle}
                     next={() => nextValue()}
                     revel={() => revel()}
                     correct={() => { correct(); }}></Play>
-            </div>
+            </div>}
 
             <div>
+                {
+                    isHistorifyMessageEnable && <ConfirmationDialog message="Words learned will move into the history group, do you want to continue?" onConfirm={handleHistorifyClick} open={isHistorifyMessageEnable} onClose={() => setIsHistorifyMessageEnable(false)} />
+                }
                 {
                     isEndedCycle &&
                     <Alert severity="info">
@@ -247,6 +262,9 @@ export const PlaySpace = () => {
                         <Box>
                             <Button variant="outlined" startIcon={<RefreshIcon />} onClick={handleRefreshClick}>
                                 Restart
+                            </Button>
+                            <Button disabled={isHistorified} variant="outlined" startIcon={<CallSplitIcon />} onClick={()=>setIsHistorifyMessageEnable(true)}>
+                                Historify
                             </Button>
                         </Box>
 

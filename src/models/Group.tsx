@@ -10,6 +10,7 @@ export class Group implements IGroup {
     Words: IWord[];
     Status: StatusChange;
     LastModified: Date;
+    static HISTORY_ID: string = "-1"
 
     constructor(Id:string) {
         this.Id=Id;
@@ -25,6 +26,13 @@ export class Group implements IGroup {
 
     static NewGroup() {
         return new Group("0"); // { Id: "0", Name: '', Words: [] }
+    }
+
+    static NewGroupHistory() {
+        const group = new Group(Group.HISTORY_ID);
+        group.Name = '__History_Learned';
+
+        return group;
     }
 
 

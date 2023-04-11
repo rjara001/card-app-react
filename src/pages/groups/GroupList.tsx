@@ -118,6 +118,7 @@ export const GroupList = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isActiveMessageSaveData, setIsActiveMessageSaveData] = useState<boolean>(false);
     const [isSyncSuccessful, setIsSyncSuccessful] = useState<boolean>(false);
+    const [messageSuccessful, setMessageSuccessful]= useState<string>('');
 
     const getData = async () => {
         setIsLoading(true);
@@ -153,6 +154,8 @@ export const GroupList = () => {
     function handleSaveAction(): void {
         Adapter.setGroups(userInfo.UserId);
         setIsActiveMessageSaveData(false);
+        setIsSyncSuccessful(true);
+        setMessageSuccessful('Upload process was complete succesfull.');
     }
 
     const handleSync = async () => {
@@ -163,6 +166,7 @@ export const GroupList = () => {
         setGroups(_groups);
 
         setIsSyncSuccessful(true);
+        setMessageSuccessful('Sync process was complete succesfull.');
     }
 
     return (<div>
@@ -172,7 +176,7 @@ export const GroupList = () => {
         <MessageDialog
             open={isSyncSuccessful}
             // title="Sync successful!"
-            message="The sync process was complete succesfull."
+            message={messageSuccessful}
             onClose={() => setIsSyncSuccessful(false)}
         />
 

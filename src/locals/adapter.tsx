@@ -1,9 +1,11 @@
+import { group } from "console";
 import { mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
 import { checkGroupConsistency } from "../util/util";
 import { localGroups, setLocalGroup, setLocalGroups } from "./group.local";
+import { Group } from "../models/Group";
 
 
 const getUserFromAPI = async (idUser: string) => {
@@ -90,6 +92,20 @@ const deleteGroup = async (idUser: string, group: IGroup, doCloud: boolean = fal
         await mutationPutUser(new User(idUser, groups));
 }
 
+const historify = async (idUser:string, group: IGroup) => {
+    const _HistoryGroup = localGroups().find(_ => _.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
+    const wordsLearned = group.Words.filter(_=>_.IsKnowed && _.Cycles === 0);
+
+    group.Words = group.Words.filter(_=>!(_.IsKnowed && _.Cycles === 0));
+
+    setGroup(idUser, group);
+
+    _HistoryGroup.Words.push(... wordsLearned);
+
+    setGroup(idUser, _HistoryGroup);
+
+}
+
 export const Adapter = {
     getGroup
     , getGroups
@@ -97,4 +113,5 @@ export const Adapter = {
     , deleteGroup
     , setGroups
     , setSync
+    , historify
 }
