@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
+import { AppBar, Toolbar, IconButton, Typography, Avatar } from '@mui/material';
+import { AccountCircle, ArrowBack } from '@mui/icons-material';
 
 interface Props {
   title: string;
@@ -18,7 +18,11 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
 
   return (
     <><AppBar position="static">
+   
           <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Avatar sx={{ width: 50, height: 50, position: 'relative',left: '-20px' }}>
+              <AccountCircle  style={{ fontSize: 58 }}/>
+            </Avatar>
               <IconButton edge="start" color="inherit" onClick={handleBackClick} sx={{ marginRight: 2 }}>
                   {hasBack===true && <ArrowBack />}
               </IconButton>

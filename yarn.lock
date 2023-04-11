@@ -8438,6 +8438,11 @@
   optionalDependencies:
     "fsevents" "^2.3.2"
 
+"react-social-login-buttons@^3.6.1":
+  "integrity" "sha512-DIz30W+C147s7wxwt8zgwjx5pE+gTJwtUzTNKpKZO3bEY06eLjcY1zvZ8h35hQd1Yjd7b4rLkeuZBwlLURYIfg=="
+  "resolved" "https://registry.npmjs.org/react-social-login-buttons/-/react-social-login-buttons-3.6.1.tgz"
+  "version" "3.6.1"
+
 "react-transition-group@^4.4.5":
   "integrity" "sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g=="
   "resolved" "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.5.tgz"
