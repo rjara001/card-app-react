@@ -2,56 +2,93 @@ import { makeStyles } from '@material-ui/styles';
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Login } from '../components/Login';
+import { UserContext } from '../context/context.create';
+import Header from '../components/Header';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import { IUserInfo } from '../interfaces/IUserInfo.js';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    padding: 4,
-    textAlign: 'center'
-  },
-  title: {
-    fontSize: '3rem',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 2,
-    position: 'fixed',
-    top: '10px'
-  },
-  description: {
-    fontSize: '1.5rem',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  button: {
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
-    padding: `2px 4px`,
-    borderRadius: '50px',
-  },
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '70vh',
+        padding: 4,
+        textAlign: 'center'
+    },
+    title: {
+        fontSize: '3rem',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 2,
+        position: 'fixed',
+        top: '10px'
+    },
+    description: {
+        fontSize: '1.5rem',
+        textAlign: 'center',
+        marginBottom: 4,
+
+    },
+    button: {
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        padding: `2px 4px`,
+        borderRadius: '50px',
+    },
 }));
 
 export const MainPage = () => {
-  const classes = useStyles();
+    const classes = useStyles();
+    const { updateValue, userInfo } = useContext(UserContext);
+    const [open, setOpen] = useState(false);
 
-  return (
-    <div className={classes.root}>
-      <Typography variant="h1" className={classes.title}>
-        FladyCard
-      </Typography>
-      <Typography variant="h4" className={classes.description}>
-        Login
-      </Typography>
-      <Typography variant="body1" className={classes.description}>
-        {/* Expand your vocabulary by learning, memorizing, and playing */}
-      </Typography>
+    const handleGoLoginClick = () => {
+        setOpen(true);
+    }
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-      <Login></Login>
-    </div>
-  );
+    const handleSelectionProvider = (user: IUserInfo) => {
+        setOpen(false);
+    }
+    return (
+        <>
+
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>
+                    <IconButton sx={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }} onClick={handleClose}>
+                        <Close />
+                    </IconButton></DialogTitle>
+                <DialogContent>
+
+                    <Login handleSelectionProvider={handleSelectionProvider}></Login>
+
+
+                </DialogContent>
+
+            </Dialog>
+
+            <div>
+                <UserContext.Provider value={{ userInfo, updateValue }}>
+                    <Header title="FladyCard" />
+                </UserContext.Provider>
+            </div > <div className={classes.root}>
+
+                <Typography variant="h4" className={classes.description}>
+                    Hey there, Welcome {userInfo.FullName}
+                </Typography>
+
+                {!userInfo.IsInLogin && <Button onClick={handleGoLoginClick}>Go to Login</Button>}
+
+                <Typography variant="body1" className={classes.description} style={{ paddingTop: '50px' }}>
+                    Expand your vocabulary by learning, memorizing, and playing
+                </Typography>
+            </div></>
+    );
 }

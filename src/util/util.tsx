@@ -38,7 +38,9 @@ export const getCurrentLearned = (summary: IGlobalSummary, currentCycle: number)
 }
 
 export const globalUserDefault = {
-    UserId: 'rjara'
+    UserId: 'anonymous'
+    , FullName: 'anonymous'
+    , imageUrl: ''
     , PlayingGroup: "0"
     , FirstShowed: false
     , UserName: ''
@@ -46,6 +48,7 @@ export const globalUserDefault = {
     , IsInLogin: false
     , PromptActived: false
     , TimeOutActived: -1
+    , provider:''
 }
 
 export const groupDefault = Group.NewGroup();
