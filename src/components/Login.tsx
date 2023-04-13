@@ -9,8 +9,6 @@ import { FC, useContext } from 'react';
 import { UserContext } from "../context/context.create";
 import { IUser } from '../interfaces/IUser.js';
 import { IUserInfo } from '../interfaces/IUserInfo';
-import { FACEBOOK_CLIENT_ID, GOOGLE_CLIENT_ID } from '../constants/config';
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -123,7 +121,7 @@ export const Login: FC<LoginProps> = ({handleSelectionProvider}): JSX.Element =>
                         {/* <GoogleLoginButton onClick={handleGoogleLogin} style={{ backgroundColor: '#DB4437', color: '#FFFFFF', height: '40px' }} /> */}
                         <GoogleLogin
                         
-                            clientId={GOOGLE_CLIENT_ID}
+                            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
                             buttonText="Login with Google"
                             style={{ background: '#dd4b39', color: 'white', padding: '10px 20px', borderRadius: '5px', fontWeight: 'bold' }}
                             disabledStyle={{ opacity: 0.6 }}
@@ -136,7 +134,7 @@ export const Login: FC<LoginProps> = ({handleSelectionProvider}): JSX.Element =>
                     <Grid item xs={12}>
                         {/* <FacebookLoginButton onClick={handleFacebookLogin} style={{ height: '40px' }} /> */}
                         <FacebookLogin
-                            appId={FACEBOOK_CLIENT_ID}
+                            appId={process.env.REACT_APP_FACEBOOK_CLIENT_ID || ''}
                             autoLoad={false}
                             fields="name,email,picture"
                             callback={handleFacebookLogin}

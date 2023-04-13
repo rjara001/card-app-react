@@ -9,8 +9,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { blue } from '@mui/material/colors';
 import { GoogleLogout, GoogleLogoutProps } from "react-google-login";
-import { GOOGLE_CLIENT_ID } from "../constants/config";
-
 
 interface Props {
   title: string;
@@ -115,7 +113,7 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
               <ListItemButton onClick={handleLogout}>
 
                     {userInfo.provider === 'google'?<GoogleLogout
-                       clientId={GOOGLE_CLIENT_ID}
+                       clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
                       buttonText="Logout"
                       onLogoutSuccess={handleLogoutSuccess}
                       onFailure={handleLogoutFailure}
