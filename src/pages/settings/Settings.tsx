@@ -1,7 +1,7 @@
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from "../../context/context.create";
+// import { UserContext } from "../../context/context.create";
 import { IUserInfo } from '../../interfaces/IUserInfo.js';
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
@@ -27,6 +27,7 @@ import { gapi } from 'gapi-script';
 
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider, useMsal } from "@azure/msal-react";
+import { UserContext } from '../../context/context.user';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

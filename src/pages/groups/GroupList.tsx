@@ -10,7 +10,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { IGroup, IGroupProps } from '../../interfaces/IGroup';
-import { UserContext } from "../../context/context.create";
+// import { UserContext } from "../../context/context.create";
 import { Adapter } from '../../locals/adapter';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BackupIcon from '@mui/icons-material/Backup';
@@ -18,8 +18,9 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { makeStyles } from '@material-ui/styles';
 import Header from '../../components/Header';
 import DeleteButton from '../../elements/DeleteButton/Index';
-import ConfirmationDialog from '../../elements/Messages/ConfirmationDialog';
-import { MessageDialog } from '../../elements/Messages/MessageDialog';
+import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
+import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
+import { UserContext } from '../../context/context.user';
 
 const useStyles = makeStyles({
     button: {

@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Typography, Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, List, ListItem, ListItemIcon, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Avatar, Button, Menu, MenuItem, List, ListItem, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
 import { AccountCircle, ArrowBack } from '@mui/icons-material';
 import { useContext, useState } from "react";
-import { userInfo } from "os";
-import FacebookLogout from 'react-facebook-login';
-import { UserContext } from "../context/context.create";
+// import { UserContext } from "../context/context.create";
 import PersonIcon from '@mui/icons-material/Person';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { blue } from '@mui/material/colors';
-import { GoogleLogout, GoogleLogoutProps } from "react-google-login";
+import { GoogleLogout } from "react-google-login";
+import { UserContext } from "../context/context.user";
+import { User } from "../models/User";
 
 interface Props {
   title: string;
@@ -31,22 +30,17 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
   };
 
   const handleLogout = () => {
-    userInfo.IsInLogin = false;
-    userInfo.UserId = '';
-    userInfo.FullName = '';
-    userInfo.imageUrl = '';
+
+    User.LoginClean(userInfo);
     
     updateValue(userInfo);
-    console.log('logout ok');
+    
   }
   const handleLogoutSuccess = () => {
     // Perform any necessary logout actions, such as clearing local storage or redirecting to the login page
 
   };
   
-  // const handleLogoutFailure = (error: GoogleLogoutProps | Readonly<GoogleLogoutProps>) => {
-  //   console.error(error);
-  // };
   const handleBackClick = () => {
 
     navigate(-1);

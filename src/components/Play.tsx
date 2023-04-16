@@ -8,14 +8,15 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { IWord, IWordProps } from "../interfaces/IWord";
 import { getCurrentLearned, ofuscator } from "../util/util";
 
-import { PlayContext, UserContext } from "../context/context.create";
+import { PlayContext } from "../context/context.create";
 
 import { makeStyles } from "@material-ui/styles";
-import { MessageDialog } from "../elements/Messages/MessageDialog";
+import { MessageDialog } from "../elements/Dialogs/MessageDialog";
 import { PalabraService } from "../util/coincidence";
 import { Word } from "../models/Word";
 import { User } from "../models/User.js";
 import { userInfo } from "os";
+import { UserContext } from "../context/context.user";
 
 const useStyles = makeStyles({
     button: {

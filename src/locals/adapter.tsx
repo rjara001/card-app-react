@@ -3,9 +3,11 @@ import { mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
-import { checkGroupConsistency } from "../util/util";
+import { checkGroupConsistency, globalUserDefault } from "../util/util";
 import { localGroups, setLocalGroup, setLocalGroups } from "./group.local";
 import { Group } from "../models/Group";
+import { UserInfo } from "os";
+import { IUserInfo } from "../interfaces/IUserInfo.js";
 
 
 const getUserFromAPI = async (idUser: string) => {
@@ -105,6 +107,13 @@ const historify = async (idUser:string, group: IGroup) => {
     setGroup(idUser, _HistoryGroup);
 
 }
+const setUser = (user:IUserInfo) => {
+    localStorage.setItem('__user', JSON.stringify(user));
+}
+
+const getUser = () => {
+    return JSON.parse(localStorage.getItem('__user') || JSON.stringify(globalUserDefault)) as unknown as IUserInfo;
+}
 
 export const Adapter = {
     getGroup
@@ -114,4 +123,6 @@ export const Adapter = {
     , setGroups
     , setSync
     , historify
+    , setUser
+    , getUser
 }

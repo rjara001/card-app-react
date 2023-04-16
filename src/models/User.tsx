@@ -1,9 +1,9 @@
-import { IFlatGroup } from "../interfaces/IFlatGroup";
-import { IFlatUser } from "../interfaces/IFlatUser";
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
+import { IUserInfo } from "../interfaces/IUserInfo";
+import { Adapter } from "../locals/adapter";
 
-import { jsonToCsv, parseCsv } from "../util/csvToJson";
+import { parseCsv } from "../util/csvToJson";
 
 export class User implements IUser {
 
@@ -21,6 +21,42 @@ export class User implements IUser {
         });
 
         return new User(resp.idUser, groups);
+    }
+
+    static LoginFacebook(userInfo:IUserInfo, response: any) {
+        userInfo.IsInLogin = true;
+        userInfo.UserId = response.email;
+        userInfo.FullName = response.name;
+        userInfo.imageUrl = response.picture.data.url;
+        userInfo.provider = 'facebook';
+        Adapter.setUser(userInfo);
+    }
+
+    static LoginGoogle(userInfo:IUserInfo, response:any){
+        userInfo.IsInLogin = true;
+        userInfo.UserId = response.profileObj.email;
+        userInfo.FullName = response.profileObj.name;
+        userInfo.imageUrl = response.profileObj.imageUrl;
+        userInfo.provider = 'google';
+        Adapter.setUser(userInfo);
+    }
+
+    static LoginCustom(userInfo:IUserInfo, response:any) {
+        userInfo.IsInLogin = true;
+        userInfo.UserId = response.idToken.payload.email;
+        userInfo.FullName = response.idToken.payload.name;
+        userInfo.provider = 'amazon';
+        Adapter.setUser(userInfo);
+    }
+
+    static LoginClean(userInfo:IUserInfo)
+    {
+        userInfo.IsInLogin = false;
+        userInfo.UserId = '';
+        userInfo.FullName = '';
+        userInfo.imageUrl = '';
+        userInfo.provider = '';
+        Adapter.setUser(userInfo);
     }
 
 }

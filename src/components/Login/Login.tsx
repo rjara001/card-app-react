@@ -1,14 +1,14 @@
 
-import { Grid, Button, TextField, Box, Divider, Typography } from '@mui/material';
-import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
+import { Grid, Box, Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
-import { Separator } from '../elements/Separator/Separator';
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import { FC, useContext } from 'react';
-import { UserContext } from "../context/context.create";
-import { IUser } from '../interfaces/IUser.js';
-import { IUserInfo } from '../interfaces/IUserInfo';
+// import { UserContext } from "../../context/context.create";
+import { IUserInfo } from '../../interfaces/IUserInfo';
+import { CustomLogin } from './CustomLogin';
+import { User } from '../../models/User';
+import { UserContext } from '../../context/context.user';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,61 +38,43 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '1.5rem',
         textAlign: 'center',
         marginBottom: 4,
-      },
+    },
 }));
 
 type LoginProps = {
-    handleSelectionProvider:(user:IUserInfo)=>void
+    handleSelectionProvider: (user: IUserInfo) => void
 }
 
-export const Login: FC<LoginProps> = ({handleSelectionProvider}): JSX.Element => {
+export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element => {
     const classes = useStyles();
     const { userInfo, updateValue } = useContext(UserContext);
+
 
     const handleGoogleLogin = () => {
         // handle Google login logic here
     };
-    const handleFacebookLogin = (response:any) => {
-        // handle the Facebook response here
-        console.log(response);
-        
-        userInfo.IsInLogin = true;
-        userInfo.UserId = response.email;
-        userInfo.FullName = response.name;
-        userInfo.imageUrl = response.picture.data.url;
-        userInfo.provider = 'facebook';
+    const handleFacebookLogin = (response: any) => {
+        User.LoginFacebook(userInfo, response);
 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
-        console.log('logeado ok');
-      };
-    
-      const handleFacebookLogout = () => {
-        // handle the Facebook logout here
-       
-      };
 
-
-    const handleCustomLogin = () => {
-        // handle custom login logic here
     };
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
-        // handle form submission logic
-    }
 
     const handleGoogleLoginSuccess = (response: any) => {
-        // Handle successful login response
-        userInfo.IsInLogin = true;
-        userInfo.UserId = response.profileObj.email;
-        userInfo.FullName = response.profileObj.name;
-        userInfo.imageUrl = response.profileObj.imageUrl;
-        userInfo.provider = 'google';
+
+        User.LoginGoogle(userInfo, response);
 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
-        console.log('logeado ok');
     };
+
+    const handleCustomLoginSuccess = (response: any) => {
+        User.LoginCustom(userInfo, response);
+
+        updateValue(userInfo);
+        handleSelectionProvider(userInfo);
+    }
 
     const handleGoogleLoginFailure = (response: any) => {
         // Handle failed login response
@@ -100,18 +82,11 @@ export const Login: FC<LoginProps> = ({handleSelectionProvider}): JSX.Element =>
 
     return (
         <div className={classes.root}>
-            <Typography variant="h4" className={classes.description}>
-                Login
-            </Typography>
+
             <Grid container spacing={0} sx={{ justifyContent: 'center' }}>
+    
                 <Grid item xs={12}>
-                    <form className={classes.form} onSubmit={handleSubmit}>
-                        <TextField size="small" className={classes.input} label="Username" inputProps={{ style: { width: '100%' } }} variant="outlined" />
-                        <TextField size="small" className={classes.input} label="Password" type="password" inputProps={{ style: { width: '100%' } }} variant="outlined" />
-                        <Button type="submit" variant="contained" className={classes.button}>Login</Button>
-                    </form>
-                </Grid>
-                <Grid item xs={12}>
+                    <CustomLogin handleCustomLoginSuccess={handleCustomLoginSuccess}></CustomLogin>
                     <Box textAlign="center" sx={{ paddingTop: '18px', paddingBottom: '18px' }}>
                         <Typography variant="subtitle2">Or sign in with social media</Typography>
                     </Box>
@@ -120,7 +95,7 @@ export const Login: FC<LoginProps> = ({handleSelectionProvider}): JSX.Element =>
                     <Grid item xs={12}>
                         {/* <GoogleLoginButton onClick={handleGoogleLogin} style={{ backgroundColor: '#DB4437', color: '#FFFFFF', height: '40px' }} /> */}
                         <GoogleLogin
-                        
+
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
                             buttonText="Login with Google"
                             style={{ background: '#dd4b39', color: 'white', padding: '10px 20px', borderRadius: '5px', fontWeight: 'bold' }}
@@ -138,8 +113,8 @@ export const Login: FC<LoginProps> = ({handleSelectionProvider}): JSX.Element =>
                             autoLoad={false}
                             fields="name,email,picture"
                             callback={handleFacebookLogin}
-                            />
-                    </Grid> 
+                        />
+                    </Grid>
                 </Grid>
             </Grid>
         </div>

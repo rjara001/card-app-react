@@ -3,7 +3,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { GlobalSummary } from "../../components/GlobalSummary";
-import { PlayContext, UserContext } from "../../context/context.create";
+import { PlayContext } from "../../context/context.create";
 import { IGroup } from "../../interfaces/IGroup";
 import { calculateSummary, countSummary, groupDefault } from "../../util/util";
 import { Play } from "../../components/Play";
@@ -17,7 +17,8 @@ import { IWord } from "../../interfaces/IWord";
 import { setLocalGroup } from "../../locals/group.local";
 import { Adapter } from "../../locals/adapter";
 import Header from "../../components/Header";
-import ConfirmationDialog from "../../elements/Messages/ConfirmationDialog";
+import ConfirmationDialog from "../../elements/Dialogs/ConfirmationDialog";
+import { UserContext } from "../../context/context.user";
 
 
 const getRandomArbitrary = (min: number, max: number, currentIndex: number): number => {

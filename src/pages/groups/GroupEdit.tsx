@@ -15,7 +15,7 @@ import Grid from "@mui/material/Grid";
 import { Box, Button, Divider, IconButton, Tab, Tabs, TextareaAutosize, Typography } from "@mui/material";
 import { makeStyles } from "@material-ui/styles";
 
-import { UserContext } from "../../context/context.create";
+// import { UserContext } from "../../context/context.create";
 import { setLocalGroup, setLocalGroups } from "../../locals/group.local";
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined'
 import EditIcon from '@mui/icons-material/Edit'
@@ -23,6 +23,7 @@ import Header from "../../components/Header";
 import { parseCsvBySeparator } from "../../util/csvToJson";
 import { IndividualEdit } from "./IIndividualProps";
 import EditBatch from "./EditBatch";
+import { UserContext } from "../../context/context.user";
 
 const useStyles = makeStyles({
     rigthButton: {

@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - yarn install
+    build:
+      commands:
+        - yarn run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+  environment:
+      variables:
+      REACT_APP_GOOGLE_CLIENT_ID: 967034721711-4i00m78jrqflbt7thoikffn8tukm98fc.apps.googleusercontent.com
+      REACT_APP_FACEBOOK_CLIENT_ID: 171404752441145

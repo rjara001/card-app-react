@@ -11,7 +11,7 @@ import { PlaySpace } from './pages/play/PlaySpace';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
-import { PlayContext, UserContext } from './context/context.create';
+import { PlayContext } from './context/context.create';
 
 import { globalSummaryDefault, globalUserDefault } from './util/util';
 import { IGlobalSummary } from './interfaces/IGlobalSummary';
@@ -25,6 +25,7 @@ import ScrollTopButton from './components/BackButton';
 import BackButton from './components/BackButton';
 import { IUserInfo } from './interfaces/IUserInfo.js';
 import {SettingsPage} from './pages/settings/Settings';
+import { UserContextProvider } from './context/context.user';
 
 function App() {
 
@@ -32,7 +33,7 @@ function App() {
   const queryClient = new QueryClient()
 
   const [summary, setSummary] = useState(globalSummaryDefault);
-  const [userInfo, setUserInfo] = useState(globalUserDefault);
+
 
 
   const playContext = {
@@ -41,17 +42,10 @@ function App() {
     }
   };
 
-  const userContext = {
-    userInfo, updateValue: (newObj: IUserInfo) => {
-      setUserInfo(prevState => ({ ...prevState, ...newObj }));
-    }
-  };
-
-
   return (
     <QueryClientProvider client={queryClient}>
       <PlayContext.Provider value={playContext}>
-        <UserContext.Provider value={userContext}>
+        <UserContextProvider>
           <CssBaseline />
           <Container>
 
@@ -70,7 +64,7 @@ function App() {
             </BrowserRouter>
 
           </Container>
-        </UserContext.Provider>
+        </UserContextProvider>
 
 
       </PlayContext.Provider>
