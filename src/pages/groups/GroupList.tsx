@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { IGroup, IGroupProps } from '../../interfaces/IGroup';
 // import { UserContext } from "../../context/context.create";
 import { Adapter } from '../../locals/adapter';
@@ -21,6 +21,7 @@ import DeleteButton from '../../elements/DeleteButton/Index';
 import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
 import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
 import { UserContext } from '../../context/context.user';
+import { filterWordByType } from '../../util/util';
 
 const useStyles = makeStyles({
     button: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles({
     }
 });
 
-const ItemGroup: FC<IGroupProps> = ({ item, deleteGroup }: IGroupProps): JSX.Element => {
+const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps): JSX.Element => {
 
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
@@ -52,9 +53,11 @@ const ItemGroup: FC<IGroupProps> = ({ item, deleteGroup }: IGroupProps): JSX.Ele
         deleteGroup(item);
 
     }
-    function handleSaveButtonEdit(item: IGroup): void {
-        navigate(`/group/${item.Id.toString()}`)
+    
+    const handleSaveButtonEdit = (item: IGroup): void => {
+        navigate(`/group/${item.Id.toString()}/${filter}`)
     }
+
     return (
         <ListItem alignItems="flex-start" id="list-group">
             <ListItemAvatar>
@@ -93,7 +96,7 @@ const ItemGroup: FC<IGroupProps> = ({ item, deleteGroup }: IGroupProps): JSX.Ele
         </ListItem>
     )
 }
-function GroupListComponent(groupList: any[], deleteGroup: (item: IGroup) => void) {
+function GroupListComponent(groupList: any[], filter: string, deleteGroup: (item: IGroup) => void) {
 
     return (
         <Box style={{ height: 'calc(100vh - 260px)', overflow: 'auto' }}>
@@ -102,7 +105,7 @@ function GroupListComponent(groupList: any[], deleteGroup: (item: IGroup) => voi
                     groupList.map((item, i) => {
                         return (
                             <>
-                                <ItemGroup key="{i}" item={item} deleteGroup={deleteGroup}></ItemGroup><Divider variant="inset" component="li" /></>
+                                <ItemGroup key="{i}" item={item} deleteGroup={deleteGroup} filter={filter}></ItemGroup><Divider variant="inset" component="li" /></>
                         )
                     })
                 }
@@ -116,10 +119,14 @@ export const GroupList = () => {
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
     const [groups, setGroups] = useState<IGroup[]>([]);
+    const [dataGroups, setDataGroups] = useState<IGroup[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isActiveMessageSaveData, setIsActiveMessageSaveData] = useState<boolean>(false);
     const [isSyncSuccessful, setIsSyncSuccessful] = useState<boolean>(false);
-    const [messageSuccessful, setMessageSuccessful]= useState<string>('');
+    const [messageSuccessful, setMessageSuccessful] = useState<string>('');
+    const [filter, setFilter] = useState('');
+
+    let { word } = useParams();
 
     const getData = async () => {
         setIsLoading(true);
@@ -127,19 +134,35 @@ export const GroupList = () => {
         let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
 
         setLocalGroups(_groups);
+        setDataGroups(_groups);
 
         setGroups(_groups);
     };
 
     useEffect(() => {
         getData();
+        setFilter(word || '');
+
     }, []);
 
     useEffect(() => {
         if (groups)
             setIsLoading(false);
-
     }, [groups]);
+
+    useEffect(()=>{
+      
+        if (filter !== undefined)
+        {
+            let _groups = dataGroups.filter(obj =>
+                {
+                    let _filter = obj.Words.filter(_ => filterWordByType(userInfo.FirstShowed?'Name':'Value', _, filter) );
+
+                    return _filter.length>0;
+                });
+            setGroups(_groups);
+        }
+    }, [filter])
 
 
     function handleAddClick(): void {
@@ -148,7 +171,7 @@ export const GroupList = () => {
 
     const deleteGroup = (item: IGroup) => {
         setGroups((prev) => {
-            return [...prev.filter((_) => _.Id !== item.Id)];
+            return [... prev.filter((_) => _.Id !== item.Id)];
         })
     }
 
@@ -185,7 +208,11 @@ export const GroupList = () => {
 
         <Grid container spacing={2} alignItems="center" justifyContent="space-between">
             <Grid item xs={9} sm={9} >
-                <TextField id="standard-basic" label="Group" variant="standard" style={{ width: '100%' }} />
+                <TextField id="standard-basic" 
+                            label="Filter" variant="standard" 
+                            style={{ width: '100%' }} 
+                            onChange={(e)=>setFilter(e.target.value)} 
+                            value={filter} />
             </Grid>
             <Grid container xs={3} sm={3}>
                 <Grid item xs={6} sm={6}>
@@ -208,7 +235,7 @@ export const GroupList = () => {
                 'Loading groups...'
             ) : (
                 <div>
-                    {GroupListComponent(groups, deleteGroup)}
+                    {GroupListComponent(groups, filter, deleteGroup)}
                 </div>
             )}
         </div>

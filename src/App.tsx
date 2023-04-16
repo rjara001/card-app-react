@@ -52,10 +52,10 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path='/' element={<HomePage></HomePage>}></Route>
-                <Route path='/groups' element={<GroupList></GroupList>}></Route>
+                <Route path='/groups/:word?' element={<GroupList></GroupList>}></Route>
                 <Route path='/settings' element={<SettingsPage></SettingsPage>}></Route>
                 <Route path='/play' element={<PlaySpace></PlaySpace>}></Route>
-                <Route path='/group/:id?' element={<GroupEdit></GroupEdit>}></Route>
+                <Route path='/group/:id?/:word?' element={<GroupEdit></GroupEdit>}></Route>
                 {/* <Route path='/upload' element={<FileUpload></FileUpload>}></Route> */}
                 
               </Routes>

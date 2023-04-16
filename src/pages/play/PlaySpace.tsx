@@ -6,7 +6,7 @@ import { GlobalSummary } from "../../components/GlobalSummary";
 import { PlayContext } from "../../context/context.create";
 import { IGroup } from "../../interfaces/IGroup";
 import { calculateSummary, countSummary, groupDefault } from "../../util/util";
-import { Play } from "../../components/Play";
+import { Play } from "../../components/Play/Play";
 import Title from "../../molecule/Title";
 import Subtitle from "../../molecule/SubTitle";
 import Button from "@mui/material/Button";
@@ -269,7 +269,8 @@ export const PlaySpace = () => {
                             </Button>
                         </Box>
 
-                    </Alert>}
+                    </Alert>
+                }
             </div>
         </div>)
 

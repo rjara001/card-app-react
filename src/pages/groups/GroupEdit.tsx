@@ -21,9 +21,9 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import EditIcon from '@mui/icons-material/Edit'
 import Header from "../../components/Header";
 import { parseCsvBySeparator } from "../../util/csvToJson";
-import { IndividualEdit } from "./IIndividualProps";
 import EditBatch from "./EditBatch";
 import { UserContext } from "../../context/context.user";
+import { EditIndividual } from "./EditIndividual";
 
 const useStyles = makeStyles({
     rigthButton: {
@@ -35,8 +35,7 @@ const useStyles = makeStyles({
 export const GroupEdit = () => {
     const classes = useStyles();
     const { userInfo, updateValue } = useContext(UserContext);
-    let { id } = useParams();
-
+    let { id, word: filter } = useParams();
 
     const [group, setGroup] = useState<IGroup>(groupDefault);
     const [word, setWord] = useState<IWord>(Word.newWord3());
@@ -57,12 +56,19 @@ export const GroupEdit = () => {
         const group = await Adapter.getGroup(userInfo.UserId, id as string) as IGroup || new Group(getLastGroupId(groups));
 
         group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
+
         setGroup(group);
     };
 
     useEffect(() => {
-        if (group.Words.length === 0)
+        if (group.Words.length === 0) {
+
             getData();
+
+        }
+
+
+
     }, []);
 
     useEffect(() => {
@@ -81,23 +87,14 @@ export const GroupEdit = () => {
     }, [newGroupElement])
 
 
-    const handleSaveClick = async (word:IWord) => {
-  
+    const handleSaveClick = async (word: IWord) => {
+
         setGroup((prev: IGroup) => {
-            const _words = prev.Words.filter(_=>_.Name !== word.Name);
+            const _words = prev.Words.filter(_ => _.Name !== word.Name);
             return { ...prev, Words: [..._words, word] }
         });
 
-        // setNewGroupElement(true);
     }
-
-    // const handleChangeWord = (e: any) => {
-    //     const { name, value } = e.target;
-    //     setWord((prevState) => ({
-    //       ...prevState,
-    //       [name]: value,
-    //     }));
-    // }
 
     const handleChangeGroupName = (e: any) => {
         setGroup((prev) => {
@@ -113,31 +110,17 @@ export const GroupEdit = () => {
         setIsEditingGroupName(false);
     }
 
-    const handleSaveBatchClick = (text:string) => {
+    const handleSaveBatchClick = (text: string) => {
         setGroup((prev: IGroup) => {
             return { ...prev, Words: parseCsvBySeparator(text, ';') }
         });
     }
 
-    const handleDeleteWord = (item:IWord)=> {
+    const handleDeleteWord = (item: IWord) => {
         setGroup((prev: IGroup) => {
-            return { ...prev, Words: prev.Words.filter(_=>_.Name !== item.Name) }
+            return { ...prev, Words: prev.Words.filter(_ => _.Name !== item.Name) }
         });
     }
-
-    // const editBatch = () => <Grid>
-    //     <TextareaAutosize
-    //         maxRows={100}
-    //         aria-label="maximum height"
-    //         placeholder="Word1;Word2&#10;Word1;Word2"
-    //         defaultValue=""
-    //         onChange={(e) => setTextBatch(e.target.value)}
-    //         value={textBatch}
-    //         style={{ height: '400px', width: '100%' }} />
-    //     <Grid item className={classes.rigthButton}>
-    //         <Button onClick={handleSaveBatchClick}>Save</Button>
-    //     </Grid>
-    // </Grid>;
 
     return (
 
@@ -154,7 +137,7 @@ export const GroupEdit = () => {
                                     label="Group Name"
                                     variant="outlined"
                                     value={group.Name}
-                                    sx={{width:'100%'}}
+                                    sx={{ width: '100%' }}
                                     onChange={handleChangeGroupName} />
                             </Grid>
                             <Grid item xs={2}>
@@ -184,13 +167,11 @@ export const GroupEdit = () => {
                 </Tabs>
                 <div>
                     <TabPanel value={tabValue} index={0}>
-                        <IndividualEdit word={word} handleSaveClick={handleSaveClick}></IndividualEdit>
                         
-                        <Divider></Divider>
-                        <WordList words={group.Words} onHandleClickDeleteItem={handleDeleteWord}></WordList>
+                        <EditIndividual userInfo={userInfo} filter={filter || ''} word={word} words={group.Words} handleDeleteWord={handleDeleteWord} handleSaveClick={handleSaveClick}></EditIndividual>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1}>
-                       <EditBatch handleSaveBatchClick={handleSaveBatchClick}></EditBatch>
+                        <EditBatch handleSaveBatchClick={handleSaveBatchClick}></EditBatch>
 
                     </TabPanel>
 

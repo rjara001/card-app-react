@@ -1,6 +1,8 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
+import { IUserInfo } from "../interfaces/IUserInfo.js";
+import { IWord } from "../interfaces/IWord.js";
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
 
@@ -88,13 +90,20 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
 export const checkGroupConsistency = (group: IGroup | undefined) => {
     if (!group)
         return undefined;
-    return { ...group, Words: group.Words.filter(_ => _ != undefined).map(_ => Word.newWord(_)) }
+    return { ...group, Words: group.Words.filter(_=> _!== undefined).map(_=> Word.newWord(_)) }
 }
 
 export const getLastGroupId = (groups: IGroup[]) => {
     return (parseInt(groups.reduce((max: IGroup, obj: IGroup) => {
         return parseInt(obj.Id) > parseInt(max.Id) ? obj : max;
     }, new Group("0")).Id) + 1).toString();
+}
+
+export const filterWordByType = (type:string, word:IWord, filter:string) => {
+    if (type==='Name')
+        return word.Name.toLowerCase().indexOf(filter.toLowerCase())>=0;
+    else
+        return word.Value.toLowerCase().indexOf(filter.toLowerCase())>=0;
 }
 // export const Base64ToJson = (base64:string) =>{
 //     let text = decodeURIComponent(escape(atob(base64)));

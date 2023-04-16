@@ -1,22 +1,21 @@
 import { CardContent, Typography, CardActions, Button, Box, Card, TextField, Grid, Badge, Divider, Stack, Chip, IconButton, AlertColor } from "@mui/material";
 import React, { createContext, FC, useContext, useEffect, useState } from "react";
-import { useGlobalStyles } from "../global.style";
+import { useGlobalStyles } from "../../global.style";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import StarIcon from '@mui/icons-material/Star';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import { IWord, IWordProps } from "../interfaces/IWord";
-import { getCurrentLearned, ofuscator } from "../util/util";
+import { IWord, IWordProps } from "../../interfaces/IWord";
+import { getCurrentLearned, ofuscator } from "../../util/util";
 
-import { PlayContext } from "../context/context.create";
+import { PlayContext } from "../../context/context.create";
 
 import { makeStyles } from "@material-ui/styles";
-import { MessageDialog } from "../elements/Dialogs/MessageDialog";
-import { PalabraService } from "../util/coincidence";
-import { Word } from "../models/Word";
-import { User } from "../models/User.js";
-import { userInfo } from "os";
-import { UserContext } from "../context/context.user";
+import { MessageDialog } from "../../elements/Dialogs/MessageDialog";
+import { PalabraService } from "../../util/coincidence";
+import { Word } from "../../models/Word";
+import { UserContext } from "../../context/context.user";
+import { TextWord } from "./TextWord";
 
 const useStyles = makeStyles({
     button: {
@@ -60,20 +59,6 @@ const Score = (currentCycle:number) => {
     </Stack>
 };
 
-
-const Text = (word: Word) => {
-    const { userInfo } = useContext(UserContext);
-
-    return (<Box>
-        <Typography variant="h6" component="div" style={{ paddingTop: '10px' }}>
-            {word.getName(userInfo.FirstShowed)}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {word.Reveled && word.getValue(userInfo.FirstShowed)}
-            {!word.Reveled && ofuscator(word.getValue(userInfo.FirstShowed))}
-        </Typography>
-    </Box>)
-};
 const Actions = (next: any, revel: any, correct: any, userInfo: any) => <div style={{
     width: '100%', display: 'flex',
 }}>
@@ -99,7 +84,8 @@ const card = (word: IWord, next: any, revel: any, correct: any, userInfo: any, c
             <>
                 {Score(currentCycle)}
                 <Divider />
-                {Text(Word.newWord(word))}
+                <TextWord word={Word.newWord(word)}></TextWord>
+                
             </>
 
         </CardContent>
