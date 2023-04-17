@@ -234,7 +234,7 @@ export const PlaySpace = () => {
             <div>
                 <Subtitle>Group "{result.Name}"</Subtitle>
             </div>
-            {indexWord>0 && <div>
+            {indexWord>=0 && <div>
 
                 <Play word={result.Words[indexWord]}
                     currentCycle={currentCycle}
