@@ -31,6 +31,7 @@ export class Word implements IWord {
    static newWord2(name: string, value: string): IWord {
       return new Word(name, value, 0, false, false);
    }
+   
    static newWord3(): IWord {
       return new Word('', '', 0, false, false);
    }

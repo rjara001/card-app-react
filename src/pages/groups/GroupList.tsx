@@ -53,7 +53,7 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
         deleteGroup(item);
 
     }
-    
+
     const handleSaveButtonEdit = (item: IGroup): void => {
         navigate(`/group/${item.Id.toString()}/${filter}`)
     }
@@ -73,16 +73,16 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
                             variant="body2"
                             color="text.primary"
                         />
-                        <div>
+                        <span>
                             {item.Words.length} total
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'right' }}>
+                        </span>
+                        <span style={{ display: 'flex', alignItems: 'right' }}>
 
                             <DeleteButton handleDeleteItem={handleButtonDelete} item={item}></DeleteButton>
                             <IconButton onClick={() => handleSaveButtonEdit(item)}>
                                 <EditIcon />
                             </IconButton>
-                        </div>
+                        </span>
                     </React.Fragment>
                 }
             />
@@ -104,12 +104,14 @@ function GroupListComponent(groupList: any[], filter: string, deleteGroup: (item
                 {
                     groupList.map((item, i) => {
                         return (
-                            <>
-                                <ItemGroup key="{i}" item={item} deleteGroup={deleteGroup} filter={filter}></ItemGroup><Divider variant="inset" component="li" /></>
+                            <React.Fragment key={i}>
+                                <ItemGroup item={item} deleteGroup={deleteGroup} filter={filter}></ItemGroup><Divider variant="inset" component="li" />
+                            </React.Fragment>
                         )
                     })
                 }
-            </List></Box>
+            </List>
+        </Box>
     );
 }
 
@@ -150,16 +152,14 @@ export const GroupList = () => {
             setIsLoading(false);
     }, [groups]);
 
-    useEffect(()=>{
-      
-        if (filter !== undefined)
-        {
-            let _groups = dataGroups.filter(obj =>
-                {
-                    let _filter = obj.Words.filter(_ => filterWordByType(userInfo.FirstShowed?'Name':'Value', _, filter) );
+    useEffect(() => {
 
-                    return _filter.length>0;
-                });
+        if (filter !== undefined) {
+            let _groups = dataGroups.filter(obj => {
+                let _filter = obj.Words.filter(_ => filterWordByType(userInfo.FirstShowed ? 'Name' : 'Value', _, filter));
+
+                return _filter.length > 0;
+            });
             setGroups(_groups);
         }
     }, [filter])
@@ -171,7 +171,7 @@ export const GroupList = () => {
 
     const deleteGroup = (item: IGroup) => {
         setGroups((prev) => {
-            return [... prev.filter((_) => _.Id !== item.Id)];
+            return [...prev.filter((_) => _.Id !== item.Id)];
         })
     }
 
@@ -206,15 +206,15 @@ export const GroupList = () => {
 
         <ConfirmationDialog message="Are you sure you want to save your data in the cloud?" onConfirm={handleSaveAction} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
 
-        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+        <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={9} sm={9} >
-                <TextField id="standard-basic" 
-                            label="Filter" variant="standard" 
-                            style={{ width: '100%' }} 
-                            onChange={(e)=>setFilter(e.target.value)} 
-                            value={filter} />
+                <TextField id="standard-basic"
+                    label="Filter" variant="standard"
+                    style={{ width: '100%' }}
+                    onChange={(e) => setFilter(e.target.value)}
+                    value={filter} />
             </Grid>
-            <Grid container xs={3} sm={3}>
+            <Grid container item xs={3} sm={3}>
                 <Grid item xs={6} sm={6}>
                     <IconButton onClick={() => handleSync()}>
                         <CloudDownloadIcon />
@@ -228,8 +228,6 @@ export const GroupList = () => {
             </Grid>
 
         </Grid>
-
-
         <div>
             {isLoading ? (
                 'Loading groups...'
@@ -241,8 +239,8 @@ export const GroupList = () => {
         </div>
         <div>
             <div className={classes.button}>
-                <IconButton aria-label="add" size="large" color="success">
-                    <AddCircleIcon fontSize="inherit" sx={{ fontSize: 40 }} onClick={handleAddClick} />
+                <IconButton aria-label="add" size="large" color="success" onClick={handleAddClick}>
+                    <AddCircleIcon fontSize="inherit" sx={{ fontSize: 40 }} />
                 </IconButton>
             </div>
         </div>

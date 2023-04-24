@@ -52,6 +52,8 @@ export const PlaySpace = () => {
     const [isHistorifyMessageEnable, setIsHistorifyMessageEnable] = useState<boolean>(false);
     const [isHistorified, setIsHistorified] = useState(false);
     // const [globalSummary, setGlobalSummary] = useState<IGlobalSummary>(globalSummaryDefault);
+    const inputTextMatchRef = useRef<HTMLInputElement>(null);
+
     const navigate = useNavigate();
 
     const handleRefreshClick = () => {
@@ -82,6 +84,10 @@ export const PlaySpace = () => {
         let arbitraryIndex = getRandomArbitrary(0, wordsFilterd.length, indexWord);
 
         let nextElement = wordsFilterd[arbitraryIndex];
+
+        if (inputTextMatchRef.current) {
+            inputTextMatchRef.current.focus();
+          }
 
         if (nextElement) {
             // nextElement.cycles++;
@@ -238,6 +244,7 @@ export const PlaySpace = () => {
 
                 <Play word={result.Words[indexWord]}
                     currentCycle={currentCycle}
+                    inputTextMatchRef={inputTextMatchRef}
                     next={() => nextValue()}
                     revel={() => revel()}
                     correct={() => { correct(); }}></Play>

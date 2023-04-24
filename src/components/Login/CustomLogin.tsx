@@ -62,7 +62,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <div>{children}</div>
                 </Box>
             )}
         </div>
@@ -165,7 +165,8 @@ export const CustomLogin: FC<CustomLoginProps> = ({ handleCustomLoginSuccess }) 
                     <Button type="submit" variant="contained" className={classes.button} onClick={signIn}>Login</Button>
                 </form>
 
-            </Grid><Grid container spacing={0} sx={{ justifyContent: 'center' }}>
+            </Grid>
+            <Grid container spacing={0} sx={{ justifyContent: 'center' }}>
                 <Grid item>
                     <Button variant="text">Forgot password?</Button>
                 </Grid>
@@ -173,7 +174,8 @@ export const CustomLogin: FC<CustomLoginProps> = ({ handleCustomLoginSuccess }) 
                 <Grid item>
                     <Button variant="text" onClick={()=>setTabValue(1)}>Not a member? Register</Button>
                 </Grid>
-            </Grid></>
+            </Grid>
+        </>
     }
 
     const register = () => {

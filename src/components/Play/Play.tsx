@@ -1,5 +1,5 @@
 import { CardContent, Typography, CardActions, Button, Box, Card, TextField, Grid, Badge, Divider, Stack, Chip, IconButton, AlertColor } from "@mui/material";
-import React, { createContext, FC, useContext, useEffect, useState } from "react";
+import React, { createContext, FC, useContext, useEffect, useRef, useState } from "react";
 import { useGlobalStyles } from "../../global.style";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
@@ -95,7 +95,7 @@ const card = (word: IWord, next: any, revel: any, correct: any, userInfo: any, c
     </React.Fragment>
 );
 
-export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle }): JSX.Element => {
+export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle, inputTextMatchRef }): JSX.Element => {
     const global = useGlobalStyles();
     const classes = useStyles();
     const [textMatch, setTextMatch] = useState('')
@@ -103,6 +103,8 @@ export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle 
     const [messageMatch, setMessageMatch] = useState('');
     const [openMessageMatch, setOpenMessageMatch] = useState<boolean>(false);
     const [severity, setSeverity] = useState<AlertColor>('success');
+    // const inputRef = useRef<HTMLInputElement>(null);
+    
     const handleMatchClick = () => {
   
  
@@ -117,7 +119,7 @@ export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle 
         }
         else
            {
-             setMessageMatch(`You weren't able to attain an ${Math.round(similarity*100).toString()}.`);
+             setMessageMatch(`You just got it a ${Math.round(similarity*100).toString()}.`);
              setSeverity('warning');
             }
         
@@ -138,7 +140,7 @@ export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle 
                     {userInfo.PromptActived && <div style={{ paddingTop: '10px' }}>
                         <Grid container>
                             <Grid xs={10} sm={10}>
-                                <TextField style={{ width: "100%" }} value={textMatch} onChange={(e)=>setTextMatch(e.target.value)}></TextField>
+                                <TextField style={{ width: "100%" }} value={textMatch} onChange={(e)=>setTextMatch(e.target.value)}  inputRef={inputTextMatchRef}></TextField>
                             </Grid>
                             
                            <Grid xs={2} sm={2}>

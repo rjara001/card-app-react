@@ -27,9 +27,7 @@ export const EditIndividual : React.FC<EditIndividualType> = ({word, userInfo, w
         setType(type);
     }
     const doFilter = (word:IWord)=> {
-  
         return filterWordByType(type, word, filterWord);
-  
     }
 
     return <>

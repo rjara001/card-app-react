@@ -1,8 +1,8 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
-import { IUserInfo } from "../interfaces/IUserInfo.js";
 import { IWord } from "../interfaces/IWord.js";
+import { StatusChange } from "../models/Enums";
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
 
@@ -96,7 +96,7 @@ export const checkGroupConsistency = (group: IGroup | undefined) => {
 export const getLastGroupId = (groups: IGroup[]) => {
     return (parseInt(groups.reduce((max: IGroup, obj: IGroup) => {
         return parseInt(obj.Id) > parseInt(max.Id) ? obj : max;
-    }, new Group("0")).Id) + 1).toString();
+    }, new Group("0", StatusChange.None)).Id) + 1).toString();
 }
 
 export const filterWordByType = (type:string, word:IWord, filter:string) => {

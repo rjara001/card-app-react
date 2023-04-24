@@ -18,7 +18,14 @@ const getUserFromAPI = async (idUser: string) => {
 
 const getGroup = async (idUser: string, idGroup: string) => {
     if (idGroup)
-        return checkGroupConsistency((await getGroups(idUser)).find(_ => _.Id.toString() === idGroup));
+    {
+        let groups = await getGroups(idUser);
+
+        let group = groups.find(_ => _.Id.toString() === idGroup);
+
+        return checkGroupConsistency(group);
+    }
+    
     return undefined;
 }
 

@@ -12,11 +12,11 @@ export class Group implements IGroup {
     LastModified: Date;
     static HISTORY_ID: string = "-1"
 
-    constructor(Id:string) {
+    constructor(Id:string, status: StatusChange) {
         this.Id=Id;
         this.Name = 'New Group';
         this.Words = []
-        this.Status = StatusChange.Created;
+        this.Status = status; // StatusChange.None;
         this.LastModified = new Date();
     }
 
@@ -25,15 +25,13 @@ export class Group implements IGroup {
     }
 
     static NewGroup() {
-        return new Group("0"); // { Id: "0", Name: '', Words: [] }
+        return new Group("0", StatusChange.None); // { Id: "0", Name: '', Words: [] }
     }
 
     static NewGroupHistory() {
-        const group = new Group(Group.HISTORY_ID);
+        const group = new Group(Group.HISTORY_ID, StatusChange.Historify);
         group.Name = '__History_Learned';
 
         return group;
     }
-
-
 }

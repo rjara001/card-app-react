@@ -1,4 +1,5 @@
-import { IGlobalSummary } from "./IGlobalSummary.js"
+import { IGlobalSummary } from "./IGlobalSummary"
+import React, { createContext, FC, useContext, useEffect, useRef, useState } from "react";
 
 export interface IWord {
     Name:string
@@ -28,6 +29,7 @@ export interface IWordProps {
     revel: (word:IWord) => void
     correct: (word:IWord) => void
     currentCycle: number
+    inputTextMatchRef: any;
 }
 
 

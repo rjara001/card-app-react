@@ -24,13 +24,13 @@ import { parseCsvBySeparator } from "../../util/csvToJson";
 import EditBatch from "./EditBatch";
 import { UserContext } from "../../context/context.user";
 import { EditIndividual } from "./EditIndividual";
+import { StatusChange } from "../../models/Enums";
 
 const useStyles = makeStyles({
     rigthButton: {
         textAlign: 'right'
     },
 });
-
 
 export const GroupEdit = () => {
     const classes = useStyles();
@@ -53,7 +53,11 @@ export const GroupEdit = () => {
         setIsLoading(true);
         const groups = await Adapter.getGroups(userInfo.UserId);
 
-        const group = await Adapter.getGroup(userInfo.UserId, id as string) as IGroup || new Group(getLastGroupId(groups));
+        let group = await Adapter.getGroup(userInfo.UserId, id as string) as IGroup;
+        
+        if (group===undefined || group.Status === StatusChange.None ) { 
+            group = new Group(getLastGroupId(groups), StatusChange.Created);
+        }
 
         group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
 
@@ -62,20 +66,16 @@ export const GroupEdit = () => {
 
     useEffect(() => {
         if (group.Words.length === 0) {
-
             getData();
-
         }
-
-
-
     }, []);
 
     useEffect(() => {
         if (group)
             setIsLoading(false);
 
-        Adapter.setGroup(userInfo.UserId, group);
+            if (group.Status !== StatusChange.None)
+                Adapter.setGroup(userInfo.UserId, group);
 
     }, [group])
 
