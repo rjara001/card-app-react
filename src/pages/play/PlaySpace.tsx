@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { GlobalSummary } from "../../components/GlobalSummary";
 import { PlayContext } from "../../context/context.create";
 import { IGroup } from "../../interfaces/IGroup";
-import { calculateSummary, countSummary, groupDefault } from "../../util/util";
+import { calculateSummary, countSummary, groupDefault, textToSpeech } from "../../util/util";
 import { Play } from "../../components/Play/Play";
 import Title from "../../molecule/Title";
 import Subtitle from "../../molecule/SubTitle";
@@ -53,6 +53,7 @@ export const PlaySpace = () => {
     const [isHistorified, setIsHistorified] = useState(false);
     // const [globalSummary, setGlobalSummary] = useState<IGlobalSummary>(globalSummaryDefault);
     const inputTextMatchRef = useRef<HTMLInputElement>(null);
+    const [audioUrl, setAudioUrl] = useState('');
 
     const navigate = useNavigate();
 
@@ -78,6 +79,14 @@ export const PlaySpace = () => {
         setIsHistorified(true);
     }
 
+    const riseTheVoice = async () => {
+        textToSpeech(result.Words[indexWord]?.Name, 'en-US');
+
+        // let urlVoice = ''; // await textToSpeech(result.Words[indexWord]?.Name, 'en-US') || '';
+
+        // setAudioUrl(urlVoice);
+    }
+
     const nextValue = () => {
 
         let wordsFilterd = result.Words.filter(_ => !_.IsKnowed && !_.Reveled && _.Cycles == currentCycle);
@@ -87,10 +96,10 @@ export const PlaySpace = () => {
 
         if (inputTextMatchRef.current) {
             inputTextMatchRef.current.focus();
-          }
+        }
 
         if (nextElement) {
-            // nextElement.cycles++;
+
             arbitraryIndex = result.Words.findIndex(_ => _.Name === nextElement.Name);
 
             setIndexWord(arbitraryIndex);
@@ -99,14 +108,10 @@ export const PlaySpace = () => {
 
             updateWords[arbitraryIndex] = nextElement;
 
-            // saveGroup(setGetResult, result, updateWords);
-            // setGetResult({ ...result, Words: updateWords });
         }
         else {
             if (currentCycle >= 3) {
                 setIsVeryEndedCycle(true);
-                
-
             }
             else {
                 const updateWords = [...result.Words];
@@ -122,7 +127,6 @@ export const PlaySpace = () => {
                 setHasDoNextValue(true);
 
                 saveGroup(setGetResult, result, updateWords);
-                // setGetResult({ ...result, Words: updateWords });
 
             }
         }
@@ -175,12 +179,12 @@ export const PlaySpace = () => {
 
     useEffect(() => {
 
-        if (hasDoNextValue===true) {
+        if (hasDoNextValue === true) {
             setHasDoNextValue(false);
             nextValue();
         }
 
-       
+
 
     }, [hasDoNextValue, currentCycle])
 
@@ -208,10 +212,15 @@ export const PlaySpace = () => {
         // This code will only run once, when the component mounts
         if (userInfo.TimeOutActived > 0 && result.Words.length > 0)
             intervalIdRef.current = setInterval(() => {
-                if (!result.Words[indexWord].Reveled)
+
+                if (indexWord >= 0 && !result.Words[indexWord].Reveled) {
                     revel();
-                else
+
+                    // riseTheVoice();
+                }
+                else {
                     nextValue();
+                }
                 console.log('nextValue');
 
             }, userInfo.TimeOutActived * 1000);
@@ -220,13 +229,15 @@ export const PlaySpace = () => {
         return () => {
             clearInterval(intervalIdRef.current as NodeJS.Timeout);
         };
-    }, [userInfo.TimeOutActived, result]);
+    }, [userInfo.TimeOutActived, indexWord, result]);
 
     if (indexWord < 0 && !isVeryEndedCycle)
         return <div>Loading..</div>
 
     return (
         <div>
+            {audioUrl && <audio src={audioUrl} controls />}
+
             <div>
                 <Header title="Play" />
             </div>
@@ -240,7 +251,7 @@ export const PlaySpace = () => {
             <div>
                 <Subtitle>Group "{result.Name}"</Subtitle>
             </div>
-            {indexWord>=0 && <div>
+            {indexWord >= 0 && <div>
 
                 <Play word={result.Words[indexWord]}
                     currentCycle={currentCycle}
@@ -271,7 +282,7 @@ export const PlaySpace = () => {
                             <Button variant="outlined" startIcon={<RefreshIcon />} onClick={handleRefreshClick}>
                                 Restart
                             </Button>
-                            <Button disabled={isHistorified} variant="outlined" startIcon={<CallSplitIcon />} onClick={()=>setIsHistorifyMessageEnable(true)}>
+                            <Button disabled={isHistorified} variant="outlined" startIcon={<CallSplitIcon />} onClick={() => setIsHistorifyMessageEnable(true)}>
                                 Historify
                             </Button>
                         </Box>

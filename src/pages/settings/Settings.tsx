@@ -151,6 +151,13 @@ export function SettingsPage() {
                     <ListItemText id="switch-list-label-wifi" primary="Active Timeout (5s)" />
                     <Switch checked={(userInfo.TimeOutActived>0?true:false)} onChange={handleToggleActiveTimeOut} color="primary" />
                 </ListItem>
+                <ListItem>
+                    <ListItemIcon>
+                        <ChangeCircleIcon />
+                    </ListItemIcon>
+                    <ListItemText id="switch-list-label-wifi" primary="Active Voice" />
+                    <Switch color="primary" />
+                </ListItem>
             </List></ MsalProvider>
     );
 

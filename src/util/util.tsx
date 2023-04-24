@@ -5,6 +5,7 @@ import { IWord } from "../interfaces/IWord.js";
 import { StatusChange } from "../models/Enums";
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
+// import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 export const ofuscator = (text: string) => {
     return String('').padStart(text.length - 1, 'x');
@@ -50,7 +51,7 @@ export const globalUserDefault = {
     , IsInLogin: false
     , PromptActived: false
     , TimeOutActived: -1
-    , provider:''
+    , provider: ''
 }
 
 export const groupDefault = Group.NewGroup();
@@ -90,7 +91,7 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
 export const checkGroupConsistency = (group: IGroup | undefined) => {
     if (!group)
         return undefined;
-    return { ...group, Words: group.Words.filter(_=> _!== undefined).map(_=> Word.newWord(_)) }
+    return { ...group, Words: group.Words.filter(_ => _ !== undefined).map(_ => Word.newWord(_)) }
 }
 
 export const getLastGroupId = (groups: IGroup[]) => {
@@ -99,13 +100,33 @@ export const getLastGroupId = (groups: IGroup[]) => {
     }, new Group("0", StatusChange.None)).Id) + 1).toString();
 }
 
-export const filterWordByType = (type:string, word:IWord, filter:string) => {
-    if (type==='Name')
-        return word.Name.toLowerCase().indexOf(filter.toLowerCase())>=0;
+export const filterWordByType = (type: string, word: IWord, filter: string) => {
+    if (type === 'Name')
+        return word.Name.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
     else
-        return word.Value.toLowerCase().indexOf(filter.toLowerCase())>=0;
+        return word.Value.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
 }
-// export const Base64ToJson = (base64:string) =>{
-//     let text = decodeURIComponent(escape(atob(base64)));
-//     return CsvToJson(text);
-// }
+
+// const client = new TextToSpeechClient();
+
+export const textToSpeech = async (text: string, languageCode: string) => {
+    try {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = languageCode;
+
+        speechSynthesis.speak(utterance);
+
+        // const [response] = await client.synthesizeSpeech({
+        //   input: { text },
+        //   voice: { languageCode: languageCode, ssmlGender: "NEUTRAL" },
+        //   audioConfig: { audioEncoding: "MP3" },
+        // });
+    
+        // const audioContent = response.audioContent;
+        // const base64String = btoa(String.fromCharCode(...new Uint8Array(audioContent)));
+        // const audioSrc = `data:audio/mp3;base64,${base64String}`;
+        // return audioSrc;
+      } catch (error) {
+        console.error(error);
+      }
+}
