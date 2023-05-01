@@ -172,7 +172,7 @@ export const CustomLogin: FC<CustomLoginProps> = ({ handleCustomLoginSuccess }) 
                 </Grid>
                 <Grid item>|</Grid>
                 <Grid item>
-                    <Button variant="text" onClick={()=>setTabValue(1)}>Not a member? Register</Button>
+                    <Button variant="text" onClick={() => setTabValue(1)}>Not a member? Register</Button>
                 </Grid>
             </Grid>
         </>

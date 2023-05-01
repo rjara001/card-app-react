@@ -82,7 +82,7 @@ export const MainPage = () => {
             </Dialog>
 
             <div>
-                <Header title="FladyCard" />
+                <Header title="Glimmind" />
             </div> 
             <div className={classes.root}>
 

@@ -1,14 +1,22 @@
 
 import { Grid, Box, Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
-import { GoogleLogin } from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import { ReactFacebookLoginProps } from 'react-facebook-login';
 import { FC, useContext } from 'react';
 // import { UserContext } from "../../context/context.create";
 import { IUserInfo } from '../../interfaces/IUserInfo';
 import { CustomLogin } from './CustomLogin';
 import { User } from '../../models/User';
 import { UserContext } from '../../context/context.user';
+import { GoogleLogin } from 'react-google-login';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+// import { FaFacebookF } from 'react-icons/fa';
+// import { Fa } from 'react-icons/fa';
+import { FaFacebookF } from 'react-icons/fa';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +47,53 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         marginBottom: 4,
     },
+    googleButton: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '48px',
+        height: '48px',
+        borderRadius: '50%',
+        backgroundColor: '#4285F4',
+        color: '#ffffff',
+        border: 'none',
+        alignText: 'center',
+        boxShadow: 'rgba(0, 0, 0, 0.3) 0px 1px 1px 1px',
+        '&:hover': {
+            backgroundColor: '#3c77d9',
+        },
+    },
+
+    facebookButton: {
+        borderRadius: '50%',
+        width: '48px',
+        height: '48px',
+        padding: 0,
+        marginRight: 2,
+        backgroundColor: '#3b5998',
+        color: 'white',
+        minWidth: 'auto',
+        '&:hover': {
+            backgroundColor: '#2f477a',
+        },
+    },
+    logo: {
+        fontSize: '24px',
+        marginRight: 1,
+    },
+
 }));
+
+function CircleFacebookButton() {
+    const classes = useStyles();
+    return (
+        <Button
+            variant="contained"
+            className={classes.facebookButton}
+            startIcon={<FaFacebookF className={classes.logo} />}
+        />
+    );
+}
 
 type LoginProps = {
     handleSelectionProvider: (user: IUserInfo) => void
@@ -53,7 +107,7 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
     const handleGoogleLogin = () => {
         // handle Google login logic here
     };
-    const handleFacebookLogin = (response: any) => {
+    const handleFacebookLoginSuccess = (response: any) => {
         User.LoginFacebook(userInfo, response);
 
         updateValue(userInfo);
@@ -84,7 +138,7 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
         <div className={classes.root}>
 
             <Grid container spacing={0} sx={{ justifyContent: 'center' }}>
-    
+
                 <Grid item xs={12}>
                     <CustomLogin handleCustomLoginSuccess={handleCustomLoginSuccess}></CustomLogin>
                     <Box textAlign="center" sx={{ paddingTop: '18px', paddingBottom: '18px' }}>
@@ -92,28 +146,32 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
                     </Box>
                 </Grid>
                 <Grid container spacing={0} sx={{ justifyContent: 'center' }}>
-                    <Grid item xs={12}>
-                        {/* <GoogleLoginButton onClick={handleGoogleLogin} style={{ backgroundColor: '#DB4437', color: '#FFFFFF', height: '40px' }} /> */}
-                        <GoogleLogin
-
-                            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
-                            buttonText="Login with Google"
-                            style={{ background: '#dd4b39', color: 'white', padding: '10px 20px', borderRadius: '5px', fontWeight: 'bold' }}
-                            disabledStyle={{ opacity: 0.6 }}
-                            onSuccess={handleGoogleLoginSuccess}
-                            onFailure={handleGoogleLoginFailure}
-                            className="google-login-button"
-                            cookiePolicy={'single_host_origin'}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        {/* <FacebookLoginButton onClick={handleFacebookLogin} style={{ height: '40px' }} /> */}
-                        <FacebookLogin
-                            appId={process.env.REACT_APP_FACEBOOK_CLIENT_ID || ''}
-                            autoLoad={false}
-                            fields="name,email,picture"
-                            callback={handleFacebookLogin}
-                        />
+                    <Grid container spacing={2}>
+                        <Grid item xs={6} sx={{ textAlign: '-webkit-right'}}>
+                            <GoogleLogin
+                                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
+                                render={renderProps => (
+                                    <button className={classes.googleButton} onClick={renderProps.onClick} disabled={renderProps.disabled}>
+                                        <FontAwesomeIcon icon={faGoogle} />
+                                    </button>
+                                )}
+                                onSuccess={handleGoogleLoginSuccess}
+                                onFailure={handleGoogleLoginFailure}
+                                cookiePolicy={'single_host_origin'}
+                            /></Grid>
+                        <Grid item xs={6}>
+                            <FacebookLogin
+                                appId={process.env.REACT_APP_FACEBOOK_CLIENT_ID || ''}
+                                fields="name,email,picture"
+                                // onClick={handleFacebookLoginSuccess}
+                                callback={handleFacebookLoginSuccess}
+                                render={(renderProps: any) => (
+                                    <Button className={classes.facebookButton} onClick={renderProps.onClick} disabled={renderProps.isDisabled}>
+                                        <FaFacebookF className={classes.logo} />
+                                    </Button>
+                                )}
+                            />
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>
