@@ -110,9 +110,9 @@ export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle,
  
         const similarity = new PalabraService(word.Name).Coincide(textMatch, !userInfo.FirstShowed);
 
-        if (similarity>=0.75)
+        if (similarity>=0.8)
         {
-            setMessageMatch(`Nice work!, you got a ${Math.round(similarity*100).toString()}% of 75%. ${word.Name} / ${textMatch}`);
+            setMessageMatch(`Nice work!, you got a ${Math.round(similarity*100).toString()}% of 80%. ${word.Name} / ${textMatch}`);
             correct(word);
             setSeverity('success');
             setTextMatch('');

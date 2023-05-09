@@ -8,7 +8,8 @@ import { Word } from "../models/Word";
 // import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 export const ofuscator = (text: string) => {
-    return String('').padStart(text.length - 1, 'x');
+    const paddedString = text.replace(/[^/]/g, 'x');
+    return paddedString;
 }
 
 export const countSummary = (group: IGroup, currentCycle: number): ISummary => {
@@ -115,7 +116,7 @@ const filterWordByWord = (word: string, filter: string) => {
 }
 
 export const filterWordByType = (type: string, word: IWord, filter: string) => {
-    
+
     if (type === 'Name')
         return filterWordByWord(word.Name.toLowerCase(), filter.toLowerCase())
     else
