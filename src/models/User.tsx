@@ -4,6 +4,7 @@ import { IUserInfo } from "../interfaces/IUserInfo";
 import { Adapter } from "../locals/adapter";
 
 import { parseCsv } from "../util/csvToJson";
+import { globalUserDefault } from "../util/util";
 
 export class User implements IUser {
 
@@ -16,6 +17,9 @@ export class User implements IUser {
     }
     
     static newUser(resp: any) {
+        if (resp==='')
+            resp = new User('', []);
+
         const groups = resp.Groups.map((_: any)=>{
             return {... _, Words : parseCsv(_.Words)}
         });
@@ -51,12 +55,10 @@ export class User implements IUser {
 
     static LoginClean(userInfo:IUserInfo)
     {
-        userInfo.IsInLogin = false;
-        userInfo.UserId = '';
-        userInfo.FullName = '';
-        userInfo.imageUrl = '';
-        userInfo.provider = '';
+        userInfo = globalUserDefault;
         Adapter.setUser(userInfo);
+
+        return userInfo;
     }
 
 }

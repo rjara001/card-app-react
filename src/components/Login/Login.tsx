@@ -17,6 +17,7 @@ import { FaFacebookF } from 'react-icons/fa';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -102,7 +103,7 @@ type LoginProps = {
 export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element => {
     const classes = useStyles();
     const { userInfo, updateValue } = useContext(UserContext);
-
+    const navigate = useNavigate();
 
     const handleGoogleLogin = () => {
         // handle Google login logic here
@@ -113,6 +114,7 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
 
+        navigate('/home');
     };
 
     const handleGoogleLoginSuccess = (response: any) => {
@@ -121,6 +123,8 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
+
+        navigate('/home');
     };
 
     const handleCustomLoginSuccess = (response: any) => {
@@ -128,6 +132,8 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
+
+        navigate('/home');
     }
 
     const handleGoogleLoginFailure = (response: any) => {

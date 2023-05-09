@@ -9,18 +9,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { IWordListProps } from '../pages/groups/IWordLIstProps.js';
 import { IItemWord } from './IItemWord';
 
-const ItemWord = ({ word, handleClickDeteleItem }: IItemWord) => {
+const ItemWord = ({ word, handleClickDeteleItem, handleSelectedItem }: IItemWord) => {
 
     return (
         <ListItem alignItems="flex-start" secondaryAction={
-            <IconButton edge="end" aria-label="delete" onClick={()=>handleClickDeteleItem(word)}>
-              <DeleteIcon />
+            <IconButton edge="end" aria-label="delete" onClick={() => handleClickDeteleItem(word)}>
+                <DeleteIcon />
             </IconButton>
-          }>
+        }>
             <ListItemAvatar>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
             </ListItemAvatar>
-            <ListItemText
+            <ListItemText onClick={()=>handleSelectedItem(word)}
                 primary={word.Name}
                 secondary={
                     <React.Fragment>
@@ -35,24 +35,26 @@ const ItemWord = ({ word, handleClickDeteleItem }: IItemWord) => {
                     </React.Fragment>
                 }
             />
-            
+
         </ListItem>
     )
 }
 
-export const WordList:FC<IWordListProps> = ({words: Words, onHandleClickDeleteItem}): JSX.Element =>{
+export const WordList: FC<IWordListProps> = ({ words: Words, onHandleClickDeleteItem, handleSelectedItem }): JSX.Element => {
 
     return (
         <div style={{ height: 300, width: '100%' }}>
-          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-            {
-                Words.map((item) => {
-                    return (
-                        <><ItemWord word={item} handleClickDeteleItem={onHandleClickDeleteItem}></ItemWord><Divider variant="inset" component="li" /></>
-                    )
-                })
-            }
-        </List>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                {
+                    Words.map((item, index) => {
+                        return (
+                            <React.Fragment key={index}>
+                                <ItemWord word={item} handleClickDeteleItem={onHandleClickDeleteItem} handleSelectedItem={handleSelectedItem}></ItemWord><Divider variant="inset" component="li" />
+                            </React.Fragment>)
+
+                    })
+                }
+            </List>
         </div>
-      );
+    );
 }

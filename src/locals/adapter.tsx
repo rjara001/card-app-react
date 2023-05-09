@@ -30,7 +30,7 @@ const getGroup = async (idUser: string, idGroup: string) => {
 }
 
 const getGroups = async (idUser: string) => {
-    const data = localGroups();
+    const data = localGroups(idUser);
 
     let groups = (data || (await getUserFromAPI(idUser) as IUser).Groups);
 
@@ -39,12 +39,12 @@ const getGroups = async (idUser: string) => {
 
 const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
     if (group != null && group.Name != undefined && group.Name != '') {
-        const groups = localGroups().filter(_ => _.Id !== group.Id);
+        const groups = localGroups(idUser).filter(_ => _.Id !== group.Id);
 
         group.LastModified = new Date();
         groups.push(group);
 
-        setLocalGroups(groups);
+        setLocalGroups(idUser, groups);
 
         if (doCloud)
             await mutationPutUser(new User(idUser, groups));
@@ -54,7 +54,7 @@ const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false)
 const setSync = async (idUser: string) => {
     let groupsFromCoud = (await getUserFromAPI(idUser) as IUser).Groups;
 
-    let groupsLocal = localGroups();
+    let groupsLocal = localGroups(idUser);
 
     if (groupsFromCoud.length >= groupsLocal.length) {
         groupsFromCoud.forEach(groupCloud => {
@@ -83,26 +83,26 @@ const setSync = async (idUser: string) => {
             }
         });
 
-    setLocalGroups(groupsLocal);
+    setLocalGroups(idUser, groupsLocal);
 }
 
 const setGroups = async (idUser: string) => {
-    const groups = localGroups();
+    const groups = localGroups(idUser);
 
     await mutationPutUser(new User(idUser, groups));
 }
 
 const deleteGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
-    const groups = localGroups().filter(_ => _.Id !== group.Id);
+    const groups = localGroups(idUser).filter(_ => _.Id !== group.Id);
 
-    setLocalGroups(groups);
+    setLocalGroups(idUser, groups);
 
     if (doCloud)
         await mutationPutUser(new User(idUser, groups));
 }
 
 const historify = async (idUser:string, group: IGroup) => {
-    const _HistoryGroup = localGroups().find(_ => _.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
+    const _HistoryGroup = localGroups(idUser).find(_ => _.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
     const wordsLearned = group.Words.filter(_=>_.IsKnowed && _.Cycles === 0);
 
     group.Words = group.Words.filter(_=>!(_.IsKnowed && _.Cycles === 0));
@@ -115,7 +115,8 @@ const historify = async (idUser:string, group: IGroup) => {
 
 }
 const setUser = (user:IUserInfo) => {
-    localStorage.setItem('__user', JSON.stringify(user));
+    // if (user.UserId!=='' && !user.IsInLogin)
+        localStorage.setItem('__user', JSON.stringify(user));
 }
 
 const getUser = () => {

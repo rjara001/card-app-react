@@ -82,7 +82,7 @@ export const GroupEdit = () => {
     useEffect(() => {
 
         if (newGroupElement)
-            setLocalGroup(group);
+            setLocalGroup(userInfo.UserId, group);
 
     }, [newGroupElement])
 
@@ -122,8 +122,12 @@ export const GroupEdit = () => {
         });
     }
 
+    const handleSelectedItem = (item:IWord) => {
+        setWord(item);
+        // console.log(item);
+    }
     return (
-
+      
         <>
             <Header title="Edit Groups" hasBack={true} />
 
@@ -168,7 +172,14 @@ export const GroupEdit = () => {
                 <div>
                     <TabPanel value={tabValue} index={0}>
                         
-                        <EditIndividual userInfo={userInfo} filter={filter || ''} word={word} words={group.Words} handleDeleteWord={handleDeleteWord} handleSaveClick={handleSaveClick}></EditIndividual>
+                        <EditIndividual 
+                                userInfo={userInfo} 
+                                filter={filter || ''} 
+                                word={word} 
+                                words={group.Words} 
+                                handleDeleteWord={handleDeleteWord} 
+                                handleSaveClick={handleSaveClick}
+                                handleSelectedItem={handleSelectedItem}></EditIndividual>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1}>
                         <EditBatch handleSaveBatchClick={handleSaveBatchClick}></EditBatch>
@@ -202,7 +213,7 @@ export const GroupEdit = () => {
             >
                 {value === index && (
                     <Box sx={{ p: 3 }}>
-                        <Typography>{children}</Typography>
+                        <span>{children}</span>
                     </Box>
                 )}
             </div>

@@ -30,13 +30,6 @@ const getRandomArbitrary = (min: number, max: number, currentIndex: number): num
     return index;
 }
 
-const saveGroup = (setGetResult: any, group: IGroup, updateWords: IWord[]) => {
-    const _group = { ...group, Words: updateWords };
-
-    setLocalGroup(_group);
-    setGetResult(_group);
-}
-
 export const PlaySpace = () => {
 
     const { userInfo } = useContext(UserContext);
@@ -56,6 +49,14 @@ export const PlaySpace = () => {
     const [audioUrl, setAudioUrl] = useState('');
 
     const navigate = useNavigate();
+
+
+    const saveGroup = (setGetResult: any, group: IGroup, updateWords: IWord[]) => {
+        const _group = { ...group, Words: updateWords };
+
+        setLocalGroup(userInfo.UserId, _group);
+        setGetResult(_group);
+    }
 
     const handleRefreshClick = () => {
         const updateWords = [...result.Words];
