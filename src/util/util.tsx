@@ -115,6 +115,7 @@ const filterWordByWord = (word: string, filter: string) => {
 }
 
 export const filterWordByType = (type: string, word: IWord, filter: string) => {
+    
     if (type === 'Name')
         return filterWordByWord(word.Name.toLowerCase(), filter.toLowerCase())
     else

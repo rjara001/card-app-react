@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { IGroup } from '../interfaces/IGroup.js';
-import { Avatar, Divider, IconButton, Link, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Avatar, Box, Divider, IconButton, Link, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import { FC } from 'react';
 import { IWord, IWordProps, IWordsProps } from '../interfaces/IWord';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,7 +20,7 @@ const ItemWord = ({ word, handleClickDeteleItem, handleSelectedItem }: IItemWord
             <ListItemAvatar>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
             </ListItemAvatar>
-            <ListItemText onClick={()=>handleSelectedItem(word)}
+            <ListItemText onClick={() => handleSelectedItem(word)}
                 primary={word.Name}
                 secondary={
                     <React.Fragment>
@@ -44,17 +44,19 @@ export const WordList: FC<IWordListProps> = ({ words: Words, onHandleClickDelete
 
     return (
         <div style={{ height: 300, width: '100%' }}>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {
-                    Words.map((item, index) => {
-                        return (
-                            <React.Fragment key={index}>
-                                <ItemWord word={item} handleClickDeteleItem={onHandleClickDeleteItem} handleSelectedItem={handleSelectedItem}></ItemWord><Divider variant="inset" component="li" />
-                            </React.Fragment>)
+            <Box style={{ height: 'calc(100vh - 260px)', overflow: 'auto' }}>
+                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                    {
+                        Words.map((item, index) => {
+                            return (
+                                <React.Fragment key={index}>
+                                    <ItemWord word={item} handleClickDeteleItem={onHandleClickDeleteItem} handleSelectedItem={handleSelectedItem}></ItemWord><Divider variant="inset" component="li" />
+                                </React.Fragment>)
 
-                    })
-                }
-            </List>
-        </div>
+                        })
+                    }
+                </List>
+            </Box>
+        </div >
     );
 }
