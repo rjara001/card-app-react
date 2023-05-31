@@ -4,6 +4,7 @@ import { IUserInfo } from "../interfaces/IUserInfo";
 import { Adapter } from "../locals/adapter";
 
 import { parseCsv } from "../util/csvToJson";
+import { globalUserDefault } from "../util/util";
 
 export class User implements IUser {
 
@@ -16,6 +17,9 @@ export class User implements IUser {
     }
     
     static newUser(resp: any) {
+        if (resp==='')
+            resp = new User('', []);
+
         const groups = resp.Groups.map((_: any)=>{
             return {... _, Words : parseCsv(_.Words)}
         });
@@ -26,6 +30,7 @@ export class User implements IUser {
     static LoginFacebook(userInfo:IUserInfo, response: any) {
         userInfo.IsInLogin = true;
         userInfo.UserId = response.email;
+        userInfo.AccessToken = response.accessToken;
         userInfo.FullName = response.name;
         userInfo.imageUrl = response.picture.data.url;
         userInfo.provider = 'facebook';
@@ -36,6 +41,7 @@ export class User implements IUser {
         userInfo.IsInLogin = true;
         userInfo.UserId = response.profileObj.email;
         userInfo.FullName = response.profileObj.name;
+        userInfo.AccessToken = response.accessToken;
         userInfo.imageUrl = response.profileObj.imageUrl;
         userInfo.provider = 'google';
         Adapter.setUser(userInfo);
@@ -45,18 +51,17 @@ export class User implements IUser {
         userInfo.IsInLogin = true;
         userInfo.UserId = response.idToken.payload.email;
         userInfo.FullName = response.idToken.payload.name;
+        userInfo.AccessToken = response.accessToken;
         userInfo.provider = 'amazon';
         Adapter.setUser(userInfo);
     }
 
     static LoginClean(userInfo:IUserInfo)
     {
-        userInfo.IsInLogin = false;
-        userInfo.UserId = '';
-        userInfo.FullName = '';
-        userInfo.imageUrl = '';
-        userInfo.provider = '';
+        userInfo = globalUserDefault;
         Adapter.setUser(userInfo);
+
+        return userInfo;
     }
 
 }

@@ -62,7 +62,7 @@ export const MainMenu = (props: Props) => {
             >
                 <BottomNavigationAction label="Home" icon={<HomeIcon />} />
                 <BottomNavigationAction label="Jugar" icon={<PlayArrowIcon />} />
-                <BottomNavigationAction label="Groups" icon={<AnimationIcon />} />
+                <BottomNavigationAction label="Collections" icon={<AnimationIcon />} />
                 <BottomNavigationAction label="Settings" icon={<LocationOnIcon />} />
             </BottomNavigation>
         </Box>

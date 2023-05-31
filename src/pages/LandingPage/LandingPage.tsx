@@ -1,18 +1,13 @@
-import { makeStyles } from '@material-ui/styles';
-
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import React, { useContext, useEffect, useState } from 'react';
-import { Login } from '../components/Login/Login';
-// import { UserContext } from '../context/context.create';
-import Header from '../components/Header';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import { IUserInfo } from '../interfaces/IUserInfo';
-import { Adapter } from '../locals/adapter';
-import { UserContext } from '../context/context.user';
-import { HeaderLand } from '../components/HeaderLand';
-import { useNavigate } from 'react-router-dom';
+import { Close } from "@mui/icons-material";
+import { Dialog, DialogTitle, IconButton, DialogContent, Typography, Button } from "@mui/material";
+import { userInfo } from "os";
+import { HeaderLand } from "../../components/HeaderLand";
+import { useContext, useEffect, useState } from "react";
+import { Login } from '../../components/Login/Login';
+import { IUserInfo } from "../../interfaces/IUserInfo";
+import { makeStyles } from "@material-ui/styles";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from '../../context/context.user';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,11 +41,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const MainPage = () => {
-    const classes = useStyles();
-    const { userInfo } = useContext(UserContext);
+export const LandingPage = () => {
     const [open, setOpen] = useState(false);
-
+    const { userInfo } = useContext(UserContext);
+    const classes = useStyles();
     const navigate = useNavigate();
 
     const handleGoLoginClick = () => {
@@ -64,12 +58,15 @@ export const MainPage = () => {
         setOpen(false);
     }
 
-    if (!userInfo.IsInLogin)
-        navigate('/');
+    useEffect(()=> {
+        if (userInfo.IsInLogin) { 
+            navigate('/home'); 
+        }
+    }, []);
+
 
     return (
         <>
-
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
                     <IconButton sx={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }} onClick={handleClose}>
@@ -82,15 +79,12 @@ export const MainPage = () => {
             </Dialog>
 
             <div>
-                <Header title="Glimmind" />
-            </div> 
+                <HeaderLand title="Glimmind" />
+            </div>
             <div className={classes.root}>
 
-                <Typography variant="h4" className={classes.description}>
-                    Hey there, Welcome {userInfo.FullName}
-                </Typography>
-
-                {!userInfo.IsInLogin && <Button onClick={handleGoLoginClick}>Go to Login</Button>}
+           { !userInfo.IsInLogin && <Button onClick={handleGoLoginClick}>Go to Login</Button>}
+           { userInfo.IsInLogin && 'Welcome ' + userInfo.FullName}
 
                 <Typography variant="body1" className={classes.description} style={{ paddingTop: '50px' }}>
                     Expand your vocabulary by learning, memorizing, and playing

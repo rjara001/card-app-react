@@ -8,7 +8,8 @@ import { Word } from "../models/Word";
 // import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 export const ofuscator = (text: string) => {
-    return String('').padStart(text.length - 1, 'x');
+    const paddedString = text.replace(/[^/]/g, 'x');
+    return paddedString;
 }
 
 export const countSummary = (group: IGroup, currentCycle: number): ISummary => {
@@ -52,6 +53,7 @@ export const globalUserDefault = {
     , PromptActived: false
     , TimeOutActived: -1
     , provider: ''
+    , AccessToken: ''
 }
 
 export const groupDefault = Group.NewGroup();
@@ -100,11 +102,26 @@ export const getLastGroupId = (groups: IGroup[]) => {
     }, new Group("0", StatusChange.None)).Id) + 1).toString();
 }
 
+const filterWordByWord = (word: string, filter: string) => {
+
+    let filterResult = false;
+
+    word.split(' ').forEach(_ => {
+        if (_ === filter) {
+            filterResult = true;
+            return;
+        }
+    });
+
+    return filterResult;
+}
+
 export const filterWordByType = (type: string, word: IWord, filter: string) => {
+
     if (type === 'Name')
-        return word.Name.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
+        return filterWordByWord(word.Name.toLowerCase(), filter.toLowerCase())
     else
-        return word.Value.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
+        return filterWordByWord(word.Value.toLowerCase(), filter.toLowerCase());
 }
 
 // const client = new TextToSpeechClient();
@@ -121,12 +138,12 @@ export const textToSpeech = async (text: string, languageCode: string) => {
         //   voice: { languageCode: languageCode, ssmlGender: "NEUTRAL" },
         //   audioConfig: { audioEncoding: "MP3" },
         // });
-    
+
         // const audioContent = response.audioContent;
         // const base64String = btoa(String.fromCharCode(...new Uint8Array(audioContent)));
         // const audioSrc = `data:audio/mp3;base64,${base64String}`;
         // return audioSrc;
-      } catch (error) {
+    } catch (error) {
         console.error(error);
-      }
+    }
 }

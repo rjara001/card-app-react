@@ -135,7 +135,7 @@ export const GroupList = () => {
 
         let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
 
-        setLocalGroups(_groups);
+        setLocalGroups(userInfo.UserId, _groups);
         setDataGroups(_groups);
 
         setGroups(_groups);
@@ -176,7 +176,8 @@ export const GroupList = () => {
     }
 
     function handleSaveAction(): void {
-        Adapter.setGroups(userInfo.UserId);
+        // Adapter.setGroups(userInfo.UserId);
+        Adapter.setDrive(userInfo);
         setIsActiveMessageSaveData(false);
         setIsSyncSuccessful(true);
         setMessageSuccessful('Upload process was complete succesfull.');
@@ -195,7 +196,7 @@ export const GroupList = () => {
 
     return (<div>
 
-        <Header title="Groups" />
+        <Header title="My Collections" />
 
         <MessageDialog
             open={isSyncSuccessful}
@@ -216,14 +217,14 @@ export const GroupList = () => {
             </Grid>
             <Grid container item xs={3} sm={3}>
                 <Grid item xs={6} sm={6}>
-                    <IconButton onClick={() => handleSync()}>
+                    {userInfo.IsInLogin && <IconButton onClick={() => handleSync()}>
                         <CloudDownloadIcon />
-                    </IconButton>
+                    </IconButton>}
                 </Grid>
                 <Grid item>
-                    <IconButton onClick={() => setIsActiveMessageSaveData(true)}>
+                    {userInfo.IsInLogin && <IconButton onClick={() => setIsActiveMessageSaveData(true)}>
                         <BackupIcon />
-                    </IconButton>
+                    </IconButton>}
                 </Grid>
             </Grid>
 

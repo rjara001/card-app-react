@@ -76,10 +76,7 @@ export const IndividualEdit: React.FC<IIndividualProps> = ({ word, userInfo, fil
 
     <Grid container spacing={3}>
       <Grid container item spacing={1} direction="column" justifyContent="center">
-        {/* <Grid>
-          {filterActive && <Chip label={filter} onDelete={handleDelete} />}
-        </Grid> */}
-
+ 
         <Grid item>
           <TextField
             sx={{ width: '100%' }}

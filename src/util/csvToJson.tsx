@@ -29,13 +29,19 @@ const parseCsv = (csv: string) => {
   return parseCsvBySeparator(rows, '\t');
 };
 
+
+const jsonToCsvRaw = (data: IWord[]) => {
+  return data.map((item) => `${item.Name}\t${item.Value}\t${item.Cycles}\t${item.IsKnowed===true?1:0}\t${item.Reveled===true?1:0}`).join('\n');
+}
+
 const jsonToCsv = (data: IWord[]) => {
-  const rows = data.map((item) => `${item.Name}\t${item.Value}\t${item.Cycles}\t${item.IsKnowed===true?1:0}\t${item.Reveled===true?1:0}`).join('\n');
+  const rows = jsonToCsvRaw(data);
   return btoa(unescape(encodeURIComponent(rows)));
 };
 
 export {
   parseCsv
   , jsonToCsv
+  , jsonToCsvRaw
   , parseCsvBySeparator
 }

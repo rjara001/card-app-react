@@ -17,7 +17,7 @@ interface Props {
 const Header: React.FC<Props> = ({ title, hasBack }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const { userInfo } = useContext(UserContext);
+  const { updateValue, userInfo } = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -31,10 +31,9 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
 
   const handleLogout = () => {
 
-    User.LoginClean(userInfo);
+    updateValue(User.LoginClean(userInfo));
     
-    updateValue(userInfo);
-    
+    navigate('/');
   }
   const handleLogoutSuccess = () => {
     // Perform any necessary logout actions, such as clearing local storage or redirecting to the login page
@@ -51,12 +50,10 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
   }
 
   const facebookLogout = ()=>{
-    userInfo.IsInLogin = false;
-    userInfo.UserId = '';
-    userInfo.FullName = '';
-    userInfo.imageUrl = '';
-    
-    updateValue(userInfo);
+
+    updateValue(User.LoginClean(userInfo));
+
+    navigate('/');
     console.log('logout ok');
   }
 
@@ -126,9 +123,5 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
   );
 };
 
-
 export default Header;
-function updateValue(userInfo: { UserId: string; FullName: string; imageUrl: string; PlayingGroup: string; FirstShowed: boolean; UserName: string; UserEmail: string; IsInLogin: boolean; PromptActived: boolean; TimeOutActived: number; }) {
-  throw new Error("Function not implemented.");
-}
 

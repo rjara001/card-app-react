@@ -9,6 +9,11 @@ export interface IGroup {
     Words: IWord[]
 }
 
+export interface IUserGroup {
+    userId: string
+    groups: IGroup[]
+}
+
 export interface IGroupProps {
     item: IGroup
     filter: string

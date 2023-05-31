@@ -15,9 +15,10 @@ type EditIndividualType = {
     words: IWord[]
     handleDeleteWord: (word:IWord)=> void
     userInfo: IUserInfo
+    handleSelectedItem: (item:IWord)=>void
 }
 
-export const EditIndividual : React.FC<EditIndividualType> = ({word, userInfo, words, filter, handleSaveClick, handleDeleteWord}) => {
+export const EditIndividual : React.FC<EditIndividualType> = ({word, userInfo, words, filter, handleSaveClick, handleDeleteWord, handleSelectedItem}) => {
     const [filterWord, setFilterWord] = useState(filter);
     const [type, setType] = useState(userInfo.FirstShowed?'Name':'Value');
 
@@ -27,12 +28,16 @@ export const EditIndividual : React.FC<EditIndividualType> = ({word, userInfo, w
         setType(type);
     }
     const doFilter = (word:IWord)=> {
-        return filterWordByType(type, word, filterWord);
+        if (filterWord.length>0)
+            return filterWordByType(type, word, filterWord);
+        else
+            return true;
     }
+
 
     return <>
 
         <IndividualEdit userInfo={userInfo}  word={word} filter={filterWord} handleSaveClick={handleSaveClick} handleWorldChanged={handleWorldChanged}></IndividualEdit>
         <Divider></Divider>
-        <WordList words={words.filter(_=> doFilter(_))} onHandleClickDeleteItem={handleDeleteWord}></WordList></>
+        <WordList words={words.filter(_=> doFilter(_))} onHandleClickDeleteItem={handleDeleteWord} handleSelectedItem={handleSelectedItem}></WordList></>
 }
