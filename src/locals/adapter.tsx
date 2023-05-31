@@ -7,7 +7,8 @@ import { checkGroupConsistency, globalUserDefault } from "../util/util";
 import { localGroups, setLocalGroup, setLocalGroups } from "./group.local";
 import { Group } from "../models/Group";
 import { UserInfo } from "os";
-import { IUserInfo } from "../interfaces/IUserInfo.js";
+import { IUserInfo } from "../interfaces/IUserInfo";
+import { saveToDrive } from "./drive";
 
 
 const getUserFromAPI = async (idUser: string) => {
@@ -123,12 +124,19 @@ const getUser = () => {
     return JSON.parse(localStorage.getItem('__user') || JSON.stringify(globalUserDefault)) as unknown as IUserInfo;
 }
 
+const setDrive = ( user: IUserInfo) => {
+    const groups = localGroups(user.UserId);
+
+    saveToDrive(user, groups);
+}
+
 export const Adapter = {
     getGroup
     , getGroups
     , setGroup
     , deleteGroup
     , setGroups
+    , setDrive
     , setSync
     , historify
     , setUser

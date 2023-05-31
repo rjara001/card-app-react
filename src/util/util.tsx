@@ -53,6 +53,7 @@ export const globalUserDefault = {
     , PromptActived: false
     , TimeOutActived: -1
     , provider: ''
+    , AccessToken: ''
 }
 
 export const groupDefault = Group.NewGroup();
