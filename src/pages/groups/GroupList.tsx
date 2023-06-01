@@ -6,6 +6,7 @@ import { setLocalGroups } from '../../locals/group.local';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -59,9 +60,10 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
     }
 
     return (
-        <ListItem alignItems="flex-start" id="list-group">
-            <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <ListItem alignItems="flex-start">
+            <ListItemAvatar style={{alignSelf: 'center'}} id='listAvatar'>
+                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
+                <CasesOutlinedIcon></CasesOutlinedIcon>
             </ListItemAvatar>
             <ListItemText
                 primary={item.Name}

@@ -20,7 +20,7 @@ export class User implements IUser {
         if (resp==='')
             resp = new User('', []);
 
-        const groups = resp.Groups.map((_: any)=>{
+        const groups = resp.Groups?.map((_: any)=>{
             return {... _, Words : parseCsv(_.Words)}
         });
 
