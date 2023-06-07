@@ -178,8 +178,8 @@ export const GroupList = () => {
     }
 
     function handleSaveAction(): void {
-        // Adapter.setGroups(userInfo.UserId);
-        Adapter.setDrive(userInfo);
+        Adapter.setGroups(userInfo.UserId);
+        // Adapter.setDrive(userInfo);
         setIsActiveMessageSaveData(false);
         setIsSyncSuccessful(true);
         setMessageSuccessful('Upload process was complete succesfull.');

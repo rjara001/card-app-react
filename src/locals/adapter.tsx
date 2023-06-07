@@ -1,5 +1,5 @@
 import { group } from "console";
-import { mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
+import { getGroupTemplate, mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
@@ -9,6 +9,15 @@ import { Group } from "../models/Group";
 import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo";
 import { saveToDrive } from "./drive";
+import { Word } from "../models/Word";
+
+
+const getGroupFromTemplate = async () : Promise<IGroup> => {
+    
+    let _group = await getGroupTemplate();
+
+    return _group.data;
+}
 
 
 const getUserFromAPI = async (idUser: string) => {
@@ -35,7 +44,7 @@ const getGroups = async (idUser: string) => {
 
     let groups = (data || (await getUserFromAPI(idUser) as IUser).Groups);
 
-    return groups;
+    return groups || [];
 }
 
 const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
@@ -141,4 +150,5 @@ export const Adapter = {
     , historify
     , setUser
     , getUser
+    , getGroupTemplate
 }

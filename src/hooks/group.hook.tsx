@@ -8,6 +8,18 @@ function getUrl(item: IApiConfig): string {
     return item.host + item.url;
 }
 
+export const getGroupTemplate = async () => {
+    let axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+        },
+        data: null
+    };
+
+    return await axios.get(getUrl(config.getTemplate), axiosConfig);
+}
+
 export const queryGetUser = async (id: string) => {
     let axiosConfig = {
         headers: {
