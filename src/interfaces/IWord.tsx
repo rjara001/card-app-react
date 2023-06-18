@@ -25,6 +25,7 @@ export interface IGlobalSummaryProps {
 
 export interface IWordProps {
     word: IWord
+    back: (words:IWord[]) => void
     next: (words:IWord[]) => void
     revel: (word:IWord) => void
     correct: (word:IWord) => void

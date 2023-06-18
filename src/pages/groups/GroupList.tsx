@@ -22,7 +22,7 @@ import DeleteButton from '../../elements/DeleteButton/Index';
 import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
 import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
 import { UserContext } from '../../context/context.user';
-import { filterWordByType } from '../../util/util';
+import { filterWordByWord } from '../../util/util';
 
 const useStyles = makeStyles({
     button: {
@@ -75,8 +75,16 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
                             variant="body2"
                             color="text.primary"
                         />
-                        <span>
-                            {item.Words.length} total
+                        <span style={{display:'flex'}}>
+                            <div>
+                                {item.Words.length} total |
+                            </div>
+                            <div>
+                                &nbsp;{`${item.Words.filter(_=>_.IsKnowed).length}`} learned |
+                            </div>
+                            <div>
+                                &nbsp;{`${item.Words.filter(_=>_.Cycles).length}`} Cycle
+                            </div>
                         </span>
                         <span style={{ display: 'flex', alignItems: 'right' }}>
 
@@ -157,10 +165,10 @@ export const GroupList = () => {
     useEffect(() => {
 
         if (filter !== undefined) {
-            let _groups = dataGroups.filter(obj => {
-                let _filter = obj.Words.filter(_ => filterWordByType(userInfo.FirstShowed ? 'Name' : 'Value', _, filter));
+            let _groups = dataGroups.filter(_group => {
+                let _filter = _group.Words.filter(word => filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter));
 
-                return _filter.length > 0;
+                return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase())>=0;
             });
             setGroups(_groups);
         }

@@ -102,26 +102,21 @@ export const getLastGroupId = (groups: IGroup[]) => {
     }, new Group("0", StatusChange.None)).Id) + 1).toString();
 }
 
-const filterWordByWord = (word: string, filter: string) => {
+export const filterWordByWord = (word: string, filter: string) => {
 
     let filterResult = false;
+    if (word===undefined)
+        return false;
 
-    word.split(' ').forEach(_ => {
-        if (_ === filter) {
-            filterResult = true;
-            return;
-        }
-    });
+    // word.split(' ').forEach(_ => {
+    //     if (_.indexOf(filter) >= 0) {
+    //         filterResult = true;
+    //         return;
+    //     }
+    // });
+    return word.indexOf(filter) >= 0;
 
-    return filterResult;
-}
-
-export const filterWordByType = (type: string, word: IWord, filter: string) => {
-
-    if (type === 'Name')
-        return filterWordByWord(word.Name.toLowerCase(), filter.toLowerCase())
-    else
-        return filterWordByWord(word.Value.toLowerCase(), filter.toLowerCase());
+    // return filterResult;
 }
 
 // const client = new TextToSpeechClient();

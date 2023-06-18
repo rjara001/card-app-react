@@ -6,19 +6,26 @@ import { Avatar, Box, Divider, IconButton, Link, List, ListItem, ListItemAvatar,
 import { FC } from 'react';
 import { IWord, IWordProps, IWordsProps } from '../interfaces/IWord';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { IWordListProps } from '../pages/groups/IWordLIstProps.js';
 import { IItemWord } from './IItemWord';
+import AbcIcon from '@mui/icons-material/Abc';
 
-const ItemWord = ({ word, handleClickDeteleItem, handleSelectedItem }: IItemWord) => {
+const ItemWord = ({ word, handleClickDeteleItem, handleClickEditItem, handleSelectedItem }: IItemWord) => {
 
+  
     return (
         <ListItem alignItems="flex-start" secondaryAction={
-            <IconButton edge="end" aria-label="delete" onClick={() => handleClickDeteleItem(word)}>
+            <><IconButton edge="end" aria-label="delete" onClick={() => handleClickDeteleItem(word)}>
                 <DeleteIcon />
-            </IconButton>
+
+            </IconButton><IconButton edge="end" aria-label="delete" onClick={() => handleClickEditItem(word)}>
+
+                    <EditIcon />
+                </IconButton></>
         }>
             <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <AbcIcon />
             </ListItemAvatar>
             <ListItemText onClick={() => handleSelectedItem(word)}
                 primary={word.Name}
@@ -31,7 +38,10 @@ const ItemWord = ({ word, handleClickDeteleItem, handleSelectedItem }: IItemWord
                             color="text.primary"
                         >
                         </Typography>
-                        {word.Value}
+                        {word.Value} | &nbsp;
+                        {word.IsKnowed?'knowed':'unknowed'} | &nbsp;
+                        {word.Reveled?'reveled':'unveiled'} | &nbsp;
+                        {`Cycles:${word.Cycles}`}
                     </React.Fragment>
                 }
             />
@@ -40,7 +50,7 @@ const ItemWord = ({ word, handleClickDeteleItem, handleSelectedItem }: IItemWord
     )
 }
 
-export const WordList: FC<IWordListProps> = ({ words: Words, onHandleClickDeleteItem, handleSelectedItem }): JSX.Element => {
+export const WordList: FC<IWordListProps> = ({ words: Words, onHandleClickDeleteItem, handleClickEditItem, handleSelectedItem }): JSX.Element => {
 
     return (
         <div style={{ height: 300, width: '100%' }}>
@@ -50,7 +60,10 @@ export const WordList: FC<IWordListProps> = ({ words: Words, onHandleClickDelete
                         Words.map((item, index) => {
                             return (
                                 <React.Fragment key={index}>
-                                    <ItemWord word={item} handleClickDeteleItem={onHandleClickDeleteItem} handleSelectedItem={handleSelectedItem}></ItemWord><Divider variant="inset" component="li" />
+                                    <ItemWord word={item} 
+                                        handleClickDeteleItem={onHandleClickDeleteItem} 
+                                        handleClickEditItem={handleClickEditItem}
+                                        handleSelectedItem={handleSelectedItem}></ItemWord><Divider variant="inset" component="li" />
                                 </React.Fragment>)
 
                         })

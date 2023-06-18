@@ -35,7 +35,7 @@ export const PlaySpace = () => {
     const { userInfo } = useContext(UserContext);
     const { summary, updateValue } = useContext(PlayContext);
     const [result, setGetResult] = useState<IGroup>(groupDefault);
-    const [indexWord, setIndexWord] = useState<number>(-1);
+    const [indexWord, setIndexWord] = useState<Array<number>>([]);
     // const [hasChanged, setHasChanged] = useState(false);
     const [hasDoNextValue, setHasDoNextValue] = useState(false);
     const [isEndedCycle, setIsEndedCycle] = useState(false);
@@ -81,17 +81,35 @@ export const PlaySpace = () => {
     }
 
     const riseTheVoice = async () => {
-        textToSpeech(result.Words[indexWord]?.Name, 'en-US');
+        textToSpeech(result.Words[getLastIndexElement()]?.Name, 'en-US');
 
         // let urlVoice = ''; // await textToSpeech(result.Words[indexWord]?.Name, 'en-US') || '';
 
         // setAudioUrl(urlVoice);
     }
 
+    const getLastIndexElement = () => {
+        return indexWord[indexWord.length - 1];
+    }
+
+    const backValue = () => {
+        if (indexWord.length > 1) {
+            // setIndexWord(item => {
+            //     let indexWord = getLastIndexElement();
+            //     let word = result.Words[indexWord];
+            //     if (!word.Reveled)
+            //         return [...item.slice(0, -1)];
+            //     return item;
+            // });
+            setIndexWord(item => [...item.slice(0, -1)]);
+
+        }
+    }
+
     const nextValue = () => {
 
         let wordsFilterd = result.Words.filter(_ => !_.IsKnowed && !_.Reveled && _.Cycles == currentCycle);
-        let arbitraryIndex = getRandomArbitrary(0, wordsFilterd.length, indexWord);
+        let arbitraryIndex = getRandomArbitrary(0, wordsFilterd.length, getLastIndexElement());
 
         let nextElement = wordsFilterd[arbitraryIndex];
 
@@ -103,7 +121,7 @@ export const PlaySpace = () => {
 
             arbitraryIndex = result.Words.findIndex(_ => _.Name === nextElement.Name);
 
-            setIndexWord(arbitraryIndex);
+            setIndexWord(_ => [..._, arbitraryIndex]);
 
             const updateWords = [...result.Words];
 
@@ -135,11 +153,11 @@ export const PlaySpace = () => {
     const revel = () => {
         const updateWords = [...result.Words];
 
-        const item = updateWords[indexWord];
+        const item = updateWords[getLastIndexElement()];
 
         item.Reveled = true;
 
-        updateWords[indexWord] = item;
+        updateWords[getLastIndexElement()] = item;
 
         saveGroup(setGetResult, result, updateWords);
         // setGetResult({ ...result, Words: updateWords });
@@ -148,11 +166,11 @@ export const PlaySpace = () => {
 
         const updateWords = [...result.Words];
 
-        const item = updateWords[indexWord];
+        const item = updateWords[getLastIndexElement()];
 
         item.IsKnowed = true;
 
-        updateWords[indexWord] = item;
+        updateWords[getLastIndexElement()] = item;
 
         saveGroup(setGetResult, result, updateWords);
         // setGetResult({ ...result, Words: updateWords });
@@ -213,8 +231,8 @@ export const PlaySpace = () => {
         // This code will only run once, when the component mounts
         if (userInfo.TimeOutActived > 0 && result.Words.length > 0)
             intervalIdRef.current = setInterval(() => {
-
-                if (indexWord >= 0 && !result.Words[indexWord].Reveled) {
+                let _indexWord = getLastIndexElement();
+                if (_indexWord >= 0 && !result.Words[_indexWord].Reveled) {
                     revel();
 
                     // riseTheVoice();
@@ -232,7 +250,7 @@ export const PlaySpace = () => {
         };
     }, [userInfo.TimeOutActived, indexWord, result]);
 
-    if (indexWord < 0 && !isVeryEndedCycle)
+    if (indexWord.length <= 0 && !isVeryEndedCycle)
         return <div>Loading..</div>
 
     return (
@@ -252,11 +270,12 @@ export const PlaySpace = () => {
             <div>
                 <Subtitle>Group "{result.Name}"</Subtitle>
             </div>
-            {indexWord >= 0 && <div>
+            {indexWord.length >= 0 && <div>
 
-                <Play word={result.Words[indexWord]}
+                <Play word={result.Words[getLastIndexElement()]}
                     currentCycle={currentCycle}
                     inputTextMatchRef={inputTextMatchRef}
+                    back={() => backValue()}
                     next={() => nextValue()}
                     revel={() => revel()}
                     correct={() => { correct(); }}></Play>
