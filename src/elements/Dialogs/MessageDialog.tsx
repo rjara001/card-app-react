@@ -33,10 +33,10 @@ export const MessageDialog: React.FC<ToastProps> = ({ open, message, onClose, au
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Snackbar open={show} autoHideDuration={autoHideDuration} onClose={handleClose}>
-            <Alert onClose={handleClose} severity={severity} style={{ position: 'fixed', top: 100, width: '100%' }}>
-                {message}
-            </Alert>
+                <Alert onClose={handleClose} severity={severity} style={{ position: 'fixed', bottom: 30, left: 0, width: '100%' }}>
+                    {message}
+                </Alert>
             </Snackbar>
         </div >
-      );
+    );
 }

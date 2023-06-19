@@ -59,14 +59,14 @@ const Score = (currentCycle: number) => {
     </Stack>
 };
 
-const Actions = (back: any,next: any, revel: any, correct: any, userInfo: any) => <div style={{
+const Actions = (backEnabled:boolean, back: any,next: any, revel: any, correct: any, userInfo: any) => <div style={{
     width: '100%', display: 'flex',
 }}>
 
     <div style={{ paddingRight: '30px' }}>
-        <Button size="small" onClick={() => {
+        {backEnabled && <Button size="small" onClick={() => {
             back();
-        }}>Back</Button>
+        }}>Back</Button>}
         <Button size="small" onClick={() => {
             next();
         }}>Next</Button>
@@ -81,7 +81,7 @@ const Actions = (back: any,next: any, revel: any, correct: any, userInfo: any) =
         }}>Correct</Button>
     </div>
 </div>;
-const card = (word: IWord, back:any, next: any, revel: any, correct: any, userInfo: any, currentCycle: number) => (
+const card = (word: IWord, backEnabled:boolean, back:any, next: any, revel: any, correct: any, userInfo: any, currentCycle: number) => (
     <React.Fragment>
         <CardContent>
             <>
@@ -93,12 +93,12 @@ const card = (word: IWord, back:any, next: any, revel: any, correct: any, userIn
 
         </CardContent>
 
-        {Actions(back, next, revel, correct, userInfo)}
+        {Actions(backEnabled, back, next, revel, correct, userInfo)}
 
     </React.Fragment>
 );
 
-export const Play: FC<IWordProps> = ({ word, back, next, revel, correct, currentCycle, inputTextMatchRef }): JSX.Element => {
+export const Play: FC<IWordProps> = ({ word, backEnabled, back, next, revel, correct, currentCycle, inputTextMatchRef }): JSX.Element => {
     const global = useGlobalStyles();
     const classes = useStyles();
     const [textMatch, setTextMatch] = useState('')
@@ -137,7 +137,7 @@ export const Play: FC<IWordProps> = ({ word, back, next, revel, correct, current
 
             <Grid className={global.p10}>
                 <Box sx={{ minWidth: 275 }}>
-                    <Card variant="outlined">{card(word, back, next, revel, correct, userInfo, currentCycle)}</Card>
+                    <Card variant="outlined">{card(word, backEnabled, back, next, revel, correct, userInfo, currentCycle)}</Card>
                     {userInfo.PromptActived && <div style={{ paddingTop: '10px' }}>
                         <Grid container>
                             <Grid xs={10} sm={10}>

@@ -92,6 +92,15 @@ export const PlaySpace = () => {
         return indexWord[indexWord.length - 1];
     }
 
+    const isAbleForBack = () => {
+        if (indexWord.length > 1) {
+            let index = indexWord[indexWord.length - 2];
+            let word = result.Words[index];
+            return !word.Reveled
+        }
+        return false;
+    }
+
     const backValue = () => {
         if (indexWord.length > 1) {
             // setIndexWord(item => {
@@ -275,6 +284,7 @@ export const PlaySpace = () => {
                 <Play word={result.Words[getLastIndexElement()]}
                     currentCycle={currentCycle}
                     inputTextMatchRef={inputTextMatchRef}
+                    backEnabled={isAbleForBack()}
                     back={() => backValue()}
                     next={() => nextValue()}
                     revel={() => revel()}
@@ -294,7 +304,7 @@ export const PlaySpace = () => {
                     </Alert>}
                 {
                     isVeryEndedCycle &&
-                    <Alert severity="success">
+                    <Alert severity="success" style={{ position: 'fixed', bottom: 30, left: 0, width: '100%' }}>
                         <AlertTitle>Great Gig!, you learned {summary.Learned} and attain an {Math.ceil(summary.Learned / summary.Total * 100)} of progress</AlertTitle>
                         <strong>You have finalized!</strong>
 
