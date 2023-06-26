@@ -117,7 +117,7 @@ export const PlaySpace = () => {
 
     const nextValue = () => {
 
-        let wordsFilterd = result.Words.filter(_ => !_.IsKnowed && !_.Reveled && _.Cycles == currentCycle);
+        let wordsFilterd = result.Words.filter(_ => _.IsKnowed===false && _.Reveled===false && _.Cycles == currentCycle);
         let arbitraryIndex = getRandomArbitrary(0, wordsFilterd.length, getLastIndexElement());
 
         let nextElement = wordsFilterd[arbitraryIndex];
