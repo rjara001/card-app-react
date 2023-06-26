@@ -39,6 +39,7 @@ export const GroupEdit = () => {
 
     const [group, setGroup] = useState<IGroup>(groupDefault);
     const [word, setWord] = useState<IWord>(Word.newWord3());
+    const [wordEditing, setWordEditing] = useState<IWord>(Word.newWord3());
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [newGroupElement, setNewGroupElement] = useState<boolean>(false);
     const [isEditingGroupName, setIsEditingGroupName] = useState(false);
@@ -90,7 +91,8 @@ export const GroupEdit = () => {
     const handleSaveClick = async (word: IWord) => {
 
         setGroup((prev: IGroup) => {
-            const _words = prev.Words.filter(_ => _.Name !== word.Name);
+            
+            const _words = prev.Words.filter(_ => _.Name !== word.Name && _.Name !== wordEditing.Name);
             return { ...prev, Words: [..._words, word] }
         });
 
@@ -123,6 +125,8 @@ export const GroupEdit = () => {
     }
 
     const handleEditWord = (item:IWord) => {
+        setWordEditing(item);
+
         setWord(item);
     }
 
