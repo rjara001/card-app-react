@@ -5,20 +5,23 @@ import { useContext, useState } from "react";
 // import { UserContext } from "../context/context.create";
 import PersonIcon from '@mui/icons-material/Person';
 import { blue } from '@mui/material/colors';
-import { GoogleLogout } from "react-google-login";
-import { UserContext } from "../context/context.user";
+// import { GoogleLogout } from "react-google-login";
+// import { UserContext } from "../context/context.user";
 import { User } from "../models/User";
+import { useKeycloak } from '@react-keycloak/web';
+import { UserContext } from "../context/context.user";
 
 interface Props {
   title: string;
   hasBack?: boolean;
+  logOut?: ()=>void
 }
 
-const Header: React.FC<Props> = ({ title, hasBack }) => {
+export const Header: React.FC<Props> = ({ title, hasBack, logOut }) => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const { userInfo } = useContext(UserContext);
-
+  const { keycloak } = useKeycloak();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleAvatarClick = (event: any) => {
@@ -29,35 +32,16 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-
-    User.LoginClean(userInfo);
-    
-    updateValue(userInfo);
-    
-  }
-  const handleLogoutSuccess = () => {
-    // Perform any necessary logout actions, such as clearing local storage or redirecting to the login page
-
-  };
-  
   const handleBackClick = () => {
 
     navigate(-1);
 
   };
-  function handleLogoutFailure(): void {
-    throw new Error("Function not implemented.");
-  }
 
-  const facebookLogout = ()=>{
-    userInfo.IsInLogin = false;
-    userInfo.UserId = '';
-    userInfo.FullName = '';
-    userInfo.imageUrl = '';
-    
-    updateValue(userInfo);
-    console.log('logout ok');
+  const _logout = () =>{
+    keycloak.logout();
+    User.LoginClean(userInfo);
+    navigate("/");
   }
 
   return (
@@ -72,8 +56,8 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
           <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
             {title}
           </Typography>
-          {userInfo.IsInLogin
-            ? <Avatar alt={userInfo.FullName} src={userInfo.imageUrl} onClick={handleAvatarClick}/>
+          {keycloak?.authenticated
+            ? <Avatar alt={keycloak?.tokenParsed?.name} src={keycloak?.tokenParsed?.imageUrl} onClick={handleAvatarClick}/>
             : <Avatar sx={{ width: 40, height: 40 }} onClick={handleAvatarClick}>
               <AccountCircle />
             </Avatar>
@@ -82,7 +66,7 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
         </Toolbar>
       </AppBar>
 
-      {userInfo.IsInLogin===true && <Menu
+      {keycloak.authenticated===true && <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
@@ -100,20 +84,13 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
                     <PersonIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={userInfo.UserId} />
+                <ListItemText primary={keycloak?.tokenParsed?.email} />
               </ListItemButton>
             </ListItem>
             <ListItem disableGutters>
-              <ListItemButton onClick={handleLogout}>
+              <ListItemButton>
 
-                    {userInfo.provider === 'google'?<GoogleLogout
-                       clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
-                      buttonText="Logout"
-                      onLogoutSuccess={handleLogoutSuccess}
-                      onFailure={handleLogoutFailure}
-                    />:<Button onClick={facebookLogout}>Logout</Button>
-                  
-                  }
+                    <Button onClick={_logout}>Logout</Button>
 
               </ListItemButton>
             </ListItem>
@@ -125,10 +102,3 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
     </>
   );
 };
-
-
-export default Header;
-function updateValue(userInfo: { UserId: string; FullName: string; imageUrl: string; PlayingGroup: string; FirstShowed: boolean; UserName: string; UserEmail: string; IsInLogin: boolean; PromptActived: boolean; TimeOutActived: number; }) {
-  throw new Error("Function not implemented.");
-}
-

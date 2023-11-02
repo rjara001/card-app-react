@@ -40,6 +40,15 @@ export class User implements IUser {
         userInfo.provider = 'google';
         Adapter.setUser(userInfo);
     }
+    
+    static Login(userInfo:IUserInfo, keycloak:any){
+        userInfo.keycloak = keycloak;
+        userInfo.UserId = keycloak.tokenParsed.email;
+        userInfo.FullName = keycloak.tokenParsed.name;
+        // userInfo.imageUrl = keycloak.tokenParsed.imageUrl;
+      
+        Adapter.setUser(userInfo);
+    }
 
     static LoginCustom(userInfo:IUserInfo, response:any) {
         userInfo.IsInLogin = true;
@@ -56,6 +65,9 @@ export class User implements IUser {
         userInfo.FullName = '';
         userInfo.imageUrl = '';
         userInfo.provider = '';
+
+        Adapter.cleanLocalGroups();
+
         Adapter.setUser(userInfo);
     }
 

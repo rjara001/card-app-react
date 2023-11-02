@@ -21,7 +21,7 @@ export class Group implements IGroup {
     }
 
     static toFlatGroup(group: IGroup): IFlatGroup {
-        return {... group, Words: jsonToCsv(group.Words)};
+        return {...group, Words: jsonToCsv(group.Words)};
     }
 
     static NewGroup() {

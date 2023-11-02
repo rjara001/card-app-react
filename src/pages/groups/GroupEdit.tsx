@@ -19,7 +19,7 @@ import { makeStyles } from "@material-ui/styles";
 import { setLocalGroup, setLocalGroups } from "../../locals/group.local";
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined'
 import EditIcon from '@mui/icons-material/Edit'
-import Header from "../../components/Header";
+import {Header} from "../../components/Header";
 import { parseCsvBySeparator } from "../../util/csvToJson";
 import EditBatch from "./EditBatch";
 import { UserContext } from "../../context/context.user";

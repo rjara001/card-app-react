@@ -1,11 +1,11 @@
 {
     "getUser":{
-        "host" : "https://us-central1-fladycard.cloudfunctions.net/api/"
+        "host" : "http://localhost:3100/"
         , "url" : "user"
         , "method" : "get"
     },
     "postUser":{
-        "host" : "https://us-central1-fladycard.cloudfunctions.net/api/"
+        "host" : "http://localhost:3100/"
         , "url" : "user"
         , "method" : "post"
     }

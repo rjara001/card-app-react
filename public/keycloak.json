@@ -1,0 +1,10 @@
+{
+  "realm": "Glimmind",
+  "auth-server-url": "http://localhost:8180/",
+  "ssl-required": "external",
+  "resource": "Glimmind",
+  "credentials": {
+    "secret": "pbdXLv8375GtPGDdX1F7ck6uwGJwaa1A"
+  },
+  "confidential-port": 0
+}

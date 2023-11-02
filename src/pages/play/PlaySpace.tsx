@@ -7,7 +7,6 @@ import { PlayContext } from "../../context/context.create";
 import { IGroup } from "../../interfaces/IGroup";
 import { calculateSummary, countSummary, groupDefault, textToSpeech } from "../../util/util";
 import { Play } from "../../components/Play/Play";
-import Title from "../../molecule/Title";
 import Subtitle from "../../molecule/SubTitle";
 import Button from "@mui/material/Button";
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -16,16 +15,15 @@ import Box from "@mui/material/Box";
 import { IWord } from "../../interfaces/IWord";
 import { setLocalGroup } from "../../locals/group.local";
 import { Adapter } from "../../locals/adapter";
-import Header from "../../components/Header";
+import {Header} from "../../components/Header";
 import ConfirmationDialog from "../../elements/Dialogs/ConfirmationDialog";
 import { UserContext } from "../../context/context.user";
-
 
 const getRandomArbitrary = (min: number, max: number, currentIndex: number): number => {
     let index = -1;
     do {
         index = Math.floor(Math.random() * (max - min) + min);
-    } while (index == currentIndex && max > 1)
+    } while (index === currentIndex && max > 1)
 
     return index;
 }
@@ -183,9 +181,6 @@ export const PlaySpace = () => {
             setHasDoNextValue(false);
             nextValue();
         }
-
-
-
     }, [hasDoNextValue, currentCycle])
 
     useEffect(() => {

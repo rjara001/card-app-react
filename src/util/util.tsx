@@ -5,7 +5,6 @@ import { IWord } from "../interfaces/IWord.js";
 import { StatusChange } from "../models/Enums";
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
-// import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 export const ofuscator = (text: string) => {
     return String('').padStart(text.length - 1, 'x');
@@ -85,7 +84,6 @@ export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSumma
         , Unknow: group.Words.length - (Learned + Recongnized + Known + Discovered)
         , Summary: summary
     }
-
 }
 
 export const checkGroupConsistency = (group: IGroup | undefined) => {

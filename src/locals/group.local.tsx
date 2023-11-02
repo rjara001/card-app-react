@@ -1,30 +1,28 @@
-import { IGroup } from "../interfaces/IGroup.js";
+import { IGroup } from "../interfaces/IGroup";
+import { Adapter } from "./adapter";
 
 
 export const setLocalGroup = (group:IGroup) => {
-    let groups = localGroups();
+    Adapter.setLocalGroup(group);
+    // let groups = localGroups();
 
-    if (group.Id==="0")
-        group.Id = (groups.length+1).toString();
+    // if (group.Id==="0")
+    //     group.Id = (groups.length+1).toString();
 
-    let newGroups = groups.filter(_=>_.Id !== group.Id);
+    // let newGroups = groups.filter(_=>_.Id !== group.Id);
 
-    newGroups.push(group);
+    // newGroups.push(group);
 
-    setLocalGroups(newGroups);
+    // setLocalGroups(newGroups);
 }
 
-export const localGroups = (): IGroup[] => {
+export const getLocalGroups = (): IGroup[] => {
 
-    let data = localStorage.getItem('groups') as string;
-
-    const groups = (data)?JSON.parse(data):undefined;
-
-    return groups;
+    return Adapter.getLocalGroups();
 }
 
 export const setLocalGroups = (groups: IGroup[]) => {
 
-    localStorage.setItem('groups', JSON.stringify(groups));
+    Adapter.setLocalGroups(groups);
 
 }   

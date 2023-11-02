@@ -10,4 +10,5 @@ export interface IUserInfo {
     IsInLogin: boolean
     PromptActived: boolean
     TimeOutActived: number
+    keycloak: any
 }
