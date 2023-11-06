@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, IconButton, Typography, Avatar, Button, Menu, MenuItem, List, ListItem, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
 import { AccountCircle, ArrowBack } from '@mui/icons-material';
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // import { UserContext } from "../context/context.create";
 import PersonIcon from '@mui/icons-material/Person';
 import { blue } from '@mui/material/colors';
@@ -38,10 +38,23 @@ export const Header: React.FC<Props> = ({ title, hasBack, logOut }) => {
 
   };
 
+  useEffect(()=>{
+    if (!keycloak.authenticated && window.location.pathname!=='/')
+    {
+      navigate("/");
+    }
+  })
+
   const _logout = () =>{
-    keycloak.logout();
-    User.LoginClean(userInfo);
-    navigate("/");
+    try {
+      keycloak.logout();
+      User.LoginClean(userInfo);
+      navigate("/");
+    }
+    catch(e) {
+      console.log(e);
+    }
+
   }
 
   return (
