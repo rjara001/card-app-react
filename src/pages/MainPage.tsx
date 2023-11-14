@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/styles";
 
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Login } from "../components/Login/Login";
 // import { UserContext } from '../context/context.create';
 import { Header } from "../components/Header";
@@ -10,13 +10,10 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
-  DialogActions,
   IconButton,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { IUserInfo } from "../interfaces/IUserInfo.js";
-import { Adapter } from "../locals/adapter";
 import { UserContext } from "../context/context.user";
 import { useKeycloak } from "@react-keycloak/web";
 import { User } from "../models/User";
