@@ -83,7 +83,7 @@ export const GroupEdit = () => {
     useEffect(() => {
 
         if (newGroupElement)
-            setLocalGroup(userInfo.UserId, group);
+            setLocalGroup(group);
 
     }, [newGroupElement])
 

@@ -1,5 +1,5 @@
 import { group } from "console";
-import { getGroupTemplate, mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
+import { mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
@@ -7,17 +7,7 @@ import { checkGroupConsistency, globalUserDefault } from "../util/util";
 // import { localGroups, setLocalGroups } from "./group.local";
 import { Group } from "../models/Group";
 import { UserInfo } from "os";
-import { IUserInfo } from "../interfaces/IUserInfo";
-import { saveToDrive } from "./drive";
-import { Word } from "../models/Word";
-
-
-const getGroupFromTemplate = async () : Promise<IGroup> => {
-    
-    let _group = await getGroupTemplate();
-
-    return _group.data;
-}
+import { IUserInfo } from "../interfaces/IUserInfo.js";
 
 
 const getUserFromAPI = async (idUser: string) => {
@@ -47,7 +37,7 @@ const getGroups = async (idUser: string) => {
     if (data.length === 0)
         groups = (await getUserFromAPI(idUser) as IUser).Groups;
 
-    return groups || [];
+    return groups;
 }
 
 const setLocalGroup = (group: IGroup) => {
@@ -57,7 +47,7 @@ const setLocalGroup = (group: IGroup) => {
         group.LastModified = new Date();
         groups.push(group);
 
-        setLocalGroups(idUser, groups);
+        setLocalGroups(groups);
 
         return true;
     }
@@ -108,7 +98,7 @@ const setSync = async (idUser: string) => {
             }
         });
 
-    setLocalGroups(idUser, groupsLocal);
+    setLocalGroups(groupsLocal);
 }
 
 const setGroups = async (idUser: string) => {
@@ -120,7 +110,7 @@ const setGroups = async (idUser: string) => {
 const deleteGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
     const groups = getLocalGroups().filter(_ => _.Id !== group.Id);
 
-    setLocalGroups(idUser, groups);
+    setLocalGroups(groups);
 
     if (doCloud)
         await mutationPutUser(new User(idUser, groups));
@@ -140,8 +130,7 @@ const historify = async (idUser:string, group: IGroup) => {
 
 }
 const setUser = (user:IUserInfo) => {
-    // if (user.UserId!=='' && !user.IsInLogin)
-        localStorage.setItem('__user', JSON.stringify(user));
+    localStorage.setItem('__user', JSON.stringify(user));
 }
 
 const getUser = () => {
@@ -173,7 +162,6 @@ export const Adapter = {
     , setGroup
     , deleteGroup
     , setGroups
-    , setDrive
     , setSync
     , historify
     , setUser
