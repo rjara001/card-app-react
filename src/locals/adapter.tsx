@@ -1,15 +1,11 @@
-import { group } from "console";
-import { getGroupTemplate, mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
+import { getGroupTemplate, mutationPutUser, queryGetUser } from "../hooks/group.hook";
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
 import { checkGroupConsistency, globalUserDefault } from "../util/util";
 // import { localGroups, setLocalGroups } from "./group.local";
 import { Group } from "../models/Group";
-import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo";
-import { saveToDrive } from "./drive";
-import { Word } from "../models/Word";
 
 
 const getGroupFromTemplate = async () : Promise<IGroup> => {
@@ -173,7 +169,7 @@ export const Adapter = {
     , setGroup
     , deleteGroup
     , setGroups
-    , setDrive
+    // , setDrive
     , setSync
     , historify
     , setUser
