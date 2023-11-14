@@ -4,7 +4,7 @@ import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
 import { checkGroupConsistency, globalUserDefault } from "../util/util";
-import { localGroups, setLocalGroup, setLocalGroups } from "./group.local";
+// import { localGroups, setLocalGroups } from "./group.local";
 import { Group } from "../models/Group";
 import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo";
@@ -40,31 +40,46 @@ const getGroup = async (idUser: string, idGroup: string) => {
 }
 
 const getGroups = async (idUser: string) => {
-    const data = localGroups(idUser);
+    const data = getLocalGroups() as IGroup[] || [];
 
-    let groups = (data || (await getUserFromAPI(idUser) as IUser).Groups);
+    let groups = data;
+
+    if (data.length === 0)
+        groups = (await getUserFromAPI(idUser) as IUser).Groups;
 
     return groups || [];
 }
 
-const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
+const setLocalGroup = (group: IGroup) => {
     if (group != null && group.Name != undefined && group.Name != '') {
-        const groups = localGroups(idUser).filter(_ => _.Id !== group.Id);
+        const groups = getLocalGroups().filter(_ => _.Id !== group.Id);
 
         group.LastModified = new Date();
         groups.push(group);
 
         setLocalGroups(idUser, groups);
 
-        if (doCloud)
-            await mutationPutUser(new User(idUser, groups));
+        return true;
     }
+}
+
+const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
+
+    if (!setLocalGroup(group))
+        return;
+
+    if (doCloud)
+    {
+        const groups = getLocalGroups().filter(_ => _.Id !== group.Id);
+        await mutationPutUser(new User(idUser, groups));
+    }
+        
 }
 
 const setSync = async (idUser: string) => {
     let groupsFromCoud = (await getUserFromAPI(idUser) as IUser).Groups;
 
-    let groupsLocal = localGroups(idUser);
+    let groupsLocal = getLocalGroups();
 
     if (groupsFromCoud.length >= groupsLocal.length) {
         groupsFromCoud.forEach(groupCloud => {
@@ -97,13 +112,13 @@ const setSync = async (idUser: string) => {
 }
 
 const setGroups = async (idUser: string) => {
-    const groups = localGroups(idUser);
+    const groups = getLocalGroups();
 
     await mutationPutUser(new User(idUser, groups));
 }
 
 const deleteGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
-    const groups = localGroups(idUser).filter(_ => _.Id !== group.Id);
+    const groups = getLocalGroups().filter(_ => _.Id !== group.Id);
 
     setLocalGroups(idUser, groups);
 
@@ -112,7 +127,7 @@ const deleteGroup = async (idUser: string, group: IGroup, doCloud: boolean = fal
 }
 
 const historify = async (idUser:string, group: IGroup) => {
-    const _HistoryGroup = localGroups(idUser).find(_ => _.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
+    const _HistoryGroup = getLocalGroups().find(_ => _.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
     const wordsLearned = group.Words.filter(_=>_.IsKnowed && _.Cycles === 0);
 
     group.Words = group.Words.filter(_=>!(_.IsKnowed && _.Cycles === 0));
@@ -133,11 +148,24 @@ const getUser = () => {
     return JSON.parse(localStorage.getItem('__user') || JSON.stringify(globalUserDefault)) as unknown as IUserInfo;
 }
 
-const setDrive = ( user: IUserInfo) => {
-    const groups = localGroups(user.UserId);
-
-    saveToDrive(user, groups);
+const cleanLocalGroups = () => {
+    setLocalGroups([]);
 }
+
+const getLocalGroups = (): IGroup[] => {
+
+    let data = localStorage.getItem('groups') as string;
+
+    const groups = (data)?JSON.parse(data):undefined;
+
+    return groups;
+}
+
+const setLocalGroups = (groups: IGroup[]) => {
+
+    localStorage.setItem('groups', JSON.stringify(groups));
+
+}   
 
 export const Adapter = {
     getGroup
@@ -150,5 +178,8 @@ export const Adapter = {
     , historify
     , setUser
     , getUser
-    , getGroupTemplate
+    , cleanLocalGroups
+    , setLocalGroup
+    , getLocalGroups
+    , setLocalGroups
 }

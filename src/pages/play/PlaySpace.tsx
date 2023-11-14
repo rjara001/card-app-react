@@ -128,7 +128,9 @@ export const PlaySpace = () => {
 
         if (nextElement) {
 
-            arbitraryIndex = result.Words.findIndex(_ => _.Name === nextElement.Name);
+            arbitraryIndex = result.Words.findIndex(
+                (_) => _.Name === nextElement.Name && !_.IsKnowed && !_.Reveled && _.Cycles === currentCycle
+              );
 
             setIndexWord(_ => [..._, arbitraryIndex]);
 
