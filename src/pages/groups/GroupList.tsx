@@ -23,6 +23,7 @@ import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
 import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
 import { UserContext } from '../../context/context.user';
 import { filterWordByWord } from '../../util/util';
+import { Bugfender } from '@bugfender/sdk';
 
 const useStyles = makeStyles({
     button: {
@@ -163,9 +164,11 @@ export const GroupList = () => {
     }, [groups]);
 
     useEffect(() => {
-
+        Bugfender.log('Pass1');
         if (filter !== undefined) {
+            Bugfender.log('Pass2');
             let _groups = dataGroups.filter(_group => {
+                Bugfender.log('Pass3');
                 let _filter = _group.Words.filter(word => filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter));
 
                 return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase())>=0;
