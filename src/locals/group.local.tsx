@@ -21,7 +21,7 @@ export const getLocalGroups = (): IGroup[] => {
     return Adapter.getLocalGroups();
 }
 
-export const setLocalGroups = (userId: string, groups: IGroup[]) => {
+export const setLocalGroups = (groups: IGroup[]) => {
 
     Adapter.setLocalGroups(groups);
 

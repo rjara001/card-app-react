@@ -146,7 +146,7 @@ export const GroupList = () => {
 
         let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
 
-        setLocalGroups(userInfo.UserId, _groups);
+        setLocalGroups(_groups);
         setDataGroups(_groups);
 
         setGroups(_groups);
@@ -167,6 +167,7 @@ export const GroupList = () => {
         Bugfender.log('Pass1');
         if (filter !== undefined) {
             Bugfender.log('Pass2');
+            Bugfender.log('dataGroups:' + dataGroups.length);
             let _groups = dataGroups.filter(_group => {
                 Bugfender.log('Pass3');
                 Bugfender.log(JSON.stringify(_group));
