@@ -4,10 +4,26 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Container, StyledEngineProvider } from '@mui/material';
+import { Bugfender } from '@bugfender/sdk';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+
+Bugfender.init({
+  appKey: 'fz9n0LeyK0bIyTaqjLVFhevohvK9bPTH',
+  // apiURL: 'https://api.bugfender.com',
+  // baseURL: 'https://dashboard.bugfender.com',
+  // overrideConsoleMethods: true,
+  // printToConsole: true,
+  // registerErrorHandler: true,
+  // logBrowserEvents: true,
+  // logUIEvents: true,
+  // version: '',
+  // build: '',
+});
+
 root.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
