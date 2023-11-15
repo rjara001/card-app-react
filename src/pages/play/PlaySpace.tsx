@@ -54,7 +54,7 @@ export const PlaySpace = () => {
     const saveGroup = (setGetResult: any, group: IGroup, updateWords: IWord[]) => {
         const _group = { ...group, Words: updateWords };
 
-        setLocalGroup(userInfo.UserId, _group);
+        setLocalGroup(_group);
         setGetResult(_group);
     }
 
@@ -191,6 +191,9 @@ export const PlaySpace = () => {
     const getData = async () => {
         let group = await Adapter.getGroup(userInfo.UserId, userInfo.PlayingGroup.toString()) as IGroup;
 
+        if (group ===undefined || group.Words.length===0)
+            navigate(`/groups`);;
+
         setGetResult(group);
         setHasDoNextValue(true);
     };
@@ -205,6 +208,7 @@ export const PlaySpace = () => {
     useEffect(() => {
         if (result.Words.length > 0)
             updateValue(calculateSummary(result, countSummary(result, currentCycle)));
+
     }, [result])
 
     useEffect(() => {
