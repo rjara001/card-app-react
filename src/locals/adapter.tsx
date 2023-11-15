@@ -8,6 +8,7 @@ import { checkGroupConsistency, globalUserDefault } from "../util/util";
 import { Group } from "../models/Group";
 import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo.js";
+import { Bugfender } from "@bugfender/sdk";
 
 
 const getUserFromAPI = async (idUser: string) => {
@@ -19,9 +20,14 @@ const getUserFromAPI = async (idUser: string) => {
 const getGroup = async (idUser: string, idGroup: string) => {
     if (idGroup)
     {
+        Bugfender.log('idUser:' + idUser);
         let groups = await getGroups(idUser);
 
+        Bugfender.log('groups:' + groups.length);
+
         let group = groups.find(_ => _.Id.toString() === idGroup);
+
+        Bugfender.log('group:' + JSON.stringify(group));
 
         return checkGroupConsistency(group);
     }
@@ -31,6 +37,8 @@ const getGroup = async (idUser: string, idGroup: string) => {
 
 const getGroups = async (idUser: string) => {
     const data = getLocalGroups() as IGroup[] || [];
+
+    Bugfender.log('local getGroups:' + data.length);
 
     let groups = data;
 
