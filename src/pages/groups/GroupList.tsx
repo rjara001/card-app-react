@@ -169,6 +169,7 @@ export const GroupList = () => {
             Bugfender.log('Pass2');
             let _groups = dataGroups.filter(_group => {
                 Bugfender.log('Pass3');
+                Bugfender.log(JSON.stringify(_group));
                 let _filter = _group.Words.filter(word => filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter));
 
                 return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase())>=0;
