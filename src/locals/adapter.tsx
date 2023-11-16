@@ -8,6 +8,7 @@ import { Group } from "../models/Group";
 import { IUserInfo } from "../interfaces/IUserInfo.js";
 import { groupSchema } from "../schemas/groups";
 import * as yup from "yup";
+import { Bugfender } from "@bugfender/sdk";
 
 
 const getUserFromAPI = async (idUser: string) => {
