@@ -8,6 +8,8 @@ import { checkGroupConsistency, globalUserDefault } from "../util/util";
 import { Group } from "../models/Group";
 import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo.js";
+import { groupSchema } from "../schemas/groups";
+import * as yup from "yup";
 
 
 const getUserFromAPI = async (idUser: string) => {
@@ -32,9 +34,11 @@ const getGroup = async (idUser: string, idGroup: string) => {
 const getGroups = async (idUser: string) => {
     const data = getLocalGroups() as IGroup[] || [];
 
+    const _valid = yup.array(groupSchema).isValidSync(data);
+  
     let groups = data;
 
-    if (data.length === 0)
+    if (!_valid || data.length === 0)
         groups = (await getUserFromAPI(idUser) as IUser).Groups;
 
     return groups;
@@ -145,7 +149,14 @@ const getLocalGroups = (): IGroup[] => {
 
     let data = localStorage.getItem('groups') as string;
 
-    const groups = (data)?JSON.parse(data):undefined;
+    let groups = [];
+    
+    try {
+        groups = (data)?JSON.parse(data):undefined;
+    } catch (error) {
+        
+    }
+   
 
     return groups;
 }
