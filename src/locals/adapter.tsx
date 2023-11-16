@@ -6,7 +6,9 @@ import { checkGroupConsistency, globalUserDefault } from "../util/util";
 // import { localGroups, setLocalGroups } from "./group.local";
 import { Group } from "../models/Group";
 import { IUserInfo } from "../interfaces/IUserInfo.js";
-import { Bugfender } from "@bugfender/sdk";
+import { groupSchema } from "../schemas/groups";
+import * as yup from "yup";
+
 
 const getUserFromAPI = async (idUser: string) => {
   const resp = (await queryGetUser(idUser)).data;
@@ -34,9 +36,12 @@ const getGroup = async (idUser: string, idGroup: string) => {
 const getGroups = async (idUser: string) => {
   const data = (getLocalGroups() as IGroup[]) || [];
 
-  Bugfender.log("local getGroups:" + data.length);
+    const _valid = yup.array(groupSchema).isValidSync(data);
+  
+    let groups = data;
 
-  let groups = data;
+    if (!_valid || data.length === 0)
+        groups = (await getUserFromAPI(idUser) as IUser).Groups;
 
   if (data.length === 0)
     groups = ((await getUserFromAPI(idUser)) as IUser).Groups;
@@ -153,9 +158,16 @@ const cleanLocalGroups = () => {
 };
 
 const getLocalGroups = (): IGroup[] => {
-  let data = localStorage.getItem("groups") as string;
+    let data = localStorage.getItem('groups') as string;
 
-  const groups = data ? JSON.parse(data) : undefined;
+    let groups = [];
+    
+    try {
+        groups = (data)?JSON.parse(data):undefined;
+    } catch (error) {
+        
+    }
+   
 
   return groups;
 };
