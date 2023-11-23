@@ -278,7 +278,7 @@ export const PlaySpace = () => {
             </div>
 
             <div>
-                <Subtitle>Progress</Subtitle>
+                <Subtitle>Progress Cycle ({currentCycle + 1}/5)</Subtitle>
             </div>
             <div>
                 <GlobalSummary currentCycle={currentCycle} value={summary}></GlobalSummary>

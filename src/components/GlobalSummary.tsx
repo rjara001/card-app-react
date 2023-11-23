@@ -1,4 +1,4 @@
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Chip } from "@mui/material"
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Chip, Typography } from "@mui/material"
 import AdjustIcon from '@mui/icons-material/Adjust';
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
 import { IGlobalSummaryProps } from "../interfaces/IWord";
@@ -55,11 +55,14 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                 </ListItem>}
 
                 <Divider />
+                <ListItem className={classes.listItem}>
+
+                    <ListItemIcon></ListItemIcon>
+                    <ListItemText primary={<Typography style={{ color: '#ff6f00' }}>Missing</Typography>} />
+                    <div style={{ color: '#ff6f00' }}>{value.Unknow - value.Summary.bad}</div>
+                </ListItem>
                  <ListItem className={classes.listItem}>
-
-                    <ListItemIcon>
-
-                    </ListItemIcon>
+                    <ListItemIcon></ListItemIcon>
                     <ListItemText primary="Learned" />
                     <div>{value.Learned}</div>
                 </ListItem>
@@ -68,8 +71,8 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                     <ListItemIcon>
 
                     </ListItemIcon>
-                    <ListItemText primary="Total" />
-                    <div>{value.Total}</div>
+                    <ListItemText primary={<Typography style={{ color: '#ff6f00' }}>Total</Typography>} />
+                    <div style={{ color: '#ff6f00' }}>{value.Total}</div>
                 </ListItem>
             </List>
         </nav>
