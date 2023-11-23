@@ -138,6 +138,7 @@ export const PlaySpace = () => {
 
             updateWords[arbitraryIndex] = nextElement;
 
+            saveGroup(setGetResult, result, updateWords);
         }
         else {
             if (currentCycle >= 3) {

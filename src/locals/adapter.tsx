@@ -10,7 +10,6 @@ import { groupSchema } from "../schemas/groups";
 import * as yup from "yup";
 import { Bugfender } from "@bugfender/sdk";
 
-
 const getUserFromAPI = async (idUser: string) => {
   const resp = (await queryGetUser(idUser)).data;
 
@@ -37,12 +36,12 @@ const getGroup = async (idUser: string, idGroup: string) => {
 const getGroups = async (idUser: string) => {
   const data = (getLocalGroups() as IGroup[]) || [];
 
-    const _valid = yup.array(groupSchema).isValidSync(data);
-  
-    let groups = data;
+  const _valid = yup.array(groupSchema).isValidSync(data);
 
-    if (!_valid || data.length === 0)
-        groups = (await getUserFromAPI(idUser) as IUser).Groups;
+  let groups = data;
+
+  if (!_valid || data.length === 0)
+    groups = ((await getUserFromAPI(idUser)) as IUser).Groups;
 
   if (data.length === 0)
     groups = ((await getUserFromAPI(idUser)) as IUser).Groups;
@@ -79,37 +78,39 @@ const setGroup = async (
 const setSync = async (idUser: string) => {
   let groupsFromCoud = ((await getUserFromAPI(idUser)) as IUser).Groups;
 
-  let groupsLocal = getLocalGroups();
+  // let groupsLocal = getLocalGroups();
+  // Commented because if i want to sync is respect what is in the cloud, no matter what is on the local data
+  // if (groupsFromCoud.length >= groupsLocal.length) {
+  //   groupsFromCoud.forEach((groupCloud) => {
+  //     groupCloud.LastModified =
+  //       groupCloud.LastModified === undefined
+  //         ? new Date()
+  //         : groupCloud.LastModified;
 
-  if (groupsFromCoud.length >= groupsLocal.length) {
-    groupsFromCoud.forEach((groupCloud) => {
-      groupCloud.LastModified =
-        groupCloud.LastModified === undefined
-          ? new Date()
-          : groupCloud.LastModified;
+  //     const _local = groupsLocal.find((_) => _.Id === groupCloud.Id);
 
-      const _local = groupsLocal.find((_) => _.Id === groupCloud.Id);
+  //     if (_local === undefined) groupsLocal.push(groupCloud);
+  //     else if (_local.LastModified < groupCloud.LastModified) {
+  //       groupsLocal = groupsLocal.filter((_) => _.Id !== groupCloud.Id);
+  //       groupsLocal.push(groupCloud);
+  //     }
+  //   });
+  // } else
+  //   groupsLocal.forEach((groupLocal) => {
+  //     const _cloud = groupsFromCoud.find((_) => _.Id === groupLocal.Id);
 
-      if (_local === undefined) groupsLocal.push(groupCloud);
-      else if (_local.LastModified < groupCloud.LastModified) {
-        groupsLocal = groupsLocal.filter((_) => _.Id !== groupCloud.Id);
-        groupsLocal.push(groupCloud);
-      }
-    });
-  } else
-    groupsLocal.forEach((groupLocal) => {
-      const _cloud = groupsFromCoud.find((_) => _.Id === groupLocal.Id);
+  //     if (
+  //       _cloud !== undefined &&
+  //       _cloud.LastModified < groupLocal.LastModified
+  //     ) {
+  //       groupsLocal = groupsLocal.filter((_) => _.Id !== groupLocal.Id);
+  //       groupsLocal.push(_cloud);
+  //     }
+  //   });
 
-      if (
-        _cloud !== undefined &&
-        _cloud.LastModified < groupLocal.LastModified
-      ) {
-        groupsLocal = groupsLocal.filter((_) => _.Id !== groupLocal.Id);
-        groupsLocal.push(_cloud);
-      }
-    });
+  // setLocalGroups(groupsLocal);
 
-  setLocalGroups(groupsLocal);
+  setLocalGroups(groupsFromCoud);
 };
 
 const mutationGroups = async (idUser: string) => {
@@ -159,16 +160,13 @@ const cleanLocalGroups = () => {
 };
 
 const getLocalGroups = (): IGroup[] => {
-    let data = localStorage.getItem('groups') as string;
+  let data = localStorage.getItem("groups") as string;
 
-    let groups = [];
-    
-    try {
-        groups = (data)?JSON.parse(data):undefined;
-    } catch (error) {
-        
-    }
-   
+  let groups = [];
+
+  try {
+    groups = data ? JSON.parse(data) : undefined;
+  } catch (error) {}
 
   return groups;
 };

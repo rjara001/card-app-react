@@ -60,7 +60,8 @@ export const GroupEdit = () => {
             group = new Group(getLastGroupId(groups), StatusChange.Created);
         }
 
-        group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
+        
+        // group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
 
         setGroup(group);
     };
