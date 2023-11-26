@@ -60,6 +60,7 @@ const ItemGroup: FC<IGroupProps> = ({
     userInfo.PlayingGroup = id;
 
     updateValue(userInfo);
+    Adapter.setUser(userInfo);
 
     navigate(`/play`);
   };

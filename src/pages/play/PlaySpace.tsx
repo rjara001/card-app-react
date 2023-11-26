@@ -117,7 +117,7 @@ export const PlaySpace = () => {
 
     const nextValue = () => {
 
-        let wordsFilterd = result.Words.filter(_ => _.IsKnowed===false && _.Reveled===false && _.Cycles == currentCycle);
+        let wordsFilterd = result.Words.filter(_ => _.IsKnowed===false && _.Reveled===false && _.Cycles === currentCycle);
         let arbitraryIndex = getRandomArbitrary(0, wordsFilterd.length, getLastIndexElement());
 
         let nextElement = wordsFilterd[arbitraryIndex];
@@ -193,7 +193,7 @@ export const PlaySpace = () => {
         let group = await Adapter.getGroup(userInfo.UserId, userInfo.PlayingGroup.toString()) as IGroup;
 
         if (group ===undefined || group.Words.length===0)
-            navigate(`/groups`);;
+            navigate(`/groups`);
 
         setGetResult(group);
         setHasDoNextValue(true);
