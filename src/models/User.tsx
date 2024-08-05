@@ -7,6 +7,9 @@ import { parseCsv } from "../util/csvToJson";
 import { globalUserDefault } from "../util/util";
 
 export class User implements IUser {
+    static hasAccessToken(user: IUserInfo) {
+        return user.AccessToken !== null && user.AccessToken !== '';
+    }
 
     IdUser: string;
     Groups: IGroup[];
@@ -45,6 +48,7 @@ export class User implements IUser {
         userInfo.imageUrl = response.profileObj.imageUrl;
         userInfo.provider = 'google';
         Adapter.setUser(userInfo);
+        
     }
 
     static LoginCustom(userInfo:IUserInfo, response:any) {
@@ -54,6 +58,10 @@ export class User implements IUser {
         userInfo.AccessToken = response.accessToken;
         userInfo.provider = 'amazon';
         Adapter.setUser(userInfo);
+    }
+
+    static hasRefreshToken(userInfo:IUserInfo) {
+        return userInfo.RefreshToken !== null && userInfo.RefreshToken !== '';
     }
 
     static LoginClean(userInfo:IUserInfo)

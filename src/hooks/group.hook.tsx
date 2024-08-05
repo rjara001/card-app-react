@@ -8,7 +8,7 @@ function getUrl(item: IApiConfig): string {
     return item.host + item.url;
 }
 
-export const queryGetUser = async (id: string) => {
+export const queryGetUser = async (id: string, token: string) => {
     let axiosConfig = {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',

@@ -9,18 +9,32 @@ import { Group } from "../models/Group";
 import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo";
 import { saveToDrive } from "./drive";
+import { queryGetContentAllTableFile } from "../hooks/google.hook";
+import { IFileItem } from "../interfaces/Drive/IFileItem";
+import { StatusChange } from "../models/Enums";
 
 
-const getUserFromAPI = async (idUser: string) => {
-    const resp = (await queryGetUser(idUser)).data;
+const getUserFromAPI = async (user:IUser) => {
+    
+    // const resp = (await queryGetUser(idUser, token)).data;
 
-    return User.newUser(resp);
+    let _user: IUser = new User(user.IdUser, user.Groups);
+
+    const fileDictionary: { [key: string]: IFileItem } = await queryGetContentAllTableFile(user);
+    const files: IFileItem[] = Object.values(fileDictionary);
+
+    for (let index = 0; index < files.length; index++) {
+        const element = files[index];
+        _user.Groups.push(new Group(element.content, StatusChange.Updated));
+    }
+
+    return User.newUser(_user);
 }
 
-const getGroup = async (idUser: string, idGroup: string) => {
+const getGroup = async (user: IUser, idGroup: string) => {
     if (idGroup)
     {
-        let groups = await getGroups(idUser);
+        let groups = await getGroups(user);
 
         let group = groups.find(_ => _.Id.toString() === idGroup);
 
@@ -30,10 +44,10 @@ const getGroup = async (idUser: string, idGroup: string) => {
     return undefined;
 }
 
-const getGroups = async (idUser: string) => {
-    const data = localGroups(idUser);
+const getGroups = async (user:IUser) => {
+    const data = localGroups(user.IdUser);
 
-    let groups = (data || (await getUserFromAPI(idUser) as IUser).Groups);
+    let groups = (data || (await getUserFromAPI(user) as IUser).Groups);
 
     return groups;
 }
@@ -52,10 +66,10 @@ const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false)
     }
 }
 
-const setSync = async (idUser: string) => {
-    let groupsFromCoud = (await getUserFromAPI(idUser) as IUser).Groups;
+const setSync = async (user:IUser) => {
+    let groupsFromCoud = (await getUserFromAPI(user) as IUser).Groups;
 
-    let groupsLocal = localGroups(idUser);
+    let groupsLocal = localGroups(user.IdUser);
 
     if (groupsFromCoud.length >= groupsLocal.length) {
         groupsFromCoud.forEach(groupCloud => {
@@ -84,7 +98,7 @@ const setSync = async (idUser: string) => {
             }
         });
 
-    setLocalGroups(idUser, groupsLocal);
+    setLocalGroups(user.IdUser, groupsLocal);
 }
 
 const setGroups = async (idUser: string) => {

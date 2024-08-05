@@ -184,7 +184,7 @@ export const GroupList = () => {
     }
 
     const handleSync = async () => {
-        await Adapter.setSync(userInfo.UserId);
+        await Adapter.setSync(userInfo.UserId, userInfo.AccessToken);
 
         let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
 
