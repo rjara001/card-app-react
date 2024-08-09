@@ -31,7 +31,7 @@ export const mutationPutUser = async (user:IUser) => {
 
     const data = {... user, Groups: user.Groups.map(_=>Group.toFlatGroup(_))}
 
-    await axios.put(getUrl(config.postUser) + '/' + user.IdUser, data, axiosConfig);
+    await axios.put(getUrl(config.postUser) + '/' + user.UserId, data, axiosConfig);
 }
 
 export const mutationPostUser = async (user:IUser) => {
@@ -45,5 +45,5 @@ export const mutationPostUser = async (user:IUser) => {
 
     const data = {... user, Groups: user.Groups.map(_=>Group.toFlatGroup(_))}
 
-    await axios.post(getUrl(config.postUser) + '/' + user.IdUser, data, axiosConfig);
+    await axios.post(getUrl(config.postUser) + '/' + user.UserId, data, axiosConfig);
 }

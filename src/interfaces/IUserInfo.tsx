@@ -1,8 +1,10 @@
+import { Group } from "../models/Group"
 import { IUserDriveInfo } from "./Drive/IUserDriveInfo"
 import { IUser } from "./IUser"
-import { IWord } from "./IWord"
+import { IUserLogin } from "./IUserLogin"
 
 export interface IUserInfo extends IUser {
+    Login: IUserLogin
     provider: string
     imageUrl: any
     FullName: any
@@ -16,6 +18,7 @@ export interface IUserInfo extends IUser {
     TimeOutActived: number
     AccessToken: string
     RefreshToken: string
-    Words: [IWord]
     Drive: IUserDriveInfo
+    Groups: Group[]
+    TokenExpiration : Date
 }

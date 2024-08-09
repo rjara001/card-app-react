@@ -51,9 +51,9 @@ export const GroupEdit = () => {
 
     const getData = async () => {
         setIsLoading(true);
-        const groups = await Adapter.getGroups(userInfo.UserId);
+        const groups = await Adapter.getGroups(userInfo);
 
-        let group = await Adapter.getGroup(userInfo.UserId, id as string) as IGroup;
+        let group = await Adapter.getGroup(userInfo, id as string) as IGroup;
         
         if (group===undefined || group.Status === StatusChange.None ) { 
             group = new Group(getLastGroupId(groups), StatusChange.Created);

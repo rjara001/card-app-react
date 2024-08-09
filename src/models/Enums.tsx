@@ -6,4 +6,11 @@ export enum StatusChange {
     Deleted,
     None
 }
-  
+
+export enum LoginStatus {
+    SignIn = 1,
+    Done = 2,
+    Error = 3,
+    Exchange = 4,
+    GetUserInfo = 5
+}

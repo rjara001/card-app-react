@@ -1,3 +1,5 @@
+import { IGoogleUserInfo } from "../interfaces/AWS/IResponse";
+import { ITokenResponse } from "../interfaces/Google/ITokenResponse";
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { IUserInfo } from "../interfaces/IUserInfo";
@@ -7,15 +9,28 @@ import { parseCsv } from "../util/csvToJson";
 import { globalUserDefault } from "../util/util";
 
 export class User implements IUser {
+    static SetAuth(user: IUserInfo, googleUser: IGoogleUserInfo, tokens: ITokenResponse) {
+
+        const minutes = Math.floor(tokens.expires_in / 60);
+
+        user.AccessToken = tokens?.access_token ?? '';
+        user.RefreshToken = tokens?.refresh_token ?? '';
+        user.imageUrl = googleUser.picture;
+        user.UserEmail = googleUser.email;
+        user.UserId = googleUser.email;
+        user.FullName = googleUser.name;
+        user.TokenExpiration = new Date(Date.now() + minutes * 60 * 1000);
+    }
+
     static hasAccessToken(user: IUserInfo) {
         return user.AccessToken !== null && user.AccessToken !== '';
     }
 
-    IdUser: string;
+    UserId: string;
     Groups: IGroup[];
 
     constructor(idUser: string, groups: IGroup[]) {
-        this.IdUser = idUser;
+        this.UserId = idUser;
         this.Groups = groups;
     }
     
@@ -40,12 +55,9 @@ export class User implements IUser {
         Adapter.setUser(userInfo);
     }
 
-    static LoginGoogle(userInfo:IUserInfo, response:any){
+    static LoginGoogle(userInfo:IUserInfo){
         userInfo.IsInLogin = true;
-        userInfo.UserId = response.profileObj.email;
-        userInfo.FullName = response.profileObj.name;
-        userInfo.AccessToken = response.accessToken;
-        userInfo.imageUrl = response.profileObj.imageUrl;
+       
         userInfo.provider = 'google';
         Adapter.setUser(userInfo);
         
@@ -72,6 +84,9 @@ export class User implements IUser {
         return userInfo;
     }
 
+    static TokenIsExpired(userInfo:IUserInfo) {
+        return userInfo.TokenExpiration  < new Date();
+    }
 }
 
 

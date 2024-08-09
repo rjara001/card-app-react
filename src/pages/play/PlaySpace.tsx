@@ -160,7 +160,7 @@ export const PlaySpace = () => {
         nextValue();
     }
     const getData = async () => {
-        let group = await Adapter.getGroup(userInfo.UserId, userInfo.PlayingGroup.toString()) as IGroup;
+        let group = await Adapter.getGroup(userInfo, userInfo.PlayingGroup.toString()) as IGroup;
 
         setGetResult(group);
         setHasDoNextValue(true);

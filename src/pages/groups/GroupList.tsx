@@ -133,7 +133,7 @@ export const GroupList = () => {
     const getData = async () => {
         setIsLoading(true);
 
-        let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
+        let _groups = await Adapter.getGroups(userInfo) as IGroup[];
 
         setLocalGroups(userInfo.UserId, _groups);
         setDataGroups(_groups);
@@ -184,9 +184,9 @@ export const GroupList = () => {
     }
 
     const handleSync = async () => {
-        await Adapter.setSync(userInfo.UserId, userInfo.AccessToken);
+        await Adapter.setSync(userInfo);
 
-        let _groups = await Adapter.getGroups(userInfo.UserId) as IGroup[];
+        let _groups = await Adapter.getGroups(userInfo) as IGroup[];
 
         setGroups(_groups);
 

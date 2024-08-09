@@ -1,8 +1,9 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
+import { IUserInfo } from "../interfaces/IUserInfo";
 import { IWord } from "../interfaces/IWord.js";
-import { StatusChange } from "../models/Enums";
+import { LoginStatus, StatusChange } from "../models/Enums";
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
 // import { TextToSpeechClient } from '@google-cloud/text-to-speech';
@@ -41,7 +42,7 @@ export const getCurrentLearned = (summary: IGlobalSummary, currentCycle: number)
     }
 }
 
-export const globalUserDefault = {
+export const globalUserDefault : IUserInfo = {
     UserId: 'anonymous'
     , FullName: 'anonymous'
     , imageUrl: ''
@@ -54,6 +55,16 @@ export const globalUserDefault = {
     , TimeOutActived: -1
     , provider: ''
     , AccessToken: ''
+    , RefreshToken: ''
+    , Drive: {idFolder: ''} 
+    , Groups: []
+    , TokenExpiration: new Date('1900-01-01T12:00:00Z')
+    , Login: {
+        Code: ''
+        , LoginStatus: LoginStatus.Done
+        , Redirect: ''
+    }
+
 }
 
 export const groupDefault = Group.NewGroup();

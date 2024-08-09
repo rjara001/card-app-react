@@ -12,13 +12,16 @@ import { saveToDrive } from "./drive";
 import { queryGetContentAllTableFile } from "../hooks/google.hook";
 import { IFileItem } from "../interfaces/Drive/IFileItem";
 import { StatusChange } from "../models/Enums";
+import { loadFolder } from "./google/helper";
 
 
-const getUserFromAPI = async (user:IUser) => {
+const getUserFromAPI = async (user:IUserInfo) => {
     
     // const resp = (await queryGetUser(idUser, token)).data;
 
-    let _user: IUser = new User(user.IdUser, user.Groups);
+    let _user: IUser = new User(user.UserId, user.Groups);
+
+    await loadFolder(user);
 
     const fileDictionary: { [key: string]: IFileItem } = await queryGetContentAllTableFile(user);
     const files: IFileItem[] = Object.values(fileDictionary);
@@ -31,7 +34,7 @@ const getUserFromAPI = async (user:IUser) => {
     return User.newUser(_user);
 }
 
-const getGroup = async (user: IUser, idGroup: string) => {
+const getGroup = async (user: IUserInfo, idGroup: string) => {
     if (idGroup)
     {
         let groups = await getGroups(user);
@@ -44,10 +47,10 @@ const getGroup = async (user: IUser, idGroup: string) => {
     return undefined;
 }
 
-const getGroups = async (user:IUser) => {
-    const data = localGroups(user.IdUser);
+const getGroups = async (user:IUserInfo) => {
+    const data : IGroup[] | undefined = localGroups(user.UserId);
 
-    let groups = (data || (await getUserFromAPI(user) as IUser).Groups);
+    let groups = (data && data.length > 0) ? data : (await getUserFromAPI(user) as IUser).Groups;
 
     return groups;
 }
@@ -66,10 +69,10 @@ const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false)
     }
 }
 
-const setSync = async (user:IUser) => {
+const setSync = async (user:IUserInfo) => {
     let groupsFromCoud = (await getUserFromAPI(user) as IUser).Groups;
 
-    let groupsLocal = localGroups(user.IdUser);
+    let groupsLocal = localGroups(user.UserId);
 
     if (groupsFromCoud.length >= groupsLocal.length) {
         groupsFromCoud.forEach(groupCloud => {
@@ -98,7 +101,7 @@ const setSync = async (user:IUser) => {
             }
         });
 
-    setLocalGroups(user.IdUser, groupsLocal);
+    setLocalGroups(user.UserId, groupsLocal);
 }
 
 const setGroups = async (idUser: string) => {

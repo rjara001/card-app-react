@@ -1,6 +1,6 @@
 import { IGroup } from "./IGroup"
 
 export interface IUser {
-    IdUser: string
+    UserId: string
     Groups: IGroup[]
 }

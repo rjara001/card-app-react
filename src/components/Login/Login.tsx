@@ -119,7 +119,7 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
 
     const handleGoogleLoginSuccess = (response: any) => {
 
-        User.LoginGoogle(userInfo, response);
+        User.LoginGoogle(userInfo);
 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);

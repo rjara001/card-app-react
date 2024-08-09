@@ -23,6 +23,7 @@ import {SettingsPage} from './pages/settings/Settings';
 import { UserContextProvider } from './context/context.user';
 import { LandingPage } from './pages/LandingPage/LandingPage';
 import { UserContext } from "./context/context.user";
+import SigninGoogle from './pages/google/SigninGoogle';
 
 function App() {
   const { userInfo } = useContext(UserContext);
@@ -50,6 +51,7 @@ function App() {
 
             <BrowserRouter>
               <Routes>
+                <Route path='/signin-google' element={<SigninGoogle></SigninGoogle>}></Route>
                 <Route path='/home' element={<HomePage></HomePage>}></Route>
                 <Route path='/groups/:word?' element={<GroupList></GroupList>}></Route>
                 <Route path='/settings' element={<SettingsPage></SettingsPage>}></Route>

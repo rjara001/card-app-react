@@ -35,6 +35,7 @@ const downloadFileContent = async (user: IUserInfo, fileId: string): Promise<str
     try {
         const response = await axios.get(apiUrl, {
             headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
                 Authorization: `Bearer ${user.AccessToken}`
             }
         });

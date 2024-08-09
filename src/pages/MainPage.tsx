@@ -13,6 +13,9 @@ import { Adapter } from '../locals/adapter';
 import { UserContext } from '../context/context.user';
 import { HeaderLand } from '../components/HeaderLand';
 import { useNavigate } from 'react-router-dom';
+import { LoginStatus } from '../models/Enums';
+import { signin } from '../locals/auth/signin';
+import { User } from '../models/User';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -48,10 +51,31 @@ const useStyles = makeStyles((theme) => ({
 
 export const MainPage = () => {
     const classes = useStyles();
-    const { userInfo } = useContext(UserContext);
+    const { userInfo , updateValue} = useContext(UserContext);
     const [open, setOpen] = useState(false);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleSignIn = async () => {
+            if (userInfo.Login.LoginStatus === LoginStatus.SignIn) {
+                try {
+                    // Sign in the user
+                    await signin(userInfo);                    
+
+                    User.LoginGoogle(userInfo);
+                    
+                    updateValue(userInfo);
+
+                } catch (error) {
+                    console.error('An error occurred during sign-in:', error);
+                    // Handle errors as needed
+                }
+            }
+        };
+    
+        handleSignIn();
+    }, [userInfo]);
 
     const handleGoLoginClick = () => {
         setOpen(true);
@@ -63,6 +87,7 @@ export const MainPage = () => {
     const handleSelectionProvider = (user: IUserInfo) => {
         setOpen(false);
     }
+   
 
     if (!userInfo.IsInLogin)
         navigate('/');
