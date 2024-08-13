@@ -1,5 +1,4 @@
 import { IGlobalSummary } from "./IGlobalSummary"
-import React, { createContext, FC, useContext, useEffect, useRef, useState } from "react";
 
 export interface IWord {
     Name:string

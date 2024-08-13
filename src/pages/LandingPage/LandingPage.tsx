@@ -47,6 +47,7 @@ export const LandingPage = () => {
     const classes = useStyles();
     const navigate = useNavigate();
 
+    
     const handleGoLoginClick = () => {
         setOpen(true);
     }
@@ -59,11 +60,14 @@ export const LandingPage = () => {
     }
 
     useEffect(()=> {
-        if (userInfo.IsInLogin) { 
+        if (userInfo?.IsInLogin) { 
             navigate('/home'); 
         }
-    }, []);
+    }, [navigate, userInfo?.IsInLogin]);
 
+    if (!userInfo) {
+        return <div>Loading user information...</div>;
+    }
 
     return (
         <>

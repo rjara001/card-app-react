@@ -1,3 +1,3 @@
 export interface IUserDriveInfo {
-    idFolder: string
+    IdFolder: string
 }

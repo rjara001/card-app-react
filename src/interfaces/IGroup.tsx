@@ -2,11 +2,13 @@ import { StatusChange } from "../models/Enums"
 import { IWord } from "./IWord"
 
 export interface IGroup {
+    IdDriveFile: string
     Id: string
     Name: string
     LastModified: Date
     Status: StatusChange
     Words: IWord[]
+    keyFileName: string
 }
 
 export interface IUserGroup {

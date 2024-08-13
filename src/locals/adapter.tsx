@@ -1,10 +1,10 @@
 import { group } from "console";
 import { mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
-import { IGroup } from "../interfaces/IGroup";
+import { IGroup, IUserGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
 import { checkGroupConsistency, globalUserDefault } from "../util/util";
-import { localGroups, setLocalGroup, setLocalGroups } from "./group.local";
+
 import { Group } from "../models/Group";
 import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo";
@@ -12,13 +12,12 @@ import { saveToDrive } from "./drive";
 import { queryGetContentAllTableFile } from "../hooks/google.hook";
 import { IFileItem } from "../interfaces/Drive/IFileItem";
 import { StatusChange } from "../models/Enums";
-import { loadFolder } from "./google/helper";
+import { loadFolder, saveGroup } from "./google/helper";
+import { _USER } from "../constants/constants";
 
 
-const getUserFromAPI = async (user:IUserInfo) => {
+const getUserAndAllGroupsFromAPI = async (user:IUserInfo) => {
     
-    // const resp = (await queryGetUser(idUser, token)).data;
-
     let _user: IUser = new User(user.UserId, user.Groups);
 
     await loadFolder(user);
@@ -34,128 +33,158 @@ const getUserFromAPI = async (user:IUserInfo) => {
     return User.newUser(_user);
 }
 
-const getGroup = async (user: IUserInfo, idGroup: string) => {
-    if (idGroup)
-    {
-        let groups = await getGroups(user);
-
-        let group = groups.find(_ => _.Id.toString() === idGroup);
-
-        return checkGroupConsistency(group);
-    }
-    
-    return undefined;
-}
-
-const getGroups = async (user:IUserInfo) => {
-    const data : IGroup[] | undefined = localGroups(user.UserId);
-
-    let groups = (data && data.length > 0) ? data : (await getUserFromAPI(user) as IUser).Groups;
-
-    return groups;
-}
-
-const setGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
-    if (group != null && group.Name != undefined && group.Name != '') {
-        const groups = localGroups(idUser).filter(_ => _.Id !== group.Id);
-
-        group.LastModified = new Date();
-        groups.push(group);
-
-        setLocalGroups(idUser, groups);
-
-        if (doCloud)
-            await mutationPutUser(new User(idUser, groups));
-    }
-}
-
-const setSync = async (user:IUserInfo) => {
-    let groupsFromCoud = (await getUserFromAPI(user) as IUser).Groups;
-
-    let groupsLocal = localGroups(user.UserId);
-
-    if (groupsFromCoud.length >= groupsLocal.length) {
-        groupsFromCoud.forEach(groupCloud => {
-            groupCloud.LastModified = groupCloud.LastModified===undefined?new Date():groupCloud.LastModified;
-
-            const _local = groupsLocal.find(_ => _.Id === groupCloud.Id);
-
-            if (_local === undefined)
-                groupsLocal.push(groupCloud);
-            else
-                if (_local.LastModified < groupCloud.LastModified)
-                    {
-                        groupsLocal = groupsLocal.filter(_=>_.Id!==groupCloud.Id);
-                        groupsLocal.push(groupCloud);
-                    }
-        });
-    }
-    else
-        groupsLocal.forEach(groupLocal => {
-            const _cloud = groupsFromCoud.find(_ => _.Id === groupLocal.Id);
-
-            if (_cloud !== undefined && _cloud.LastModified < groupLocal.LastModified)
-            {
-                groupsLocal = groupsLocal.filter(_=>_.Id!==groupLocal.Id);
-                groupsLocal.push(_cloud);
-            }
-        });
-
-    setLocalGroups(user.UserId, groupsLocal);
-}
-
-const setGroups = async (idUser: string) => {
-    const groups = localGroups(idUser);
-
-    await mutationPutUser(new User(idUser, groups));
-}
-
-const deleteGroup = async (idUser: string, group: IGroup, doCloud: boolean = false) => {
-    const groups = localGroups(idUser).filter(_ => _.Id !== group.Id);
-
-    setLocalGroups(idUser, groups);
-
-    if (doCloud)
-        await mutationPutUser(new User(idUser, groups));
-}
-
-const historify = async (idUser:string, group: IGroup) => {
-    const _HistoryGroup = localGroups(idUser).find(_ => _.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
-    const wordsLearned = group.Words.filter(_=>_.IsKnowed && _.Cycles === 0);
-
-    group.Words = group.Words.filter(_=>!(_.IsKnowed && _.Cycles === 0));
-
-    setGroup(idUser, group);
-
-    _HistoryGroup.Words.push(... wordsLearned);
-
-    setGroup(idUser, _HistoryGroup);
-
-}
 const setUser = (user:IUserInfo) => {
     // if (user.UserId!=='' && !user.IsInLogin)
-        localStorage.setItem('__user', JSON.stringify(user));
+        localStorage.setItem(_USER, JSON.stringify(user));
 }
 
-const getUser = () => {
-    return JSON.parse(localStorage.getItem('__user') || JSON.stringify(globalUserDefault)) as unknown as IUserInfo;
+const getUser = async (): Promise<IUserInfo> => {
+    let user = JSON.parse(localStorage.getItem(_USER) || JSON.stringify(globalUserDefault)) as IUserInfo;
+
+    if (!user || user.Groups.length === 0) {
+        user = await getUserAndAllGroupsFromAPI(user) as IUserInfo;
+    }
+
+    return user;
+};
+
+// const getGroup = async (user: IUserInfo, idGroup: string) => {
+//     if (idGroup)
+//     {
+//         let groups = await getGroups(user);
+
+//         let group = groups.find(_ => _.Id.toString() === idGroup);
+
+//         return checkGroupConsistency(group);
+//     }
+    
+//     return undefined;
+// }
+
+// const getGroups = async (user:IUserInfo) => {
+//     const data : IGroup[] | undefined = localGroups(user.UserId);
+
+//     let groups = (data && data.length > 0) ? data : (await getUserAndAllGroupsFromAPI(user) as IUser).Groups;
+
+//     return groups;
+// }
+
+const setGroup = async (user: IUserInfo, group: IGroup) => {
+    if (group && group.Name) {
+        // Create a new group object with the updated last modified date
+        const updatedGroup = { ...group, LastModified: new Date() };
+
+        // Create a new groups array with the added group
+        const updatedGroups = [...user.Groups, updatedGroup];
+
+        // Create a new user object with the updated groups
+        const updatedUser = { ...user, Groups: updatedGroups };
+
+        // Update the user state with the new user object
+        setUser(updatedUser);
+    }
+};
+
+
+const setSync = async (user:IUserInfo) => {
+    // let groupsFromCoud = (await getUserAndAllGroupsFromAPI(user) as IUser).Groups;
+
+    let groupsLocal: IGroup[] = user.Groups; //localGroups(user.UserId);
+
+    groupsLocal.filter(group=>group.Status !== StatusChange.None 
+            && group.Status === StatusChange.Created).forEach(async group => {
+
+        await saveGroup(user, group);
+    });
+
+    // if (groupsFromCoud.length >= groupsLocal.length) {
+    //     groupsFromCoud.forEach(groupCloud => {
+    //         groupCloud.LastModified = groupCloud.LastModified===undefined?new Date():groupCloud.LastModified;
+
+    //         const _local = groupsLocal.find(_ => _.Id === groupCloud.Id);
+
+    //         if (_local === undefined)
+    //             groupsLocal.push(groupCloud);
+    //         else
+    //             if (_local.LastModified < groupCloud.LastModified)
+    //                 {
+    //                     groupsLocal = groupsLocal.filter(_=>_.Id!==groupCloud.Id);
+    //                     groupsLocal.push(groupCloud);
+    //                 }
+    //     });
+    // }
+    // else
+    //     groupsLocal.forEach(groupLocal => {
+    //         const _cloud = groupsFromCoud.find(_ => _.Id === groupLocal.Id);
+
+    //         if (_cloud !== undefined && _cloud.LastModified < groupLocal.LastModified)
+    //         {
+    //             groupsLocal = groupsLocal.filter(_=>_.Id!==groupLocal.Id);
+    //             groupsLocal.push(_cloud);
+    //         }
+    //     });
+
+    setUser(user);
 }
 
-const setDrive = ( user: IUserInfo) => {
-    const groups = localGroups(user.UserId);
+// const setGroups = async (idUser: string) => {
+//     const groups = localGroups(idUser);
 
-    saveToDrive(user, groups);
-}
+//     await mutationPutUser(new User(idUser, groups));
+// }
+
+const deleteGroup = async (user: IUserInfo, group: IGroup) => {
+    // Create a new array of groups excluding the group to be deleted
+    const updatedGroups = user.Groups.filter(g => g.Id !== group.Id);
+
+    // Create a new user object with the updated groups
+    const updatedUser = { ...user, Groups: updatedGroups };
+
+    // Update the user state
+    setUser(updatedUser);
+};
+
+const historify = async (user: IUserInfo, group: IGroup) => {
+    // Find or create the history group
+    const historyGroup = user.Groups.find(g => g.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
+
+    // Separate words that are learned (IsKnowed and Cycles === 0) from those that aren't
+    const wordsLearned = group.Words.filter(word => word.IsKnowed && word.Cycles === 0);
+    const remainingWords = group.Words.filter(word => !(word.IsKnowed && word.Cycles === 0));
+
+    // Update the group with the remaining words
+    const updatedGroup = { ...group, Words: remainingWords };
+
+    // Update the history group with the learned words
+    const updatedHistoryGroup = {
+        ...historyGroup,
+        Words: [...historyGroup.Words, ...wordsLearned]
+    };
+
+    // Replace the old group and history group in the user's groups
+    const updatedGroups = user.Groups.map(g =>
+        g.Id === group.Id ? updatedGroup : g.Id === historyGroup.Id ? updatedHistoryGroup : g
+    );
+
+    // Create a new user object with the updated groups
+    const updatedUser = { ...user, Groups: updatedGroups };
+
+    // Update the user state
+    setUser(updatedUser);
+};
+
+
+// const setDrive = ( user: IUserInfo) => {
+//     const groups = localGroups(user.UserId);
+
+//     saveToDrive(user, groups);
+// }
 
 export const Adapter = {
-    getGroup
-    , getGroups
-    , setGroup
-    , deleteGroup
-    , setGroups
-    , setDrive
-    , setSync
+    setSync
     , historify
     , setUser
     , getUser
+    , deleteGroup
+    , setGroup
 }

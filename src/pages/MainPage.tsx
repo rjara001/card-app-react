@@ -2,16 +2,14 @@ import { makeStyles } from '@material-ui/styles';
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Login } from '../components/Login/Login';
 // import { UserContext } from '../context/context.create';
 import Header from '../components/Header';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, IconButton } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { IUserInfo } from '../interfaces/IUserInfo';
-import { Adapter } from '../locals/adapter';
 import { UserContext } from '../context/context.user';
-import { HeaderLand } from '../components/HeaderLand';
 import { useNavigate } from 'react-router-dom';
 import { LoginStatus } from '../models/Enums';
 import { signin } from '../locals/auth/signin';
@@ -58,7 +56,7 @@ export const MainPage = () => {
 
     useEffect(() => {
         const handleSignIn = async () => {
-            if (userInfo.Login.LoginStatus === LoginStatus.SignIn) {
+            if (userInfo?.Login.LoginStatus === LoginStatus.SignIn) {
                 try {
                     // Sign in the user
                     await signin(userInfo);                    
@@ -75,7 +73,12 @@ export const MainPage = () => {
         };
     
         handleSignIn();
-    }, [userInfo]);
+    }, [updateValue, userInfo]);
+
+    if (!userInfo) {
+        return <div>Loading user information...</div>;
+    }
+
 
     const handleGoLoginClick = () => {
         setOpen(true);

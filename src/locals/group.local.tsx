@@ -1,41 +1,47 @@
-import { IGroup, IUserGroup } from "../interfaces/IGroup";
-import { UserGroup } from "../models/UserGroup";
+import { _USER } from "../constants/constants";
+import { IGroup } from "../interfaces/IGroup";
+import { IUserInfo } from "../interfaces/IUserInfo";
 
 
-export const setLocalGroup = (userId: string, group: IGroup) => {
-    let groups = localGroups(userId);
+// export const setLocalGroup = (userId: string, group: IGroup) => {
+//     let groups = localGroups();
 
-    if (group.Id === "0")
-        group.Id = (groups.length + 1).toString();
+//     if (group.Id === "0")
+//         group.Id = (groups.length + 1).toString();
 
-    let newGroups = groups.filter(_ => _.Id !== group.Id);
+//     let newGroups = groups.filter(_ => _.Id !== group.Id);
 
-    newGroups.push(group);
+//     newGroups.push(group);
 
-    setLocalGroups(userId, newGroups);
-}
+//     setLocalGroups(userId, newGroups);
+// }
 
-export const localGroups = (userId: string): IGroup[] => {
+export const localGroups = (): IGroup[] => {
+    const data = localStorage.getItem(_USER);
 
-    let data = (localStorage.getItem('groups') || '[]') as string;
+    if (!data) {
+        return [];
+    }
 
-    const groups = (data) ? JSON.parse(data) : undefined;
+    const user = JSON.parse(data) as IUserInfo | undefined;
 
-    return groups.find((_: IUserGroup) => _.userId === userId)?.groups;
-}
+    return user?.Groups ?? [];
+};
 
-export const setLocalGroups = (userId: string, groups: IGroup[]) => {
 
-    const userGroups = JSON.parse(localStorage.getItem('groups') as string) || [];
+export const setLocalGroup = (user: IUserInfo, group: IGroup) => {
+    if (!group?.Name) return;
 
-    const userGroup = userGroups.find((_: IUserGroup) => _.userId === userId);
+    const existingGroup = user.Groups.find(g => g.Id === group.Id);
 
-    if (!userGroup) {
-         userGroups.push({ userId, groups }); 
-        }
-    else
-        userGroup.groups = groups;
+    if (existingGroup) {
+        Object.assign(existingGroup, group);
+    } else {
+        
+        if (group.Id === "0")
+            group.Id = (user.Groups.length + 1).toString();
+        user.Groups.push(group);
+    }
 
-    localStorage.setItem('groups', JSON.stringify(userGroups));
-
-}   
+    localStorage.setItem(_USER, JSON.stringify(user));
+};

@@ -1,9 +1,10 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
+import { LoginStatus, StatusChange } from "../models/Enums";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
 import { IUserInfo } from "../interfaces/IUserInfo";
 import { IWord } from "../interfaces/IWord.js";
-import { LoginStatus, StatusChange } from "../models/Enums";
+
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
 // import { TextToSpeechClient } from '@google-cloud/text-to-speech';
@@ -41,33 +42,6 @@ export const getCurrentLearned = (summary: IGlobalSummary, currentCycle: number)
             return summary.Known;
     }
 }
-
-export const globalUserDefault : IUserInfo = {
-    UserId: 'anonymous'
-    , FullName: 'anonymous'
-    , imageUrl: ''
-    , PlayingGroup: "0"
-    , FirstShowed: false
-    , UserName: ''
-    , UserEmail: ''
-    , IsInLogin: false
-    , PromptActived: false
-    , TimeOutActived: -1
-    , provider: ''
-    , AccessToken: ''
-    , RefreshToken: ''
-    , Drive: {idFolder: ''} 
-    , Groups: []
-    , TokenExpiration: new Date('1900-01-01T12:00:00Z')
-    , Login: {
-        Code: ''
-        , LoginStatus: LoginStatus.Done
-        , Redirect: ''
-    }
-
-}
-
-export const groupDefault = Group.NewGroup();
 
 export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSummary => {
     let Learned: number = 0;
@@ -157,4 +131,32 @@ export const textToSpeech = async (text: string, languageCode: string) => {
     } catch (error) {
         console.error(error);
     }
+}
+
+
+export const groupDefault = Group.NewGroup();
+
+export const globalUserDefault : IUserInfo = {
+    UserId: 'anonymous'
+    , FullName: 'anonymous'
+    , imageUrl: ''
+    , PlayingGroup: "0"
+    , FirstShowed: false
+    , UserName: ''
+    , UserEmail: ''
+    , IsInLogin: false
+    , PromptActived: false
+    , TimeOutActived: -1
+    , provider: ''
+    , AccessToken: ''
+    , RefreshToken: ''
+    , Drive: {IdFolder: ''} 
+    , Groups: []
+    , TokenExpiration: new Date('1900-01-01T12:00:00Z')
+    , Login: {
+        Code: ''
+        , LoginStatus: LoginStatus.Done
+        , Redirect: ''
+    }
+
 }

@@ -1,113 +1,60 @@
-import axios from "axios";
 import { IUserInfo } from "../../interfaces/IUserInfo";
-import { IDriveFileInfo } from "../../interfaces/Drive/IDriveFileInfo";
 import { _DRIVE } from "../../constants/drive";
+import { IGroup } from "../../interfaces/IGroup";
+import { createFolder, createNewFile, getIdFileByItsChildFiles, loadIdFolder, uploadFile, ValidateTokenWithGoogle } from "../../hooks/google.hook";
+import { jsonToCsv } from "../../util/csvToJson";
+import { User } from "../../models/User";
+import { getAWSData } from "../../hooks/aws.lambda.hook";
+
+const saveGroup = async (user:IUserInfo, group: IGroup) => {
+    await TokenValidation(user);
+
+    await loadFolder(user);
+
+    group.IdDriveFile = await loadIdFile(user, group.IdDriveFile, group.keyFileName);
+
+    const fileContent = jsonToCsv(group.Words);
+    
+    await uploadFile(user, group.IdDriveFile, fileContent);
+
+}
 
 const loadFolder = async (user: IUserInfo) => {
 
-    if (user.Drive.idFolder === null || user.Drive.idFolder ==='')
+    if (user.Drive.IdFolder === null || user.Drive.IdFolder ==='')
         await loadIdFolder(user);
 
-    if (user.Drive.idFolder === null || user.Drive.idFolder ==='')
+    if (user.Drive.IdFolder === null || user.Drive.IdFolder ==='')
         await createFolder(user);
 };
 
-const createFolder = async (user: IUserInfo) => {
-    const parentId = 'root';
-
-    // Create the JSON request body
-    const requestBody = {
-        name: _DRIVE.DRIVE_NAME_FOLDER,
-        mimeType: 'application/vnd.google-apps.folder',
-        parents: [parentId],
-    };
-
-    try {
-        // Make a POST request to create the folder
-        const response = await axios.post(
-            'https://www.googleapis.com/drive/v3/files',
-            requestBody,
-            {
-                headers: {
-                    'Authorization': `Bearer ${user.AccessToken}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
-
-        // Check if the request was successful
-        if (response.status === 200) {
-            // Get the folder ID from the response
-            const fileItem = response.data;
-
-            // Assuming you have a state setter function to save the folder ID
-            if (fileItem) {
-                user.Drive.idFolder = fileItem.id;
-            }
-        } else {
-            console.error('Failed to create folder:', response.statusText);
+const loadIdFile = async (user:IUserInfo, idFile:string, fileName:string) =>{
+    // async function loadIdFile(folder: string, fileName: string, idFile: string): Promise<string> {
+        if (user.Drive.IdFolder && !idFile) {
+            idFile = await getIdFileByItsChildFiles(user, fileName);
         }
-    } catch (error) {
-        console.error('An error occurred while creating the folder:', error);
-    }
+    
+        if (!idFile) {
+            idFile = await createNewFile(user, fileName);
+        }
+    
+        return idFile;
+    // }
+    
 }
 
-const loadIdFolder = async (user: IUserInfo) => {
-    const token = user.AccessToken;
+const TokenValidation = async (user:IUserInfo) => {
+    
+    var isValid = await ValidateTokenWithGoogle(user);
 
-    const getFileUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(_DRIVE.DRIVE_NAME_FOLDER)}' and trashed=false and mimeType='application/vnd.google-apps.folder'`;
-
-    try {
-        const response = await axios.get(getFileUrl, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": 'application/json'
-            }
-        });
-
-        if (response.status === 200) {
-            const streamFile = response.data;
-
-            const fileListResponse: IDriveFileInfo = { files: [] };
-            Object.assign(fileListResponse, streamFile);
-
-            if (fileListResponse && fileListResponse.files.length > 0) {
-                user.Drive.idFolder = fileListResponse.files[0].id;
-            }
-        }
-    } catch (error) {
-        console.error('Error loading folder ID:', error);
+    if (!User.hasRefreshToken(user) && !isValid) {
+        throw new Error("Token is null or expired.");
+    } else if (!isValid) {
+        user.AccessToken = (await getAWSData(user)).UserToken.Token;
     }
-};
+}
 
 export {
     loadFolder
+    , saveGroup
 }
-// const getIdFileByItsChildFiles = async (folderName, fileName) => {
-//     const param1 = encodeURIComponent(`parents='${_session.user.drive.idFolder}' and trashed=false and name='${Tabito.Model.Constants.DRIVE_USER_FILE_NAME}'`);
-//     const param2 = encodeURIComponent('fields=files(id,name,size,mimeType,trashed)');
-//     const apiUrl = `https://www.googleapis.com/drive/v3/files?q=${param1}&${param2}`;
-
-//     try {
-//         const response = await axios.get(apiUrl, {
-//             headers: {
-//                 Authorization: `Bearer ${_session.user.userToken.token}`,
-//                 Accept: 'application/json'
-//             }
-//         });
-
-//         if (response.status === 200) {
-//             const fileListResponse = response.data;
-
-//             if (fileListResponse && fileListResponse.files.length === 1) {
-//                 return fileListResponse.files.find(file => file.name === fileName)?.id || '';
-//             } else if (fileListResponse && fileListResponse.files.length === 2) {
-//                 await deleteFiles();
-//             }
-//         }
-//     } catch (error) {
-//         console.error('Error fetching file ID:', error);
-//     }
-
-//     return '';
-// };

@@ -1,5 +1,6 @@
 import { Group } from "../models/Group"
 import { IUserDriveInfo } from "./Drive/IUserDriveInfo"
+import { IGroup } from "./IGroup"
 import { IUser } from "./IUser"
 import { IUserLogin } from "./IUserLogin"
 
@@ -19,6 +20,6 @@ export interface IUserInfo extends IUser {
     AccessToken: string
     RefreshToken: string
     Drive: IUserDriveInfo
-    Groups: Group[]
+    Groups: IGroup[]
     TokenExpiration : Date
 }

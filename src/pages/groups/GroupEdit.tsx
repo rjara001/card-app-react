@@ -16,7 +16,7 @@ import { Box, Button, Divider, IconButton, Tab, Tabs, TextareaAutosize, Typograp
 import { makeStyles } from "@material-ui/styles";
 
 // import { UserContext } from "../../context/context.create";
-import { setLocalGroup, setLocalGroups } from "../../locals/group.local";
+import { setLocalGroup } from "../../locals/group.local";
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined'
 import EditIcon from '@mui/icons-material/Edit'
 import Header from "../../components/Header";
@@ -51,17 +51,29 @@ export const GroupEdit = () => {
 
     const getData = async () => {
         setIsLoading(true);
-        const groups = await Adapter.getGroups(userInfo);
-
-        let group = await Adapter.getGroup(userInfo, id as string) as IGroup;
         
-        if (group===undefined || group.Status === StatusChange.None ) { 
-            group = new Group(getLastGroupId(groups), StatusChange.Created);
+        // Retrieve the groups from userInfo
+        const groups = userInfo?.Groups;
+    
+        // Find the group by ID
+        let group = groups?.find(g => g.Id === id) as IGroup | undefined;
+        
+        // If the group is undefined or its status is `None`, create a new group
+        if (!group || group.Status === StatusChange.None) { 
+            group = new Group(getLastGroupId(groups || []), StatusChange.Created);
+        } else {
+            // Map over the existing group's words and transform them
+            group = { 
+                ...group, 
+                Words: group.Words.map(w => Word.newWord2(w.Name, w.Value)) 
+            };
         }
-
-        group.Words = group.Words.map(_ => Word.newWord2(_.Name, _.Value));
-
+    
+        // Update the state with the group
         setGroup(group);
+        
+        // Set loading to false once the data has been processed
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -75,14 +87,14 @@ export const GroupEdit = () => {
             setIsLoading(false);
 
             if (group.Status !== StatusChange.None)
-                Adapter.setGroup(userInfo.UserId, group);
+                Adapter.setGroup(userInfo, group);
 
     }, [group])
 
     useEffect(() => {
 
         if (newGroupElement)
-            setLocalGroup(userInfo.UserId, group);
+            setLocalGroup(userInfo, group);
 
     }, [newGroupElement])
 

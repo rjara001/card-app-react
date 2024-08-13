@@ -1,12 +1,5 @@
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import React, { useContext, useEffect, useState } from 'react';
-// import { UserContext } from "../../context/context.create";
-import { IUserInfo } from '../../interfaces/IUserInfo.js';
-import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { useContext, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from "@mui/material/styles";
 
@@ -14,19 +7,14 @@ import { Theme } from "@mui/material/styles";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
-import Divider from '@mui/material/Divider';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useNavigate } from 'react-router-dom';
-import GoogleLogin, { GoogleLogout } from "react-google-login";
 import { gapi } from 'gapi-script';
 
 import { PublicClientApplication } from "@azure/msal-browser";
-import { MsalProvider, useMsal } from "@azure/msal-react";
+import { MsalProvider } from "@azure/msal-react";
 import { UserContext } from '../../context/context.user';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -54,11 +42,7 @@ const config = {
     }
 };
 export function SettingsPage() {
-    const classes = useStyles();
     const navigate = useNavigate();
-
-    var CLIENT_ID = process.env.REACT_APP_PUBLIC_GOOGLE_CLIENT_ID || '';
-
 
     useEffect(() => {
         function start() {
@@ -72,10 +56,14 @@ export function SettingsPage() {
     }, []);
 
     const { userInfo, updateValue } = useContext(UserContext);
-    //   const [isToggled, setIsToggled] = useState(false);
+   
+    if (!userInfo) {
+        return <div>Loading user information...</div>;
+    }
+
 
     const handleToggleTurnCard = () => {
-        // setIsToggled(!isToggled);
+        
         userInfo.FirstShowed = !userInfo.FirstShowed;
         updateValue(userInfo);
     };
@@ -160,32 +148,4 @@ export function SettingsPage() {
                 </ListItem>
             </List></ MsalProvider>
     );
-
-    // return (
-    //     <div>
-    //         <div>
-    //             <Grid container spacing={3} className={classes.root}>
-    //                 <Grid item xs={12} sm={3}>
-    //                     <Avatar sx={{ bgcolor: deepOrange[500] }}>R</Avatar>
-
-    //                 </Grid>
-    //                 <Grid item xs={12} sm={9}>
-    //                     <Typography variant="h2">{username}</Typography>
-    //                     <Typography variant="h5">{email}</Typography>
-    //                     <Button variant="contained" color="primary" className={classes.button}>
-    //                         Edit Profile
-    //                     </Button>
-    //                 </Grid>
-    //             </Grid>
-    //         </div>
-    //         <div>
-    //             <h1>Settings</h1>
-    //             <FormControlLabel
-    //                 control={<Switch checked={userInfo.FirstShowed} onChange={handleToggle} color="primary" />}
-    //                 label="Turn the card"
-    //                 labelPlacement="start"
-    //             />
-
-    //         </div></div>
-    // );
 };

@@ -2,13 +2,10 @@ import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, ListIte
 import React, { FC, useContext } from 'react';
 import { useEffect, useState } from 'react';
 
-import { setLocalGroups } from '../../locals/group.local';
-
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IGroup, IGroupProps } from '../../interfaces/IGroup';
 // import { UserContext } from "../../context/context.create";
 import { Adapter } from '../../locals/adapter';
@@ -38,6 +35,11 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
 
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
+
+    if (!userInfo) {
+        return <div>Loading user information...</div>;
+    }
+
     const handlePlayClick = (id: string) => {
 
         userInfo.PlayingGroup = id;
@@ -47,9 +49,9 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
         navigate(`/play`);
     }
 
-    function handleButtonDelete(item: IGroup): void {
+    const handleButtonDelete = (item: IGroup): void => {
 
-        Adapter.deleteGroup(userInfo.UserId, item);
+        Adapter.deleteGroup(userInfo, item);
         deleteGroup(item);
 
     }
@@ -133,12 +135,13 @@ export const GroupList = () => {
     const getData = async () => {
         setIsLoading(true);
 
-        let _groups = await Adapter.getGroups(userInfo) as IGroup[];
+        //TODO: Check this out
+        // userInfo.Groups = await Adapter.getUser(userInfo) as IGroup[];
 
-        setLocalGroups(userInfo.UserId, _groups);
-        setDataGroups(_groups);
+        // setLocalGroups(userInfo, _groups);
+        // updateValue(_groups);
 
-        setGroups(_groups);
+        // setGroups(_groups);
     };
 
     useEffect(() => {
@@ -156,7 +159,7 @@ export const GroupList = () => {
 
         if (filter !== undefined) {
             let _groups = dataGroups.filter(obj => {
-                let _filter = obj.Words.filter(_ => filterWordByType(userInfo.FirstShowed ? 'Name' : 'Value', _, filter));
+                let _filter = obj.Words.filter(_ => filterWordByType(userInfo?.FirstShowed ? 'Name' : 'Value', _, filter));
 
                 return _filter.length > 0;
             });
@@ -164,6 +167,9 @@ export const GroupList = () => {
         }
     }, [filter])
 
+    if (!userInfo) {
+        return <div>Loading user information...</div>;
+    }
 
     function handleAddClick(): void {
         navigate('/group');
@@ -177,7 +183,7 @@ export const GroupList = () => {
 
     function handleSaveAction(): void {
         // Adapter.setGroups(userInfo.UserId);
-        Adapter.setDrive(userInfo);
+        // Adapter.setDrive(userInfo);
         setIsActiveMessageSaveData(false);
         setIsSyncSuccessful(true);
         setMessageSuccessful('Upload process was complete succesfull.');
@@ -185,10 +191,6 @@ export const GroupList = () => {
 
     const handleSync = async () => {
         await Adapter.setSync(userInfo);
-
-        let _groups = await Adapter.getGroups(userInfo) as IGroup[];
-
-        setGroups(_groups);
 
         setIsSyncSuccessful(true);
         setMessageSuccessful('Sync process was complete succesfull.');

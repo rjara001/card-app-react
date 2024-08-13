@@ -1,11 +1,17 @@
-import { queryGetContentAllTableFile, queryGetValidateTokenAccess, queryLoadIdFoler } from "../../hooks/google.hook";
+import { queryGetContentAllTableFile, queryGetValidateTokenAccess, queryLoadIdFoler} from "../../hooks/google.hook";
 import { IUserInfo } from "../../interfaces/IUserInfo";
+import { IGroup } from "../../interfaces/IGroup";
 
 const getValidateTokenAccessFromAPI = async (user: IUserInfo) => {
     
     const resp = await queryGetValidateTokenAccess(user);
 
     return resp;
+}
+
+const mutationGroupToFile = async (group:IGroup) => {
+    
+    await mutationGroupToFile(group);
 }
 
 const getContentAllWords = async (user: IUserInfo)=> {

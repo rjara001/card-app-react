@@ -2,7 +2,7 @@ import axios from "axios";
 import { IUserInfo } from "../../interfaces/IUserInfo";
 import { ITokenResponse } from "../../interfaces/Google/ITokenResponse";
 import { LoginStatus } from "../../models/Enums";
-import { IGoogleUserInfo, IResponseObject } from "../../interfaces/AWS/IResponse";
+import { IResponseObject } from "../../interfaces/AWS/IResponse";
 import { PROJECT } from "../../constants/constants";
 import { buildAWSPostRequest } from "../../models/AWS/AWSContent";
 import { getAWSUserInfo } from "../../hooks/aws.lambda.hook";

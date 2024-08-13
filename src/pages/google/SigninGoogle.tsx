@@ -5,15 +5,15 @@ import { UserContext } from '../../context/context.user';
 import { LoginStatus } from '../../models/Enums';
 import useSessionStorage from '../../hooks/useSessionStorage';
 
-interface Session {
-  User: {
-    Login: {
-      Code: string;
-      LoginStatus: string;
-      Redirect: string;
-    };
-  };
-}
+// interface Session {
+//   User: {
+//     Login: {
+//       Code: string;
+//       LoginStatus: string;
+//       Redirect: string;
+//     };
+//   };
+// }
 
 const SignInGoogle: React.FC = () => {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ const SignInGoogle: React.FC = () => {
     };
 
     handleSignIn();
-  }, [navigate, oauthState]);
+  }, [navigate, oauthState, updateValue, userInfo]);
 
   return null; // or a loading spinner, or redirect UI
 };

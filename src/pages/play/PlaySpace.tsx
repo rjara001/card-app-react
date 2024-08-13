@@ -50,11 +50,14 @@ export const PlaySpace = () => {
 
     const navigate = useNavigate();
 
+    if (!userInfo) {
+        return <div>Loading user information...</div>;
+    }
 
     const saveGroup = (setGetResult: any, group: IGroup, updateWords: IWord[]) => {
         const _group = { ...group, Words: updateWords };
 
-        setLocalGroup(userInfo.UserId, _group);
+        setLocalGroup(userInfo, _group);
         setGetResult(_group);
     }
 
@@ -75,7 +78,7 @@ export const PlaySpace = () => {
     }
 
     const handleHistorifyClick = () => {
-        Adapter.historify(userInfo.UserId, result);
+        Adapter.historify(userInfo, result);
         setIsHistorifyMessageEnable(false);
         setIsHistorified(true);
     }
@@ -83,9 +86,6 @@ export const PlaySpace = () => {
     const riseTheVoice = async () => {
         textToSpeech(result.Words[indexWord]?.Name, 'en-US');
 
-        // let urlVoice = ''; // await textToSpeech(result.Words[indexWord]?.Name, 'en-US') || '';
-
-        // setAudioUrl(urlVoice);
     }
 
     const nextValue = () => {
@@ -160,7 +160,9 @@ export const PlaySpace = () => {
         nextValue();
     }
     const getData = async () => {
-        let group = await Adapter.getGroup(userInfo, userInfo.PlayingGroup.toString()) as IGroup;
+        // let group = await Adapter.getGroup(userInfo, userInfo.PlayingGroup.toString()) as IGroup;
+        
+        const group = userInfo.Groups.find(_=>_.Name === userInfo.PlayingGroup) as IGroup;
 
         setGetResult(group);
         setHasDoNextValue(true);
@@ -184,8 +186,6 @@ export const PlaySpace = () => {
             setHasDoNextValue(false);
             nextValue();
         }
-
-
 
     }, [hasDoNextValue, currentCycle])
 

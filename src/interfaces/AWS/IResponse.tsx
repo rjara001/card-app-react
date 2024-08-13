@@ -13,3 +13,7 @@ export interface IGoogleUserInfo {
     picture: string;
     verified_email: boolean;
 }
+
+export interface IApiResponseWrapper {
+    Body : string
+}
