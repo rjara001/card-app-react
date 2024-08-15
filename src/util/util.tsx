@@ -87,19 +87,11 @@ export const getLastGroupId = (groups: IGroup[]) => {
     }, new Group("0", StatusChange.None)).Id) + 1).toString();
 }
 
-const filterWordByWord = (word: string, filter: string) => {
-
-    let filterResult = false;
-
-    word.split(' ').forEach(_ => {
-        if (_ === filter) {
-            filterResult = true;
-            return;
-        }
-    });
-
-    return filterResult;
-}
+const filterWordByWord = (word: string, filter: string): boolean => {
+    return word
+        .split(' ')
+        .some(part => part !== null && part.includes(filter));
+};
 
 export const filterWordByType = (type: string, word: IWord, filter: string) => {
 
@@ -133,8 +125,20 @@ export const textToSpeech = async (text: string, languageCode: string) => {
     }
 }
 
+export const generateUniqueFileName = (extension: string = "json"): string => {
+    // Get the current timestamp in the format "yyyyMMddHHmmssfff"
+    const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 17);
 
-export const groupDefault = Group.NewGroup();
+    // Generate a UUID
+    const uuid = crypto.randomUUID().replace(/-/g, ''); // Generate a 32-character UUID with no hyphens
+
+    // Combine the timestamp and UUID to create a unique file name
+    const uniqueFileName = `${timestamp}_${uuid}.${extension}`;
+
+    return uniqueFileName;
+}
+
+export const groupDefault = Group.NewGroupDefault();
 
 export const globalUserDefault : IUserInfo = {
     UserId: 'anonymous'

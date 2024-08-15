@@ -16,6 +16,7 @@ import { gapi } from 'gapi-script';
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
 import { UserContext } from '../../context/context.user';
+import { User } from '../../models/User';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -87,7 +88,7 @@ export function SettingsPage() {
 
         userInfo.UserName = response.profileObj.name;
         userInfo.UserEmail = response.profileObj.email;
-        userInfo.IsInLogin = true;
+        userInfo.IsInLogin = User.hasAccessToken(userInfo);
         // navigate('/play');
     }
 

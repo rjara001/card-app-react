@@ -5,7 +5,30 @@ import { ITokenInfo } from "../interfaces/ITokenInfo";
 import { IDriveFileInfo } from "../interfaces/Drive/IDriveFileInfo";
 import { IFileItem } from "../interfaces/Drive/IFileItem";
 import { _DRIVE } from "../constants/drive";
+import { TokenExpiredError } from "../models/Error";
 
+
+export const deleteFile = async (user:IUserInfo, fileId:string) =>
+{
+    const apiUrl = `https://www.googleapis.com/drive/v3/files/${fileId}`;
+
+    try {
+        const response = await axios.delete(apiUrl, {
+            headers: {
+                Authorization: `Bearer ${user.AccessToken}`,
+            },
+        });
+
+        if (response.status === 204) { // Status code 204 indicates successful deletion
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+
+        return false;
+    }
+}
 export const uploadFile = async (user: IUserInfo, idFile: string, fileContent: string): Promise<boolean> => {
     const apiUrl = `https://www.googleapis.com/upload/drive/v3/files/${idFile}`;
 
@@ -274,33 +297,34 @@ export const createNewFile = async (user:IUserInfo, nameFile: string): Promise<s
     return '';
 }
 
-export const ValidateTokenWithGoogle = async (user:IUserInfo): Promise<boolean> => {
-   
-        if (!User.hasAccessToken(user)) {
-            return false;
-        }
-    
-        const token = user.AccessToken;
-        const url = `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`;
-    
-        try {
-            const response = await fetch(url);
-    
-            if (response.ok) {
-                const content = await response.json() as ITokenInfo;
-    
-                // Example: check if the token is expired
-                const expirationTime = new Date(content.exp * 1000); // Convert Unix timestamp to JavaScript Date
-                if (expirationTime > new Date()) {
-                    return true;
-                }
-            }
-        } catch (error) {
-            console.error('Failed to validate token:', error);
-        }
-    
+export const ValidateTokenWithGoogle = async (user: IUserInfo): Promise<boolean> => {
+    if (!User.hasAccessToken(user)) {
         return false;
-    
-    
+    }
+
+    const token = user.AccessToken;
+    const url = `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${encodeURIComponent(token)}`;
+
+    try {
+        const response = await fetch(url);
+
+        if (response.ok) {
+            const content = await response.json() as ITokenInfo;
+
+            // Check if the token is expired
+            const expirationTime = new Date(content.exp * 1000); // Convert Unix timestamp to JavaScript Date
+            if (expirationTime > new Date()) {
+                return true;
+            }
+        } else {
+            throw new TokenExpiredError();
+        }
+    } catch (error) {
+        console.error('Error during token validation:', error);
+        throw new TokenExpiredError();
+    }
+
+    return false;
 }
+
 

@@ -7,19 +7,28 @@ import { Adapter } from "../locals/adapter";
 
 import { parseCsv } from "../util/csvToJson";
 import { globalUserDefault } from "../util/util";
+import { LoginStatus, StatusChange } from "./Enums";
 
 export class User implements IUser {
     static SetAuth(user: IUserInfo, googleUser: IGoogleUserInfo, tokens: ITokenResponse) {
 
         const minutes = Math.floor(tokens.expires_in / 60);
 
-        user.AccessToken = tokens?.access_token ?? '';
-        user.RefreshToken = tokens?.refresh_token ?? '';
-        user.imageUrl = googleUser.picture;
-        user.UserEmail = googleUser.email;
-        user.UserId = googleUser.email;
-        user.FullName = googleUser.name;
-        user.TokenExpiration = new Date(Date.now() + minutes * 60 * 1000);
+        const _user = {...user,
+            AccessToken : tokens?.access_token ?? ''
+            , RefreshToken : tokens?.refresh_token ?? ''
+            , imageUrl : googleUser.picture
+            , UserEmail : googleUser.email
+            , UserId : googleUser.email
+            , FullName : googleUser.name
+            , IsInLogin : true
+            , TokenExpiration : new Date(Date.now() + minutes * 60 * 1000)
+            
+            , Login: { ...user.Login, LoginStatus : LoginStatus.Done}
+        };
+
+        return _user;
+
     }
 
     static hasAccessToken(user: IUserInfo) {
@@ -34,19 +43,9 @@ export class User implements IUser {
         this.Groups = groups;
     }
     
-    static newUser(resp: any) {
-        if (resp==='')
-            resp = new User('', []);
-
-        const groups = resp.Groups.map((_: any)=>{
-            return {... _, Words : parseCsv(_.Words)}
-        });
-
-        return new User(resp.idUser, groups);
-    }
 
     static LoginFacebook(userInfo:IUserInfo, response: any) {
-        userInfo.IsInLogin = true;
+        userInfo.IsInLogin = User.hasAccessToken(userInfo);
         userInfo.UserId = response.email;
         userInfo.AccessToken = response.accessToken;
         userInfo.FullName = response.name;
@@ -56,7 +55,7 @@ export class User implements IUser {
     }
 
     static LoginGoogle(userInfo:IUserInfo){
-        userInfo.IsInLogin = true;
+        userInfo.IsInLogin = User.hasAccessToken(userInfo);
        
         userInfo.provider = 'google';
         Adapter.setUser(userInfo);
@@ -64,7 +63,7 @@ export class User implements IUser {
     }
 
     static LoginCustom(userInfo:IUserInfo, response:any) {
-        userInfo.IsInLogin = true;
+        userInfo.IsInLogin = User.hasAccessToken(userInfo);
         userInfo.UserId = response.idToken.payload.email;
         userInfo.FullName = response.idToken.payload.name;
         userInfo.AccessToken = response.accessToken;
@@ -86,6 +85,10 @@ export class User implements IUser {
 
     static TokenIsExpired(userInfo:IUserInfo) {
         return userInfo.TokenExpiration  < new Date();
+    }
+
+    static getGroups(userInfo:IUserInfo): IGroup[] {
+        return userInfo.Groups.filter(_=>_.Status!== StatusChange.Deleted)
     }
 }
 

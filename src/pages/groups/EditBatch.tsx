@@ -10,6 +10,9 @@ const useStyles = makeStyles({
   rigthButton: {
       textAlign: 'right'
   },
+  paddingBottom50:{
+    paddingBottom: '50px'
+  }
 });
 
 const EditBatch: React.FC<IEditBatchProps> = memo(({ handleSaveBatchClick }) => {
@@ -21,7 +24,7 @@ const EditBatch: React.FC<IEditBatchProps> = memo(({ handleSaveBatchClick }) => 
   };
 
   return (
-    <Grid>
+    <Grid className={classes.paddingBottom50}>
       <TextareaAutosize
         maxRows={100}
         aria-label="maximum height"

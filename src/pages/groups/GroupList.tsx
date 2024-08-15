@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useMemo } from 'react';
 import { useEffect, useState } from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,6 +19,8 @@ import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
 import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
 import { UserContext } from '../../context/context.user';
 import { filterWordByType } from '../../util/util';
+import { User } from '../../models/User';
+import { TokenExpiredError } from '../../models/Error';
 
 const useStyles = makeStyles({
     button: {
@@ -51,7 +53,9 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
 
     const handleButtonDelete = (item: IGroup): void => {
 
-        Adapter.deleteGroup(userInfo, item);
+        const { updatedUserInfo } = Adapter.deleteGroup(userInfo, item);
+
+        updateValue(updatedUserInfo);
         deleteGroup(item);
 
     }
@@ -123,49 +127,43 @@ export const GroupList = () => {
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
     const [groups, setGroups] = useState<IGroup[]>([]);
-    const [dataGroups, setDataGroups] = useState<IGroup[]>([]);
+    // const [dataGroups, setDataGroups] = useState<IGroup[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isActiveMessageSaveData, setIsActiveMessageSaveData] = useState<boolean>(false);
     const [isSyncSuccessful, setIsSyncSuccessful] = useState<boolean>(false);
     const [messageSuccessful, setMessageSuccessful] = useState<string>('');
     const [filter, setFilter] = useState('');
+    const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
 
     let { word } = useParams();
 
-    const getData = async () => {
-        setIsLoading(true);
-
-        //TODO: Check this out
-        // userInfo.Groups = await Adapter.getUser(userInfo) as IGroup[];
-
-        // setLocalGroups(userInfo, _groups);
-        // updateValue(_groups);
-
-        // setGroups(_groups);
-    };
 
     useEffect(() => {
-        getData();
+        setGroups(User.getGroups(userInfo));
+    }, [userInfo]);
+
+    useEffect(() => {
         setFilter(word || '');
+    }, [word]);
 
-    }, []);
 
-    useEffect(() => {
-        if (groups)
-            setIsLoading(false);
-    }, [groups]);
-
-    useEffect(() => {
-
-        if (filter !== undefined) {
-            let _groups = dataGroups.filter(obj => {
-                let _filter = obj.Words.filter(_ => filterWordByType(userInfo?.FirstShowed ? 'Name' : 'Value', _, filter));
-
+    // Memoized value to calculate filtered groups based on filter and groups
+    const filteredGroupsMemo = useMemo(() => {
+        if (filter !== '') {
+            return groups.filter(group => {
+                const _filter = group.Words.filter(word =>
+                    filterWordByType(userInfo.FirstShowed ? 'Name' : 'Value', word, filter)
+                );
                 return _filter.length > 0;
             });
-            setGroups(_groups);
         }
-    }, [filter])
+        return groups;
+    }, [filter, groups]);
+
+    // Effect to update the filtered groups state when filteredGroupsMemo changes
+    useEffect(() => {
+        setFilteredGroups(filteredGroupsMemo);
+    }, [filteredGroupsMemo]);
 
     if (!userInfo) {
         return <div>Loading user information...</div>;
@@ -181,16 +179,38 @@ export const GroupList = () => {
         })
     }
 
-    function handleSaveAction(): void {
-        // Adapter.setGroups(userInfo.UserId);
-        // Adapter.setDrive(userInfo);
+    async function handleUploadCloud(): Promise<void> {
+        try {
+            await Adapter.uploadCloud(userInfo);
+        } catch (error) {
+            if (error instanceof TokenExpiredError) {
+                updateValue(User.LoginClean(userInfo));
+                navigate('/');
+            } else {
+                setIsSyncSuccessful(false);
+                return;
+            }
+        }
+        
         setIsActiveMessageSaveData(false);
         setIsSyncSuccessful(true);
         setMessageSuccessful('Upload process was complete succesfull.');
     }
 
-    const handleSync = async () => {
-        await Adapter.setSync(userInfo);
+    const handleDownloadCloud = async () => {
+        try {
+            const user = await Adapter.downloadCloud(userInfo);
+            updateValue(user);
+
+        } catch (error) {
+            if (error instanceof TokenExpiredError) {
+                updateValue(User.LoginClean(userInfo));
+                navigate('/');
+            } else {
+                setIsSyncSuccessful(false);
+                return;
+            }
+        }
 
         setIsSyncSuccessful(true);
         setMessageSuccessful('Sync process was complete succesfull.');
@@ -207,7 +227,7 @@ export const GroupList = () => {
             onClose={() => setIsSyncSuccessful(false)}
         />
 
-        <ConfirmationDialog message="Are you sure you want to save your data in the cloud?" onConfirm={handleSaveAction} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
+        <ConfirmationDialog message="Are you sure you want to save your data in the cloud?" onConfirm={handleUploadCloud} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
 
         <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={9} sm={9} >
@@ -219,7 +239,7 @@ export const GroupList = () => {
             </Grid>
             <Grid container item xs={3} sm={3}>
                 <Grid item xs={6} sm={6}>
-                    {userInfo.IsInLogin && <IconButton onClick={() => handleSync()}>
+                    {userInfo.IsInLogin && <IconButton onClick={() => handleDownloadCloud()}>
                         <CloudDownloadIcon />
                     </IconButton>}
                 </Grid>
@@ -236,7 +256,7 @@ export const GroupList = () => {
                 'Loading groups...'
             ) : (
                 <div>
-                    {GroupListComponent(groups, filter, deleteGroup)}
+                    {GroupListComponent(filteredGroups, filter, deleteGroup)}
                 </div>
             )}
         </div>

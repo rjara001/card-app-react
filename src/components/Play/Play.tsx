@@ -107,8 +107,7 @@ export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle,
     
     const handleMatchClick = () => {
   
- 
-        const similarity = new PalabraService(word.Name).Coincide(textMatch, !userInfo.FirstShowed);
+         const similarity = new PalabraService(word.Name).Coincide(textMatch, !userInfo.FirstShowed);
 
         if (similarity>=0.8)
         {

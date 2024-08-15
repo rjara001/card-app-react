@@ -1,10 +1,10 @@
 export enum StatusChange {
-    Historify,
-    Created,
-    Modified,
-    Updated,
-    Deleted,
-    None
+    Historify = 5,
+    Created = 2,
+    Modified = 1,
+    Synced = 3,
+    Deleted = 4,
+    None = 6
 }
 
 export enum LoginStatus {

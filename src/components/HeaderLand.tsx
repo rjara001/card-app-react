@@ -61,13 +61,21 @@ export const HeaderLand = (props: Props) => {
     const state = uuidv4().replace(/-/g, '');
 
     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth
-              ?client_id=${clientId}
-              &redirect_uri=${encodeURIComponent(redirectUri)}
-              &response_type=code
-              &scope=${encodeURIComponent(scope)}
-              &state=${state}
-              &prompt=consent
-              &access_type=offline`.replace(/\s+/g, '');
+            ?client_id=${clientId}
+            &redirect_uri=${encodeURIComponent(redirectUri)}
+            &response_type=code
+            &scope=${encodeURIComponent(scope)}
+            &state=${state}
+            &access_type=offline`.replace(/\s+/g, '');
+
+    // const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth
+    //           ?client_id=${clientId}
+    //           &redirect_uri=${encodeURIComponent(redirectUri)}
+    //           &response_type=code
+    //           &scope=${encodeURIComponent(scope)}
+    //           &state=${state}
+    //           &prompt=consent
+    //           &access_type=offline`.replace(/\s+/g, '');
 
               setOauthState(state);
 

@@ -57,7 +57,7 @@ const SignInGoogle: React.FC = () => {
     };
 
     handleSignIn();
-  }, [navigate, oauthState, updateValue, userInfo]);
+  }, []);
 
   return null; // or a loading spinner, or redirect UI
 };

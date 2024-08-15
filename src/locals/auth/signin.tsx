@@ -43,7 +43,7 @@ export const signin = async (user: IUserInfo) => {
     
                 if (tokens) {
                     // Fetch user info based on the tokens
-                    await getUserInfo(user, tokens);
+                    return await getUserInfo(user, tokens);
                 } else {
                     throw new Error('Invalid state parameter');
                 }
@@ -76,8 +76,5 @@ const getUserInfo = async (user: IUserInfo, tokens: ITokenResponse) => {
 
     const responseObject: IResponseObject = JSON.parse(result) as IResponseObject;
 
-    User.SetAuth(user, responseObject.Data, tokens);
-
-    user.Login.LoginStatus = LoginStatus.Done;
-
+    return User.SetAuth(user, responseObject.Data, tokens);
 }

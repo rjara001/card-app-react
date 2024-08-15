@@ -15,7 +15,7 @@ export function UserContextProvider(props: any) {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const user = await Adapter.getUser(); // Await the promise
+            const user = {...await Adapter.getUser()}; // Await the promise
             setUserInfo(user); // Set the state once the user data is available
         };
 
@@ -24,6 +24,7 @@ export function UserContextProvider(props: any) {
 
     const updateValue = (newObj: IUserInfo) => {
         setUserInfo(prevState => ({ ...prevState, ...newObj }));
+        Adapter.setUser(newObj);
     };
 
     const userContext = {

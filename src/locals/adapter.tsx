@@ -1,24 +1,22 @@
-import { group } from "console";
-import { mutationPostUser, mutationPutUser, queryGetUser } from "../hooks/group.hook";
-import { IGroup, IUserGroup } from "../interfaces/IGroup";
+import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/User";
-import { checkGroupConsistency, globalUserDefault } from "../util/util";
+import { globalUserDefault } from "../util/util";
 
 import { Group } from "../models/Group";
-import { UserInfo } from "os";
 import { IUserInfo } from "../interfaces/IUserInfo";
-import { saveToDrive } from "./drive";
 import { queryGetContentAllTableFile } from "../hooks/google.hook";
 import { IFileItem } from "../interfaces/Drive/IFileItem";
 import { StatusChange } from "../models/Enums";
-import { loadFolder, saveGroup } from "./google/helper";
+import { loadFolder, saveGroup, TokenValidation } from "./google/helper";
 import { _USER } from "../constants/constants";
+import { IWord } from "../interfaces/IWord";
 
 
-const getUserAndAllGroupsFromAPI = async (user:IUserInfo) => {
-    
-    let _user: IUser = new User(user.UserId, user.Groups);
+const getUserAndAllGroupsFromAPI = async (user: IUserInfo) : Promise<IUserInfo> => {
+    await TokenValidation(user);
+
+    let _user: IUserInfo = { ...user, Groups:[]}
 
     await loadFolder(user);
 
@@ -27,15 +25,17 @@ const getUserAndAllGroupsFromAPI = async (user:IUserInfo) => {
 
     for (let index = 0; index < files.length; index++) {
         const element = files[index];
-        _user.Groups.push(new Group(element.content, StatusChange.Updated));
+        _user.Groups.push(Group.toGroup(element.id, element.name, element.content));
     }
 
-    return User.newUser(_user);
+    Adapter.setUser(_user);
+
+    return _user;
 }
 
-const setUser = (user:IUserInfo) => {
+const setUser = (user: IUserInfo) => {
     // if (user.UserId!=='' && !user.IsInLogin)
-        localStorage.setItem(_USER, JSON.stringify(user));
+    localStorage.setItem(_USER, JSON.stringify(user));
 }
 
 const getUser = async (): Promise<IUserInfo> => {
@@ -48,81 +48,41 @@ const getUser = async (): Promise<IUserInfo> => {
     return user;
 };
 
-// const getGroup = async (user: IUserInfo, idGroup: string) => {
-//     if (idGroup)
-//     {
-//         let groups = await getGroups(user);
+const setWordGroup = (group: IGroup, word: IWord, userInfo: IUserInfo) => {
 
-//         let group = groups.find(_ => _.Id.toString() === idGroup);
+    const updatedGroup = { ...group, Words: [...group.Words.filter(_=>_.Name !== word.Name), word] };
 
-//         return checkGroupConsistency(group);
-//     }
+    return setGroup(userInfo, updatedGroup);
+}
+
+const setGroup = (user: IUserInfo, group: IGroup) => {
     
-//     return undefined;
-// }
+    const updatedGroup = { ...group, LastModified: new Date() };
 
-// const getGroups = async (user:IUserInfo) => {
-//     const data : IGroup[] | undefined = localGroups(user.UserId);
-
-//     let groups = (data && data.length > 0) ? data : (await getUserAndAllGroupsFromAPI(user) as IUser).Groups;
-
-//     return groups;
-// }
-
-const setGroup = async (user: IUserInfo, group: IGroup) => {
-    if (group && group.Name) {
-        // Create a new group object with the updated last modified date
-        const updatedGroup = { ...group, LastModified: new Date() };
-
-        // Create a new groups array with the added group
-        const updatedGroups = [...user.Groups, updatedGroup];
-
-        // Create a new user object with the updated groups
-        const updatedUser = { ...user, Groups: updatedGroups };
-
-        // Update the user state with the new user object
-        setUser(updatedUser);
-    }
+    const updatedUserInfo = { ...user, Groups: [...user.Groups.filter(_=>_.Id !== group.Id), updatedGroup] } as IUserInfo;
+    
+    return { updatedUserInfo, updatedGroup };
 };
 
+const downloadCloud = async (user: IUserInfo) : Promise<IUserInfo> => {
+    const userUpdated = await getUserAndAllGroupsFromAPI(user) as IUserInfo;
 
-const setSync = async (user:IUserInfo) => {
-    // let groupsFromCoud = (await getUserAndAllGroupsFromAPI(user) as IUser).Groups;
+    setUser(userUpdated);
 
-    let groupsLocal: IGroup[] = user.Groups; //localGroups(user.UserId);
+    return userUpdated;
+}
 
-    groupsLocal.filter(group=>group.Status !== StatusChange.None 
-            && group.Status === StatusChange.Created).forEach(async group => {
+const uploadCloud = async (user: IUserInfo) => {
 
+    let groupsLocal: IGroup[] = user.Groups; 
+
+    let groupToSync = groupsLocal.filter(group => group.Status === StatusChange.Created
+            || group.Status === StatusChange.Modified
+            || group.Status === StatusChange.Deleted);
+     
+     for (const group of groupToSync) {
         await saveGroup(user, group);
-    });
-
-    // if (groupsFromCoud.length >= groupsLocal.length) {
-    //     groupsFromCoud.forEach(groupCloud => {
-    //         groupCloud.LastModified = groupCloud.LastModified===undefined?new Date():groupCloud.LastModified;
-
-    //         const _local = groupsLocal.find(_ => _.Id === groupCloud.Id);
-
-    //         if (_local === undefined)
-    //             groupsLocal.push(groupCloud);
-    //         else
-    //             if (_local.LastModified < groupCloud.LastModified)
-    //                 {
-    //                     groupsLocal = groupsLocal.filter(_=>_.Id!==groupCloud.Id);
-    //                     groupsLocal.push(groupCloud);
-    //                 }
-    //     });
-    // }
-    // else
-    //     groupsLocal.forEach(groupLocal => {
-    //         const _cloud = groupsFromCoud.find(_ => _.Id === groupLocal.Id);
-
-    //         if (_cloud !== undefined && _cloud.LastModified < groupLocal.LastModified)
-    //         {
-    //             groupsLocal = groupsLocal.filter(_=>_.Id!==groupLocal.Id);
-    //             groupsLocal.push(_cloud);
-    //         }
-    //     });
+    }
 
     setUser(user);
 }
@@ -133,15 +93,10 @@ const setSync = async (user:IUserInfo) => {
 //     await mutationPutUser(new User(idUser, groups));
 // }
 
-const deleteGroup = async (user: IUserInfo, group: IGroup) => {
-    // Create a new array of groups excluding the group to be deleted
-    const updatedGroups = user.Groups.filter(g => g.Id !== group.Id);
+const deleteGroup = (user: IUserInfo, group: IGroup) => {
+    group.Status = StatusChange.Deleted;
 
-    // Create a new user object with the updated groups
-    const updatedUser = { ...user, Groups: updatedGroups };
-
-    // Update the user state
-    setUser(updatedUser);
+    return setGroup(user, group);
 };
 
 const historify = async (user: IUserInfo, group: IGroup) => {
@@ -173,6 +128,27 @@ const historify = async (user: IUserInfo, group: IGroup) => {
     setUser(updatedUser);
 };
 
+// utils.ts or a similar utility file
+
+export const updateUserGroups = (
+    userInfo: IUserInfo,
+    updatedGroup: IGroup,
+    updateValue: (userInfo: IUserInfo) => void,
+    Adapter: { setUser: (userInfo: IUserInfo) => void }
+): IUserInfo => {
+    // Update the user's groups collection
+    const updatedGroups = userInfo.Groups.map(group =>
+        group.Id === updatedGroup.Id ? updatedGroup : group
+    );
+
+    const updatedUserInfo = { ...userInfo, Groups: updatedGroups } as IUserInfo;
+
+    // Update the context or state with the new user information
+    updateValue(updatedUserInfo);
+    Adapter.setUser(updatedUserInfo);
+
+    return updatedUserInfo;
+};
 
 // const setDrive = ( user: IUserInfo) => {
 //     const groups = localGroups(user.UserId);
@@ -181,10 +157,12 @@ const historify = async (user: IUserInfo, group: IGroup) => {
 // }
 
 export const Adapter = {
-    setSync
+    uploadCloud
+    , downloadCloud
     , historify
     , setUser
     , getUser
     , deleteGroup
     , setGroup
+    , setWordGroup
 }

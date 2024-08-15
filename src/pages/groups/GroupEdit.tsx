@@ -25,6 +25,7 @@ import EditBatch from "./EditBatch";
 import { UserContext } from "../../context/context.user";
 import { EditIndividual } from "./EditIndividual";
 import { StatusChange } from "../../models/Enums";
+import { IUserInfo } from "../../interfaces/IUserInfo";
 
 const useStyles = makeStyles({
     rigthButton: {
@@ -48,66 +49,50 @@ export const GroupEdit = () => {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
-
-    const getData = async () => {
-        setIsLoading(true);
-        
-        // Retrieve the groups from userInfo
-        const groups = userInfo?.Groups;
-    
-        // Find the group by ID
-        let group = groups?.find(g => g.Id === id) as IGroup | undefined;
-        
-        // If the group is undefined or its status is `None`, create a new group
-        if (!group || group.Status === StatusChange.None) { 
-            group = new Group(getLastGroupId(groups || []), StatusChange.Created);
-        } else {
-            // Map over the existing group's words and transform them
-            group = { 
-                ...group, 
-                Words: group.Words.map(w => Word.newWord2(w.Name, w.Value)) 
-            };
-        }
-    
-        // Update the state with the group
-        setGroup(group);
-        
-        // Set loading to false once the data has been processed
-        setIsLoading(false);
-    };
+  
 
     useEffect(() => {
-        if (group.Words.length === 0) {
-            getData();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (group)
+        const getData = async () => {
+            setIsLoading(true);
+    
+            // Retrieve the groups from userInfo
+            const groups = userInfo?.Groups || [];
+    
+            // Find the group by ID
+            let group = groups.find(g => g.Id === id) as IGroup | undefined;
+    
+            if (!group || group.Status === StatusChange.None) {
+                // If the group is undefined or its status is `None`, create a new group
+                group = Group.NewGroupCreated(getLastGroupId(groups));
+            } else {
+                // Map over the existing group's words and transform them
+                group = { 
+                    ...group, 
+                    Words: group.Words.map(w => Word.newWord2(w.Name, w.Value)) 
+                };
+            }
+    
+            // Update the state with the group
+            setGroup({...group, Words: group.Words });
+    
             setIsLoading(false);
+        };
+    
+            getData();
+    
+    }, []); // Add necessary dependencies
 
-            if (group.Status !== StatusChange.None)
-                Adapter.setGroup(userInfo, group);
-
-    }, [group])
-
-    useEffect(() => {
-
-        if (newGroupElement)
-            setLocalGroup(userInfo, group);
-
-    }, [newGroupElement])
-
-
+    // useEffect(()=>{
+    //     if (group!=null){
+    //         persistGroup();
+    //     }
+    // }, [group])
+    
     const handleSaveClick = async (word: IWord) => {
 
-        setGroup((prev: IGroup) => {
-            const _words = prev.Words.filter(_ => _.Name !== word.Name);
-            return { ...prev, Words: [..._words, word] }
-        });
-
-    }
-
+        persistWord(word);
+    };
+    
     const handleChangeGroupName = (e: any) => {
         setGroup((prev) => {
             return { ...prev, Name: e.target.value }
@@ -119,13 +104,18 @@ export const GroupEdit = () => {
     };
 
     const handleSaveGroupNameClick = () => {
+
+        persistGroup(group);
+        
         setIsEditingGroupName(false);
     }
 
     const handleSaveBatchClick = (text: string) => {
-        setGroup((prev: IGroup) => {
-            return { ...prev, Words: parseCsvBySeparator(text, ';') }
-        });
+        // setGroup((prev: IGroup) => {
+        //     return { ...prev, Words: parseCsvBySeparator(text, ';') }
+        // });
+
+        persistGroup({ ...group, Words: parseCsvBySeparator(text, ';') });
     }
 
     const handleDeleteWord = (item: IWord) => {
@@ -136,10 +126,8 @@ export const GroupEdit = () => {
 
     const handleSelectedItem = (item:IWord) => {
         setWord(item);
-        // console.log(item);
     }
-    return (
-      
+    return (      
         <>
             <Header title="Edit Groups" hasBack={true} />
 
@@ -232,4 +220,23 @@ export const GroupEdit = () => {
         );
     }
 
+    function persistWord(word: IWord) {
+
+        const { updatedUserInfo, updatedGroup } = Adapter.setWordGroup(group, word, userInfo);
+
+        setGroup(updatedGroup);
+        updateValue(updatedUserInfo);
+
+    }
+    
+    function persistGroup(_group: IGroup) {
+
+        const { updatedUserInfo, updatedGroup } = Adapter.setGroup(userInfo, _group);
+
+        setGroup(updatedGroup);
+        updateValue(updatedUserInfo);
+
+    }
+    
 }
+

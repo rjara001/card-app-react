@@ -11,7 +11,7 @@ import { Close } from '@mui/icons-material';
 import { IUserInfo } from '../interfaces/IUserInfo';
 import { UserContext } from '../context/context.user';
 import { useNavigate } from 'react-router-dom';
-import { LoginStatus } from '../models/Enums';
+import { LoginStatus, StatusChange } from '../models/Enums';
 import { signin } from '../locals/auth/signin';
 import { User } from '../models/User';
 
@@ -52,18 +52,14 @@ export const MainPage = () => {
     const { userInfo , updateValue} = useContext(UserContext);
     const [open, setOpen] = useState(false);
 
-    const navigate = useNavigate();
-
     useEffect(() => {
         const handleSignIn = async () => {
             if (userInfo?.Login.LoginStatus === LoginStatus.SignIn) {
                 try {
-                    // Sign in the user
-                    await signin(userInfo);                    
-
+                                
                     User.LoginGoogle(userInfo);
-                    
-                    updateValue(userInfo);
+                    const userLogged = await signin(userInfo);
+                    updateValue(userLogged);        
 
                 } catch (error) {
                     console.error('An error occurred during sign-in:', error);
@@ -73,7 +69,7 @@ export const MainPage = () => {
         };
     
         handleSignIn();
-    }, [updateValue, userInfo]);
+    }, []);
 
     if (!userInfo) {
         return <div>Loading user information...</div>;
@@ -91,10 +87,6 @@ export const MainPage = () => {
         setOpen(false);
     }
    
-
-    if (!userInfo.IsInLogin)
-        navigate('/');
-
     return (
         <>
 

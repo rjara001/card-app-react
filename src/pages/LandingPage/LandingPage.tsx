@@ -63,7 +63,7 @@ export const LandingPage = () => {
         if (userInfo?.IsInLogin) { 
             navigate('/home'); 
         }
-    }, [navigate, userInfo?.IsInLogin]);
+    }, [userInfo]);
 
     if (!userInfo) {
         return <div>Loading user information...</div>;
