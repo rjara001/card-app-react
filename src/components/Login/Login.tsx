@@ -114,17 +114,17 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
 
-        navigate('/home');
+        // navigate('/home');
     };
 
     const handleGoogleLoginSuccess = (response: any) => {
 
-        User.LoginGoogle(userInfo, response);
+        User.LoginGoogle(userInfo);
 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
 
-        navigate('/home');
+        // navigate('/home');
     };
 
     const handleCustomLoginSuccess = (response: any) => {
@@ -133,7 +133,7 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
         updateValue(userInfo);
         handleSelectionProvider(userInfo);
 
-        navigate('/home');
+        // navigate('/home');
     }
 
     const handleGoogleLoginFailure = (response: any) => {

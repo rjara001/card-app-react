@@ -1,8 +1,10 @@
 import { IGlobalSummary } from "../interfaces/IGlobalSummary";
+import { LoginStatus, StatusChange } from "../models/Enums";
 import { IGroup } from "../interfaces/IGroup";
 import { ISummary } from "../interfaces/ISummary";
+import { IUserInfo } from "../interfaces/IUserInfo";
 import { IWord } from "../interfaces/IWord.js";
-import { StatusChange } from "../models/Enums";
+
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
 // import { TextToSpeechClient } from '@google-cloud/text-to-speech';
@@ -40,23 +42,6 @@ export const getCurrentLearned = (summary: IGlobalSummary, currentCycle: number)
             return summary.Known;
     }
 }
-
-export const globalUserDefault = {
-    UserId: 'anonymous'
-    , FullName: 'anonymous'
-    , imageUrl: ''
-    , PlayingGroup: "0"
-    , FirstShowed: false
-    , UserName: ''
-    , UserEmail: ''
-    , IsInLogin: false
-    , PromptActived: false
-    , TimeOutActived: -1
-    , provider: ''
-    , AccessToken: ''
-}
-
-export const groupDefault = Group.NewGroup();
 
 export const calculateSummary = (group: IGroup, summary: ISummary): IGlobalSummary => {
     let Learned: number = 0;
@@ -102,21 +87,18 @@ export const getLastGroupId = (groups: IGroup[]) => {
     }, new Group("0", StatusChange.None)).Id) + 1).toString();
 }
 
-export const filterWordByWord = (word: string, filter: string) => {
+const filterWordByWord = (word: string, filter: string): boolean => {
+    return word
+        .split(' ')
+        .some(part => part !== null && part.includes(filter));
+};
 
-    let filterResult = false;
-    if (word===undefined)
-        return false;
+export const filterWordByType = (type: string, word: IWord, filter: string) => {
 
-    // word.split(' ').forEach(_ => {
-    //     if (_.indexOf(filter) >= 0) {
-    //         filterResult = true;
-    //         return;
-    //     }
-    // });
-    return word.indexOf(filter) >= 0;
-
-    // return filterResult;
+    if (type === 'Name')
+        return filterWordByWord(word.Name.toLowerCase(), filter.toLowerCase())
+    else
+        return filterWordByWord(word.Value.toLowerCase(), filter.toLowerCase());
 }
 
 // const client = new TextToSpeechClient();
@@ -141,4 +123,44 @@ export const textToSpeech = async (text: string, languageCode: string) => {
     } catch (error) {
         console.error(error);
     }
+}
+
+export const generateUniqueFileName = (extension: string = "json"): string => {
+    // Get the current timestamp in the format "yyyyMMddHHmmssfff"
+    const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 17);
+
+    // Generate a UUID
+    const uuid = crypto.randomUUID().replace(/-/g, ''); // Generate a 32-character UUID with no hyphens
+
+    // Combine the timestamp and UUID to create a unique file name
+    const uniqueFileName = `${timestamp}_${uuid}.${extension}`;
+
+    return uniqueFileName;
+}
+
+export const groupDefault = Group.NewGroupDefault();
+
+export const globalUserDefault : IUserInfo = {
+    UserId: 'anonymous'
+    , FullName: 'anonymous'
+    , imageUrl: ''
+    , PlayingGroup: "0"
+    , FirstShowed: false
+    , UserName: ''
+    , UserEmail: ''
+    , IsInLogin: false
+    , PromptActived: false
+    , TimeOutActived: -1
+    , provider: ''
+    , AccessToken: ''
+    , RefreshToken: ''
+    , Drive: {IdFolder: ''} 
+    , Groups: []
+    , TokenExpiration: new Date('1900-01-01T12:00:00Z')
+    , Login: {
+        Code: ''
+        , LoginStatus: LoginStatus.Done
+        , Redirect: ''
+    }
+
 }

@@ -8,19 +8,7 @@ function getUrl(item: IApiConfig): string {
     return item.host + item.url;
 }
 
-export const getGroupTemplate = async () => {
-    let axiosConfig = {
-        headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            "Access-Control-Allow-Origin": "*",
-        },
-        data: null
-    };
-
-    return await axios.get(getUrl(config.getTemplate), axiosConfig);
-}
-
-export const queryGetUser = async (id: string) => {
+export const queryGetUser = async (id: string, token: string) => {
     let axiosConfig = {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -43,7 +31,7 @@ export const mutationPutUser = async (user:IUser) => {
 
     const data = {... user, Groups: user.Groups?.map(_=>Group.toFlatGroup(_))}
 
-    await axios.put(getUrl(config.postUser) + '/' + user.IdUser, data, axiosConfig);
+    await axios.put(getUrl(config.postUser) + '/' + user.UserId, data, axiosConfig);
 }
 
 export const mutationPostUser = async (user:IUser) => {
@@ -57,5 +45,5 @@ export const mutationPostUser = async (user:IUser) => {
 
     const data = {... user, Groups: user.Groups?.map(_=>Group.toFlatGroup(_))}
 
-    await axios.post(getUrl(config.postUser) + '/' + user.IdUser, data, axiosConfig);
+    await axios.post(getUrl(config.postUser) + '/' + user.UserId, data, axiosConfig);
 }

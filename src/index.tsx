@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Container, StyledEngineProvider } from '@mui/material';
-import { Bugfender } from '@bugfender/sdk';
+import { UserContextProvider } from './context/context.user';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -25,13 +25,14 @@ Bugfender.init({
 });
 
 root.render(
-  <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-     
-        <App />
 
-    </StyledEngineProvider>
-  </React.StrictMode>
+  <StyledEngineProvider injectFirst>
+    <UserContextProvider>
+      <App />
+    </UserContextProvider>
+
+  </StyledEngineProvider>
+
 );
 
 // If you want to start measuring performance in your app, pass a function

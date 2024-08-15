@@ -1,4 +1,11 @@
-export interface IUserInfo {
+import { Group } from "../models/Group"
+import { IUserDriveInfo } from "./Drive/IUserDriveInfo"
+import { IGroup } from "./IGroup"
+import { IUser } from "./IUser"
+import { IUserLogin } from "./IUserLogin"
+
+export interface IUserInfo extends IUser {
+    Login: IUserLogin
     provider: string
     imageUrl: any
     FullName: any
@@ -11,4 +18,8 @@ export interface IUserInfo {
     PromptActived: boolean
     TimeOutActived: number
     AccessToken: string
+    RefreshToken: string
+    Drive: IUserDriveInfo
+    Groups: IGroup[]
+    TokenExpiration : Date
 }
