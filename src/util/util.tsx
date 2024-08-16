@@ -87,7 +87,7 @@ export const getLastGroupId = (groups: IGroup[]) => {
     }, new Group("0", StatusChange.None)).Id) + 1).toString();
 }
 
-const filterWordByWord = (word: string, filter: string): boolean => {
+export const filterWordByWord = (word: string, filter: string): boolean => {
     return word
         .split(' ')
         .some(part => part !== null && part.includes(filter));

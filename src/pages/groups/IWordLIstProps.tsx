@@ -4,4 +4,5 @@ export interface IWordListProps {
     words: IWord[]
     onHandleClickDeleteItem: (word:IWord)=> void
     handleSelectedItem: (item:IWord)=>void
+    handleClickEditItem: (item:IWord)=>void
 }

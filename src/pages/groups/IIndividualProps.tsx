@@ -61,17 +61,17 @@ export const IndividualEdit: React.FC<IIndividualProps> = ({ word, userInfo, fil
     setFilterActive(false);
   };
 
-  useEffect(() => {
-    if (filter.length > 0) {
-      setFilterActive(true);
-      if (filter.length>0)
-        if (userInfo.FirstShowed)
-          setName(filter);
-        else
-          setValue(filter);
-    }
+  // useEffect(() => {
+  //   if (filter.length > 0) {
+  //     setFilterActive(true);
+  //     if (filter.length>0)
+  //       if (userInfo.FirstShowed)
+  //         setName(filter);
+  //       else
+  //         setValue(filter);
+  //   }
 
-  }, [])
+  // }, [])
   return (
 
     <Grid container spacing={3}>

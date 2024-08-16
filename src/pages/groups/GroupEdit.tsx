@@ -40,6 +40,7 @@ export const GroupEdit = () => {
 
     const [group, setGroup] = useState<IGroup>(groupDefault);
     const [word, setWord] = useState<IWord>(Word.newWord3());
+    const [wordEditing, setWordEditing] = useState<IWord>(Word.newWord3());
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [newGroupElement, setNewGroupElement] = useState<boolean>(false);
     const [isEditingGroupName, setIsEditingGroupName] = useState(false);
@@ -124,9 +125,18 @@ export const GroupEdit = () => {
         });
     }
 
+    const handleEditWord = (item:IWord) => {
+        setWordEditing(item);
+
+        setWord(item);
+    }
+
     const handleSelectedItem = (item:IWord) => {
         setWord(item);
     }
+
+    const filterDisclaimer = filter!==undefined?` (filtered by:${filter})`:'';
+    
     return (      
         <>
             <Header title="Edit Groups" hasBack={true} />
@@ -165,7 +175,7 @@ export const GroupEdit = () => {
 
                 </Grid>
                 <Tabs value={tabValue} onChange={handleChange} aria-label="disabled tabs example">
-                    <Tab label="Add One by One" />
+                    <Tab label={`Add One by One ${filterDisclaimer}`} />
 
                     <Tab label="Add Batch" />
                 </Tabs>
@@ -179,6 +189,7 @@ export const GroupEdit = () => {
                                 words={group.Words} 
                                 handleDeleteWord={handleDeleteWord} 
                                 handleSaveClick={handleSaveClick}
+                                handleEditWord={handleEditWord}
                                 handleSelectedItem={handleSelectedItem}></EditIndividual>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1}>

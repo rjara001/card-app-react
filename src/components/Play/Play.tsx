@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     }
 });
 
-const Score = (currentCycle:number) => {
+const Score = (currentCycle: number) => {
     const { summary } = useContext(PlayContext);
 
     return <Stack spacing={2} direction="row" style={{
@@ -59,11 +59,14 @@ const Score = (currentCycle:number) => {
     </Stack>
 };
 
-const Actions = (next: any, revel: any, correct: any, userInfo: any) => <div style={{
+const Actions = (backEnabled:boolean, back: any,next: any, revel: any, correct: any, userInfo: any) => <div style={{
     width: '100%', display: 'flex',
 }}>
 
-    <div style={{paddingRight:'30px'}}>
+    <div style={{ paddingRight: '30px' }}>
+        {backEnabled && <Button size="small" onClick={() => {
+            back();
+        }}>Back</Button>}
         <Button size="small" onClick={() => {
             next();
         }}>Next</Button>
@@ -78,24 +81,24 @@ const Actions = (next: any, revel: any, correct: any, userInfo: any) => <div sty
         }}>Correct</Button>
     </div>
 </div>;
-const card = (word: IWord, next: any, revel: any, correct: any, userInfo: any, currentCycle:number) => (
+const card = (word: IWord, backEnabled:boolean, back:any, next: any, revel: any, correct: any, userInfo: any, currentCycle: number) => (
     <React.Fragment>
         <CardContent>
             <>
                 {Score(currentCycle)}
                 <Divider />
                 <TextWord word={Word.newWord(word)}></TextWord>
-                
+
             </>
 
         </CardContent>
 
-        {Actions(next, revel, correct, userInfo)}
+        {Actions(backEnabled, back, next, revel, correct, userInfo)}
 
     </React.Fragment>
 );
 
-export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle, inputTextMatchRef }): JSX.Element => {
+export const Play: FC<IWordProps> = ({ word, backEnabled, back, next, revel, correct, currentCycle, inputTextMatchRef }): JSX.Element => {
     const global = useGlobalStyles();
     const classes = useStyles();
     const [textMatch, setTextMatch] = useState('')
@@ -104,45 +107,44 @@ export const Play: FC<IWordProps> = ({ word, next, revel, correct, currentCycle,
     const [openMessageMatch, setOpenMessageMatch] = useState<boolean>(false);
     const [severity, setSeverity] = useState<AlertColor>('success');
     // const inputRef = useRef<HTMLInputElement>(null);
-    
-    const handleMatchClick = () => {
-  
-         const similarity = new PalabraService(word.Name).Coincide(textMatch, !userInfo.FirstShowed);
 
-        if (similarity>=0.8)
-        {
-            setMessageMatch(`Nice work!, you got a ${Math.round(similarity*100).toString()}% of 80%. ${word.Name} / ${textMatch}`);
+    const handleMatchClick = () => {
+
+
+        const similarity = new PalabraService(word.Name).Coincide(textMatch, !userInfo.FirstShowed);
+
+        if (similarity >= 0.8) {
+            setMessageMatch(`Nice work!, you got a ${Math.round(similarity * 100).toString()}% of 80%. ${word.Name} / ${textMatch}`);
             correct(word);
             setSeverity('success');
             setTextMatch('');
         }
-        else
-           {
-             setMessageMatch(`You just got it a ${Math.round(similarity*100).toString()}.`);
-             setSeverity('warning');
-            }
-        
-            setOpenMessageMatch(true);
+        else {
+            setMessageMatch(`You just got it a ${Math.round(similarity * 100).toString()}.`);
+            setSeverity('warning');
+        }
+
+        setOpenMessageMatch(true);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setTextMatch('');
     }, [word])
 
     return (
         <>
-            <MessageDialog open={openMessageMatch} message={messageMatch} onClose={()=>setOpenMessageMatch(false)} severity={severity} autoHideDuration={8000}></MessageDialog>
+            <MessageDialog open={openMessageMatch} message={messageMatch} onClose={() => setOpenMessageMatch(false)} severity={severity} autoHideDuration={8000}></MessageDialog>
 
             <Grid className={global.p10}>
                 <Box sx={{ minWidth: 275 }}>
-                    <Card variant="outlined">{card(word, next, revel, correct, userInfo, currentCycle)}</Card>
+                    <Card variant="outlined">{card(word, backEnabled, back, next, revel, correct, userInfo, currentCycle)}</Card>
                     {userInfo.PromptActived && <div style={{ paddingTop: '10px' }}>
                         <Grid container>
                             <Grid xs={10} sm={10}>
-                                <TextField style={{ width: "100%" }} value={textMatch} onChange={(e)=>setTextMatch(e.target.value)}  inputRef={inputTextMatchRef}></TextField>
+                                <TextField style={{ width: "100%" }} value={textMatch} onChange={(e) => setTextMatch(e.target.value)} inputRef={inputTextMatchRef}></TextField>
                             </Grid>
-                            
-                           <Grid xs={2} sm={2}>
+
+                            <Grid xs={2} sm={2}>
                                 <IconButton aria-label="add" size="large" color="success" disabled={word.Reveled}>
                                     <ArrowCircleRightIcon fontSize="inherit" sx={{ fontSize: 40 }} onClick={handleMatchClick} />
                                 </IconButton>

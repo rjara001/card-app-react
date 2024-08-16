@@ -31,8 +31,8 @@ export const TextWord: React.FC<TextProps> = ({ word }) => {
             </IconButton>
         </div>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {word.Reveled && word.getValue(userInfo.FirstShowed)}
-            {!word.Reveled && ofuscator(word.getValue(userInfo.FirstShowed))}
+            {word.Reveled===true && word.getValue(userInfo.FirstShowed)}
+            {word.Reveled===false && ofuscator(word.getValue(userInfo.FirstShowed))}
         </Typography>
     </Box >)
 };
