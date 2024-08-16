@@ -1,0 +1,31 @@
+name: Deploy React TypeScript Website
+
+on:
+  push:
+    branches:
+      - main  # Deploy on push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # Ensure this matches the version you use locally
+
+    - name: Install dependencies
+      run: npm ci  # 'npm ci' is generally faster and more reliable in CI environments
+
+    - name: Build the React app
+      run: npm run build  # This will run the build script specified in your package.json
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build  # This is the default output directory for React apps
