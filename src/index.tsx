@@ -9,21 +9,6 @@ import { UserContextProvider } from './context/context.user';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-
-
-Bugfender.init({
-  appKey: 'fz9n0LeyK0bIyTaqjLVFhevohvK9bPTH',
-  // apiURL: 'https://api.bugfender.com',
-  // baseURL: 'https://dashboard.bugfender.com',
-  // overrideConsoleMethods: true,
-  // printToConsole: true,
-  // registerErrorHandler: true,
-  // logBrowserEvents: true,
-  // logUIEvents: true,
-  // version: '',
-  // build: '',
-});
-
 root.render(
 
   <StyledEngineProvider injectFirst>

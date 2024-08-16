@@ -155,7 +155,7 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
                     <Grid container spacing={2}>
                         <Grid item xs={6} sx={{ textAlign: '-webkit-right'}}>
                             <GoogleLogin
-                                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || '967034721711-20e7u0gm5bqr2ic1intjer5agfs35a5n.apps.googleusercontent.com'}
+                                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
                                 render={renderProps => (
                                     <button className={classes.googleButton} onClick={renderProps.onClick} disabled={renderProps.disabled}>
                                         <FontAwesomeIcon icon={faGoogle} />

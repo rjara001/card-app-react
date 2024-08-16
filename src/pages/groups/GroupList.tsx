@@ -25,41 +25,28 @@ import { User } from '../../models/User';
 import { TokenExpiredError } from '../../models/Error';
 
 const useStyles = makeStyles({
-  button: {
-    margin: "8px 8px 8px 0",
-    textAlign: "right",
-  },
+    button: {
+        margin: '8px 8px 8px 0'
+        , textAlign: 'right'
+    },
 
-  list: {
-    maxWidth: "none",
-  },
+    list: {
+        maxWidth: 'none'
+    }
 });
 
-const ItemGroup: FC<IGroupProps> = ({
-  item,
-  filter,
-  deleteGroup,
-}: IGroupProps): JSX.Element => {
-  const { userInfo, updateValue } = useContext(UserContext);
-  const navigate = useNavigate();
-  const handlePlayClick = (id: string) => {
-    userInfo.PlayingGroup = id;
+const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps): JSX.Element => {
 
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
     const handlePlayClick = (id: string) => {
 
-    navigate(`/play`);
-  };
+        userInfo.PlayingGroup = id;
 
-  function handleButtonDelete(item: IGroup): void {
-    Adapter.deleteGroup(userInfo.UserId, item);
-    deleteGroup(item);
-  }
+        updateValue(userInfo);
 
-  const handleSaveButtonEdit = (item: IGroup): void => {
-    navigate(`/group/${item.Id.toString()}/${filter}`);
-  };
+        navigate(`/play`);
+    }
 
     const handleButtonDelete = (item: IGroup): void => {
 
@@ -111,66 +98,35 @@ const ItemGroup: FC<IGroupProps> = ({
                     </React.Fragment>
                 }
             />
-            <span style={{ display: "flex" }}>
-              <div>{item.Words.length} total |</div>
-              <div>
-                &nbsp;{`${item.Words.filter((_) => _.IsKnowed).length}`} learned
-                |
-              </div>
-              <div>
-                &nbsp;{`${item.Words.filter((_) => _.Cycles).length}`} Cycle
-              </div>
-            </span>
-            <span style={{ display: "flex", alignItems: "right" }}>
-              <DeleteButton
-                handleDeleteItem={handleButtonDelete}
-                item={item}
-              ></DeleteButton>
-              <IconButton onClick={() => handleSaveButtonEdit(item)}>
-                <EditIcon />
-              </IconButton>
-            </span>
-          </React.Fragment>
-        }
-      />
-      {userInfo.PlayingGroup !== item.Id && (
-        <div style={{ alignSelf: "center" }}>
-          <Button
-            variant="outlined"
-            onClick={() => handlePlayClick(item.Id)}
-            startIcon={<PlayArrowIcon />}
-          >
-            Play
-          </Button>
-        </div>
-      )}
-    </ListItem>
-  );
-};
-function GroupListComponent(
-  groupList: any[],
-  filter: string,
-  deleteGroup: (item: IGroup) => void
-) {
-  return (
-    <Box style={{ height: "calc(100vh - 260px)", overflow: "auto" }}>
-      <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {groupList.map((item, i) => {
-          return (
-            <React.Fragment key={i}>
-              <ItemGroup
-                item={item}
-                deleteGroup={deleteGroup}
-                filter={filter}
-              ></ItemGroup>
-              <Divider variant="inset" component="li" />
-            </React.Fragment>
-          );
-        })}
-      </List>
-    </Box>
-  );
+            {userInfo.PlayingGroup !== item.Id && <div style={{ alignSelf: 'center' }}>
+                <Button variant="outlined"
+                    onClick={() => handlePlayClick(item.Id)}
+                    startIcon={<PlayArrowIcon />}>
+                    Play
+                </Button>
+            </div>}
+        </ListItem>
+    )
 }
+function GroupListComponent(groupList: any[], filter: string, deleteGroup: (item: IGroup) => void) {
+
+    return (
+        <Box style={{ height: 'calc(100vh - 260px)', overflow: 'auto' }}>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                {
+                    groupList.map((item, i) => {
+                        return (
+                            <React.Fragment key={i}>
+                                <ItemGroup item={item} deleteGroup={deleteGroup} filter={filter}></ItemGroup><Divider variant="inset" component="li" />
+                            </React.Fragment>
+                        )
+                    })
+                }
+            </List>
+        </Box>
+    );
+}
+
 
 export const GroupList = () => {
     const classes = useStyles();
@@ -185,7 +141,7 @@ export const GroupList = () => {
     const [filter, setFilter] = useState('');
     const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
 
-  let { word } = useParams();
+    let { word } = useParams();
 
 
     useEffect(() => {
@@ -218,11 +174,12 @@ export const GroupList = () => {
     function handleAddClick(): void {
         navigate('/group');
     }
-  }, [filter, dataGroups]);
 
-  function handleAddClick(): void {
-    navigate("/group");
-  }
+    const deleteGroup = (item: IGroup) => {
+        setGroups((prev) => {
+            return [...prev.filter((_) => _.Id !== item.Id)];
+        })
+    }
 
     async function handleUploadCloud(): Promise<void> {
         try {
@@ -257,22 +214,20 @@ export const GroupList = () => {
             }
         }
 
-    setGroups(_groups);
+        setIsSyncSuccessful(true);
+        setMessageSuccessful('Sync process was complete succesfull.');
+    }
 
-    setIsSyncSuccessful(true);
-    setMessageSuccessful("Sync process was complete succesfull.");
-  };
+    return (<div>
 
-  return (
-    <div>
-      <Header title="My Collections" />
+        <Header title="My Collections" />
 
-      <MessageDialog
-        open={isSyncSuccessful}
-        // title="Sync successful!"
-        message={messageSuccessful}
-        onClose={() => setIsSyncSuccessful(false)}
-      />
+        <MessageDialog
+            open={isSyncSuccessful}
+            // title="Sync successful!"
+            message={messageSuccessful}
+            onClose={() => setIsSyncSuccessful(false)}
+        />
 
         <ConfirmationDialog message="Are you sure you want to save your data in the cloud?" onConfirm={handleUploadCloud} open={isActiveMessageSaveData} onClose={() => setIsActiveMessageSaveData(false)} />
 
@@ -297,16 +252,6 @@ export const GroupList = () => {
                 </Grid>
             </Grid>
 
-      <Grid container alignItems="center" justifyContent="space-between">
-        <Grid item xs={9} sm={9}>
-          <TextField
-            id="standard-basic"
-            label="Filter"
-            variant="standard"
-            style={{ width: "100%" }}
-            onChange={(e) => setFilter(e.target.value)}
-            value={filter}
-          />
         </Grid>
         <div>
             {isLoading ? (
@@ -316,35 +261,13 @@ export const GroupList = () => {
                     {GroupListComponent(filteredGroups, filter, deleteGroup)}
                 </div>
             )}
-          </Grid>
-          <Grid item>
-            {userInfo.IsInLogin && (
-              <IconButton onClick={() => setIsActiveMessageSaveData(true)}>
-                <BackupIcon />
-              </IconButton>
-            )}
-          </Grid>
-        </Grid>
-      </Grid>
-      <div>
-        {isLoading ? (
-          "Loading groups..."
-        ) : (
-          <div>{groups && GroupListComponent(groups, filter, deleteGroup)}</div>
-        )}
-      </div>
-      <div>
-        <div className={classes.button}>
-          <IconButton
-            aria-label="add"
-            size="large"
-            color="success"
-            onClick={handleAddClick}
-          >
-            <AddCircleIcon fontSize="inherit" sx={{ fontSize: 40 }} />
-          </IconButton>
         </div>
-      </div>
-    </div>
-  );
-};
+        <div>
+            <div className={classes.button}>
+                <IconButton aria-label="add" size="large" color="success" onClick={handleAddClick}>
+                    <AddCircleIcon fontSize="inherit" sx={{ fontSize: 40 }} />
+                </IconButton>
+            </div>
+        </div>
+    </div>)
+}
