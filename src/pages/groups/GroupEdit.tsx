@@ -134,6 +134,9 @@ export const GroupEdit = () => {
     const handleSelectedItem = (item:IWord) => {
         setWord(item);
     }
+
+    const filterDisclaimer = filter!==undefined?` (filtered by:${filter})`:'';
+    
     return (      
         <>
             <Header title="Edit Groups" hasBack={true} />

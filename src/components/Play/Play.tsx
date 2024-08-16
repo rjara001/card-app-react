@@ -109,8 +109,9 @@ export const Play: FC<IWordProps> = ({ word, backEnabled, back, next, revel, cor
     // const inputRef = useRef<HTMLInputElement>(null);
 
     const handleMatchClick = () => {
-  
-         const similarity = new PalabraService(word.Name).Coincide(textMatch, !userInfo.FirstShowed);
+
+
+        const similarity = new PalabraService(word.Name).Coincide(textMatch, !userInfo.FirstShowed);
 
         if (similarity >= 0.8) {
             setMessageMatch(`Nice work!, you got a ${Math.round(similarity * 100).toString()}% of 80%. ${word.Name} / ${textMatch}`);

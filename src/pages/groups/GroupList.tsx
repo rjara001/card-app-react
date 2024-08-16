@@ -1,11 +1,13 @@
 import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
-import React, { FC, useContext, useMemo } from 'react';
+import React, { FC, useContext } from 'react';
 import { useEffect, useState } from 'react';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { IGroup, IGroupProps } from '../../interfaces/IGroup';
 // import { UserContext } from "../../context/context.create";
 import { Adapter } from '../../locals/adapter';
@@ -18,7 +20,7 @@ import DeleteButton from '../../elements/DeleteButton/Index';
 import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
 import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
 import { UserContext } from '../../context/context.user';
-import { filterWordByType } from '../../util/util';
+import { filterWordByWord } from '../../util/util';
 import { User } from '../../models/User';
 import { TokenExpiredError } from '../../models/Error';
 
@@ -45,11 +47,6 @@ const ItemGroup: FC<IGroupProps> = ({
 
     const { userInfo, updateValue } = useContext(UserContext);
     const navigate = useNavigate();
-
-    if (!userInfo) {
-        return <div>Loading user information...</div>;
-    }
-
     const handlePlayClick = (id: string) => {
 
     navigate(`/play`);
@@ -78,9 +75,10 @@ const ItemGroup: FC<IGroupProps> = ({
     }
 
     return (
-        <ListItem alignItems="flex-start" id="list-group">
-            <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <ListItem alignItems="flex-start">
+            <ListItemAvatar style={{alignSelf: 'center'}} id='listAvatar'>
+                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
+                <CasesOutlinedIcon></CasesOutlinedIcon>
             </ListItemAvatar>
             <ListItemText
                 primary={item.Name}
@@ -92,8 +90,16 @@ const ItemGroup: FC<IGroupProps> = ({
                             variant="body2"
                             color="text.primary"
                         />
-                        <span>
-                            {item.Words.length} total
+                        <span style={{display:'flex'}}>
+                            <div>
+                                {item.Words.length} total |
+                            </div>
+                            <div>
+                                &nbsp;{`${item.Words.filter(_=>_.IsKnowed).length}`} learned |
+                            </div>
+                            <div>
+                                &nbsp;{`${item.Words.filter(_=>_.Cycles).length}`} Cycle
+                            </div>
                         </span>
                         <span style={{ display: 'flex', alignItems: 'right' }}>
 
@@ -191,23 +197,19 @@ export const GroupList = () => {
     }, [word]);
 
 
-    // Memoized value to calculate filtered groups based on filter and groups
-    const filteredGroupsMemo = useMemo(() => {
-        if (filter !== '') {
-            return groups.filter(group => {
-                const _filter = group.Words.filter(word =>
-                    filterWordByType(userInfo.FirstShowed ? 'Name' : 'Value', word, filter)
-                );
-                return _filter.length > 0;
-            });
-        }
-        return groups;
-    }, [filter, groups]);
-
-    // Effect to update the filtered groups state when filteredGroupsMemo changes
     useEffect(() => {
-        setFilteredGroups(filteredGroupsMemo);
-    }, [filteredGroupsMemo]);
+
+        if (filter !== undefined) {
+
+            let _groups = groups.filter(_group => {
+  
+                let _filter = _group.Words.filter(word => filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter));
+
+                return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase())>=0;
+            });
+            setFilteredGroups(_groups);
+        }
+    }, [filter, groups])
 
     if (!userInfo) {
         return <div>Loading user information...</div>;
