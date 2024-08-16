@@ -1,7 +1,8 @@
 {
-  "name": "first-example-app",
+  "name": "card-app-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://rjara001.github.io/card-app-react",
   "dependencies": {
     "@azure/msal-browser": "^2.34.0",
     "@azure/msal-react": "^1.5.4",
