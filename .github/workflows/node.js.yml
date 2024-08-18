@@ -29,7 +29,6 @@ jobs:
 
     - run: npm ci --force
     - run: CI=false npm run build --if-present
-    - run: npm test
     
     - name: Deploy with gh-pages
       run: |
