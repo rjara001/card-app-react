@@ -20,7 +20,7 @@ export const getAWSUserInfo = async (accessToken: string) => {
             body: jsonContent,
         });
 
-        if (response.ok) {
+        if (response.ok === true) {
             const content = await response.text();
             console.log(`Response: ${content}`);
             return content;
@@ -62,7 +62,7 @@ export const getAWSData = async (user: IUserInfo): Promise<IAWSUser> => {
             body: jsonContent,
         });
 
-        if (response.ok) {
+        if (response.ok === true) {
             const contentResponse = await response.text();
             const responseObject: IApiResponseWrapper = JSON.parse(contentResponse);
             const user: IAWSUser = JSON.parse(responseObject.Body);

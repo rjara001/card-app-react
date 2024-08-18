@@ -286,7 +286,7 @@ export const createNewFile = async (user:IUserInfo, nameFile: string): Promise<s
             body
         });
 
-        if (response.ok) {
+        if (response.ok === true) {
             const fileItem = await response.json() as IFileItem;
             return fileItem.id || '';
         }
@@ -308,7 +308,7 @@ export const ValidateTokenWithGoogle = async (user: IUserInfo): Promise<boolean>
     try {
         const response = await fetch(url);
 
-        if (response.ok) {
+        if (response.ok === true) {
             const content = await response.json() as ITokenInfo;
 
             // Check if the token is expired
