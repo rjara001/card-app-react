@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/card-app-react/static/css/main.073c9b0a.css",
-    "main.js": "/card-app-react/static/js/main.43ac3f9b.js",
-    "index.html": "/card-app-react/index.html",
-    "main.073c9b0a.css.map": "/card-app-react/static/css/main.073c9b0a.css.map",
-    "main.43ac3f9b.js.map": "/card-app-react/static/js/main.43ac3f9b.js.map"
+    "main.css": "/glimmind.com/static/css/main.073c9b0a.css",
+    "main.js": "/glimmind.com/static/js/main.74ac29bd.js",
+    "index.html": "/glimmind.com/index.html",
+    "main.073c9b0a.css.map": "/glimmind.com/static/css/main.073c9b0a.css.map",
+    "main.74ac29bd.js.map": "/glimmind.com/static/js/main.74ac29bd.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.43ac3f9b.js"
+    "static/js/main.74ac29bd.js"
   ]
 }
