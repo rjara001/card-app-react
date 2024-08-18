@@ -251,7 +251,7 @@ export const getIdFileByItsChildFiles = async (user:IUserInfo, fileName: string)
     try {
         const response = await fetch(apiUrl, { method: 'GET', headers });
 
-        if (response.ok) {
+        if (response.ok === true) {
             const streamFile = await response.json() as IDriveFileInfo;
 
             if (streamFile && streamFile.files.length === 1) {
