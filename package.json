@@ -2,11 +2,10 @@
   "name": "card-app-react",
   "version": "0.1.0",
   "private": true,
-  "homepages": "https://rjara001.github.io/glimmind.com",
+  "homepage": "https://rjara001.github.io/glimmind.com",
   "engines": {
     "node": "18.x"
   },
-  "homepage": "https://rjara001.github.io/card-app-react",
   "dependencies": {
     "@azure/msal-browser": "^2.34.0",
     "@azure/msal-react": "^1.5.4",
