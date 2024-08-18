@@ -41,7 +41,7 @@ const setUser = (user: IUserInfo) => {
 const getUser = async (): Promise<IUserInfo> => {
     let user = JSON.parse(localStorage.getItem(_USER) || JSON.stringify(globalUserDefault)) as IUserInfo;
 
-    if (!user || user.Groups?.length === 0) {
+    if (!user || !user.Groups || user.Groups.length === 0) {
         user = await getUserAndAllGroupsFromAPI(user) as IUserInfo;
     }
 
