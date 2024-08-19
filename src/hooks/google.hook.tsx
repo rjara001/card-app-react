@@ -317,11 +317,13 @@ export const ValidateTokenWithGoogle = async (user: IUserInfo): Promise<boolean>
                 return true;
             }
         } else {
-            throw new TokenExpiredError();
+            // throw new TokenExpiredError();
+            return false;
         }
     } catch (error) {
         console.error('Error during token validation:', error);
-        throw new TokenExpiredError();
+        // throw new TokenExpiredError();
+        return false;
     }
 
     return false;
