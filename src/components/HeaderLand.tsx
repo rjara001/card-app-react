@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import useSessionStorage from "../hooks/useSessionStorage";
+import { _DRIVE } from "../constants/drive";
 
 interface Props {
   /**
@@ -55,7 +56,7 @@ export const HeaderLand = (props: Props) => {
 
     const baseUrl = window.location.origin;
 
-    var clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    var clientId = _DRIVE.REACT_APP_GOOGLE_CLIENT_ID;
     const redirectUri = new URL('/signin-google', baseUrl).toString();
     const scope = "openid email profile https://www.googleapis.com/auth/drive.file";
     const state = uuidv4().replace(/-/g, '');
