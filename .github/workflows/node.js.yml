@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}  # Accessing API key from GitHub Secrets
 jobs:
   build:
 
@@ -31,8 +33,6 @@ jobs:
  # Build the application with environment variables
     - name: Build React App
       run: CI=false npm run build --if-present
-      env:
-        REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}  # Accessing API key from GitHub Secrets
     
     - name: Deploy with gh-pages
       run: |
