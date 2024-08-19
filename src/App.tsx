@@ -51,11 +51,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <PlayContext.Provider value={playContext}>
- 
-          <CssBaseline />
-          <Container>
-            <BrowserRouter>
-              <ErrorBoundaryWrapper>
+
+        <CssBaseline />
+        <Container>
+          <BrowserRouter>
+            <ErrorBoundaryWrapper>
+              <UserContextProvider>
                 <Routes>
                   <Route path='/signin-google' element={<SigninGoogle />} />
                   <Route path='/home' element={<HomePage />} />
@@ -65,10 +66,11 @@ function App() {
                   <Route path='/group/:id?/:word?' element={isLoggedIn ? <GroupEdit /> : <Navigate to='/' />} />
                   <Route path='/' element={<LandingPage />} />
                 </Routes>
-                <MainMenu value={MENU.Home} />
-              </ErrorBoundaryWrapper>
-            </BrowserRouter>
-          </Container>
+              </UserContextProvider>
+              <MainMenu value={MENU.Home} />
+            </ErrorBoundaryWrapper>
+          </BrowserRouter>
+        </Container>
       </PlayContext.Provider>
     </QueryClientProvider>
   );

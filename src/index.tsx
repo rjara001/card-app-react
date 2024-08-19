@@ -12,9 +12,8 @@ const root = ReactDOM.createRoot(
 root.render(
 
   <StyledEngineProvider injectFirst>
-    <UserContextProvider>
+
       <App />
-    </UserContextProvider>
 
   </StyledEngineProvider>
 

@@ -71,8 +71,7 @@ const TokenValidation = async (user: IUserInfo) => {
     var isValid = await ValidateTokenWithGoogle(user);
 
     if (!User.hasRefreshToken(user) && !isValid) {
-        return false;
-        // throw new TokenExpiredError()
+        throw new TokenExpiredError()
     } else if (!isValid) {
         user.AccessToken = (await getAWSData(user)).UserToken.Token;
     }

@@ -2,6 +2,8 @@ import { createContext, useEffect, useState } from 'react';
 import { IUserInfo } from '../interfaces/IUserInfo';
 import { Adapter } from '../locals/adapter';
 import { globalUserDefault } from '../util/util';
+import { TokenExpiredError } from '../models/Error';
+import { useNavigate } from 'react-router-dom';
 
 // Create the context with an initial value of null for userInfo
 export const UserContext = createContext<{ userInfo: IUserInfo, updateValue: (newObj: IUserInfo) => void }>({
@@ -12,11 +14,23 @@ export const UserContext = createContext<{ userInfo: IUserInfo, updateValue: (ne
 // Define the context provider
 export function UserContextProvider(props: any) {
     const [userInfo, setUserInfo] = useState<IUserInfo>(globalUserDefault);
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const fetchUser = async () => {
-            const user = {...await Adapter.getUser()}; // Await the promise
-            setUserInfo(user); // Set the state once the user data is available
+            try {
+                const user = {...await Adapter.getUser()}; // Await the promise
+                updateValue(user); // Set the state once the user data is available
+            } catch (error) {
+                if (error instanceof TokenExpiredError) {
+                    updateValue(globalUserDefault);
+                    navigate('/');
+                } else {
+                    // setIsSyncSuccessful(false);
+                    return;
+                }
+            }
+            
         };
 
         fetchUser();
