@@ -72,7 +72,7 @@ export class User implements IUser {
     }
 
     static hasRefreshToken(userInfo:IUserInfo) {
-        return userInfo.RefreshToken !== null && userInfo.RefreshToken !== '';
+        return userInfo.RefreshToken !== undefined && userInfo.RefreshToken !== '';
     }
 
     static LoginClean(userInfo:IUserInfo)
