@@ -1,9 +1,9 @@
 ﻿// redirect.js
 (function () {
     var currentPath = window.location.pathname + window.location.search;
-    debugger;
+    //debugger;
     //var indexPath = "/tabito.release/index.html";
-    var indexPath = "/index.html";
+    var indexPath = "index.html";
 
     // Check if we're already on the index page with a path parameter
     if (window.location.pathname === indexPath && window.location.search.includes("?path=")) {
