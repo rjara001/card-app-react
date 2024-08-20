@@ -54,7 +54,7 @@ function App() {
 
         <CssBaseline />
         <Container>
-          <BrowserRouter>
+          <BrowserRouter basename="/card-app-react">
             <ErrorBoundaryWrapper>
               <UserContextProvider>
                 <Routes>
