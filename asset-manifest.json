@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/card-app-react/static/css/main.073c9b0a.css",
-    "main.js": "/card-app-react/static/js/main.21ff1df4.js",
+    "main.js": "/card-app-react/static/js/main.87054ae1.js",
     "index.html": "/card-app-react/index.html",
     "main.073c9b0a.css.map": "/card-app-react/static/css/main.073c9b0a.css.map",
-    "main.21ff1df4.js.map": "/card-app-react/static/js/main.21ff1df4.js.map"
+    "main.87054ae1.js.map": "/card-app-react/static/js/main.87054ae1.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.21ff1df4.js"
+    "static/js/main.87054ae1.js"
   ]
 }
