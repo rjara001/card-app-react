@@ -54,7 +54,7 @@ export const HeaderLand = (props: Props) => {
 
   const signIn = () => {
 
-    const baseUrl = window.location.origin;
+    const baseUrl = window.location.href;
 
     var clientId = _DRIVE.REACT_APP_GOOGLE_CLIENT_ID;
     const redirectUri = new URL('/signin-google', baseUrl).toString();
