@@ -5,9 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import useSessionStorage from "../hooks/useSessionStorage";
-import { UserContext } from '../../context/context.user';
+
 import { _DRIVE } from "../constants/drive";
 import { Login } from "@mui/icons-material";
+import { UserContext } from "../context/context.user";
 
 interface Props {
   /**
@@ -57,7 +58,7 @@ export const HeaderLand = (props: Props) => {
   const signIn = () => {
     const baseUrl = window.location.href + "/";
 
-    updateValue({...userInfo, Login: {...Login, Redirect: baseUrl}});
+    updateValue({...userInfo, Login: {...userInfo.Login, Redirect: baseUrl}});
  
     var clientId = _DRIVE.REACT_APP_GOOGLE_CLIENT_ID;
     const redirectUri = new URL('signin-google', baseUrl).toString();
