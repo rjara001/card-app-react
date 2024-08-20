@@ -33,7 +33,7 @@ const SignInGoogle: React.FC = () => {
         // Update session data
         userInfo.Login.Code = code;
         userInfo.Login.LoginStatus = LoginStatus.SignIn;
-        userInfo.Login.Redirect = `${window.location.origin}/signin-google`;
+        userInfo.Login.Redirect = `${window.location.href}/signin-google`;
 
         updateValue(userInfo);
 
