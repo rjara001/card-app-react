@@ -21,6 +21,11 @@ jobs:
         clean: true  # Ensures a clean checkout
         submodules: false  # Disables submodule fetching
 
+    - name: Set env
+      run: echo "REACT_APP_ENV=prod" >> $GITHUB_ENV
+    - name: Test
+      run: echo $REACT_APP_ENV
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
