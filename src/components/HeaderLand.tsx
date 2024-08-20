@@ -9,7 +9,7 @@ import useSessionStorage from "../hooks/useSessionStorage";
 import { _DRIVE } from "../constants/drive";
 import { Login } from "@mui/icons-material";
 import { UserContext } from "../context/context.user";
-import config from '../config/config.json';
+import { config } from '../config/config';
 
 interface Props {
   /**
@@ -57,12 +57,12 @@ export const HeaderLand = (props: Props) => {
   const container = () => window.document.body;
 
   const signIn = () => {
-    const { homepage, googleclientid } = config;
+    const { homepage, googleClientId } = config;
     const baseUrl = homepage; // window.location.href + "/";
 
     // updateValue({...userInfo, Login: {...userInfo.Login, Redirect: baseUrl}});
  
-    var clientId = googleclientid;
+    var clientId = googleClientId;
     const redirectUri = new URL('signin-google', baseUrl).toString();
     const scope = "openid email profile https://www.googleapis.com/auth/drive.file";
     const state = uuidv4().replace(/-/g, '');
