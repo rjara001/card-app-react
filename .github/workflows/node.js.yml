@@ -29,12 +29,12 @@ jobs:
 
     - run: npm ci --force
 
-    # Modify the base href in index.html
-    - name: Set base href for GitHub Pages
-      run: |
-        BASE_URL="/$(basename $GITHUB_REPOSITORY)/"
-        sed -i "s|<head>|<head><base href=\"$BASE_URL\" />|" public/index.html
-
+    # Build the application with environment variables
+    - name: Build React App
+      run: CI=false npm run build --if-present
+      env:
+        REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}  # Accessing API key from GitHub Secrets
+    
     - name: Create 404 page
       run: |
         cp index.html 404.html
@@ -49,14 +49,7 @@ jobs:
     - name: Create .nojekyll file
       run: |
         touch .nojekyll
-        echo ".nojekyll file created."
-
-    # Build the application with environment variables
-    - name: Build React App
-      run: CI=false npm run build --if-present
-      env:
-        REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}  # Accessing API key from GitHub Secrets
-    
+        echo ".nojekyll file created."        
     - name: Deploy with gh-pages
       run: |
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
