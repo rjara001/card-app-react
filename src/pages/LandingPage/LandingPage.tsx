@@ -61,7 +61,7 @@ export const LandingPage = () => {
 
     useEffect(()=> {
         if (userInfo?.IsInLogin) { 
-            navigate('/home'); 
+            navigate('home'); 
         }
     }, [userInfo]);
 

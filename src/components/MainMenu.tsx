@@ -37,16 +37,16 @@ export const MainMenu = (props: Props) => {
         // navigate to the appropriate route based on the selected Bottom Navigation item
         switch (newValue) {
             case MENU.Home:
-                navigate('/');
+                navigate('');
                 break;
             case MENU.Play:
-                navigate('/play');
+                navigate('play');
                 break;
             case MENU.Groups:
-                navigate('/groups');
+                navigate('groups');
                 break;
             case MENU.Settings:
-                navigate('/settings');
+                navigate('settings');
                 break;
         }
 

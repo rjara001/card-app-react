@@ -191,7 +191,7 @@ export const PlaySpace = () => {
     const getData = async () => {
         const group = userInfo.Groups.find(group => group.Id === userInfo.PlayingGroup) as IGroup;
         if (group ===undefined || group.Words.length===0)
-            navigate(`/groups`);
+            navigate(`groups`);
         setGetResult(group);
         setHasDoNextValue(true);
     };
@@ -233,7 +233,7 @@ export const PlaySpace = () => {
     useEffect(() => {
 
         if (userInfo.PlayingGroup == "0")
-            navigate(`/groups`);
+            navigate(`groups`);
         else {
             setCurrentCycle(0);
             getData();

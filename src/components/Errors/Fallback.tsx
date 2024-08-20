@@ -22,7 +22,7 @@ const ErrorBoundaryWrapper: React.FC<Props> = ({ children }) => {
   const handleError = (error: Error) => {
     if (error.message.includes('Expired')) {
       // Handle session expiration: redirect to login
-      navigate('/login');
+      navigate('login');
     }
   };
 
