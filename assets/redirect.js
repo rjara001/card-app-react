@@ -1,6 +1,7 @@
 ﻿// redirect.js
 (function () {
     var currentPath = window.location.pathname + window.location.search;
+    debugger;
     //var indexPath = "/tabito.release/index.html";
     var indexPath = "/index.html";
 
