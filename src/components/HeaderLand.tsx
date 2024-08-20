@@ -9,6 +9,7 @@ import useSessionStorage from "../hooks/useSessionStorage";
 import { _DRIVE } from "../constants/drive";
 import { Login } from "@mui/icons-material";
 import { UserContext } from "../context/context.user";
+import { _HOME_PAGE } from "../constants/constants";
 
 interface Props {
   /**
@@ -56,9 +57,9 @@ export const HeaderLand = (props: Props) => {
   const container = () => window.document.body;
 
   const signIn = () => {
-    const baseUrl = window.location.href + "/";
+    const baseUrl = _HOME_PAGE; // window.location.href + "/";
 
-    updateValue({...userInfo, Login: {...userInfo.Login, Redirect: baseUrl}});
+    // updateValue({...userInfo, Login: {...userInfo.Login, Redirect: baseUrl}});
  
     var clientId = _DRIVE.REACT_APP_GOOGLE_CLIENT_ID;
     const redirectUri = new URL('signin-google', baseUrl).toString();

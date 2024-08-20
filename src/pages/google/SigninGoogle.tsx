@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/context.user';
 import { LoginStatus } from '../../models/Enums';
 import useSessionStorage from '../../hooks/useSessionStorage';
+import { _HOME_PAGE } from '../../constants/constants';
 
 // interface Session {
 //   User: {
@@ -33,9 +34,9 @@ const SignInGoogle: React.FC = () => {
         // Update session data
         userInfo.Login.Code = code;
         userInfo.Login.LoginStatus = LoginStatus.SignIn;
-        
+
         if (!userInfo.Login.Redirect)
-          userInfo.Login.Redirect = `${window.location.origin}/signin-google`;
+          userInfo.Login.Redirect = `${_HOME_PAGE}/signin-google`;
 
         updateValue(userInfo);
 
