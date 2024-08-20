@@ -29,11 +29,11 @@ jobs:
 
     - run: npm ci --force
 
-    # Set the base href in index.html
-    - name: Set base href for GitHub Pages
-      run: |
-        BASE_URL="/$(basename $GITHUB_REPOSITORY)/"
-        sed -i "s|<head>|<head><base href=\"$BASE_URL\" />|" public/index.html
+    # # Set the base href in index.html
+    # - name: Set base href for GitHub Pages
+    #   run: |
+    #     BASE_URL="/$(basename $GITHUB_REPOSITORY)/"
+    #     sed -i "s|<head>|<head><base href=\"$BASE_URL\" />|" public/index.html
 
     # Build the application with environment variables
     - name: Build React App
