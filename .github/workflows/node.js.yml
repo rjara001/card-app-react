@@ -47,12 +47,16 @@ jobs:
         cp build/index.html build/404.html
         echo "404 page created."
 
+    # Create .nojekyll file in the build directory
+    - name: Create .nojekyll file
+      run: |
+        touch build/.nojekyll
+        echo ".nojekyll file created."
+
     # Deploy the site to GitHub Pages
     - name: Deploy with gh-pages
       run: |
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        git add build/.nojekyll
-        git commit -m "Add .nojekyll"
         npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -207,7 +207,7 @@ export const GroupList = () => {
         } catch (error) {
             if (error instanceof TokenExpiredError) {
                 updateValue(User.LoginClean(userInfo));
-                navigate('');
+                navigate('/');
             } else {
                 setIsSyncSuccessful(false);
                 return;

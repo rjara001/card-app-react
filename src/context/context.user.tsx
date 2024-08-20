@@ -24,7 +24,7 @@ export function UserContextProvider(props: any) {
             } catch (error) {
                 if (error instanceof TokenExpiredError) {
                     updateValue(globalUserDefault);
-                    navigate('');
+                    navigate('/');
                 } else {
                     // setIsSyncSuccessful(false);
                     return;

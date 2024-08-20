@@ -33,7 +33,7 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
 
     updateValue(User.LoginClean(userInfo));
     
-    navigate('');
+    navigate('/');
   }
   const handleLogoutSuccess = () => {
     // Perform any necessary logout actions, such as clearing local storage or redirecting to the login page
@@ -53,7 +53,7 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
 
     updateValue(User.LoginClean(userInfo));
 
-    navigate('');
+    navigate('/');
     console.log('logout ok');
   }
 
