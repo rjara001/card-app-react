@@ -63,7 +63,7 @@ export const HeaderLand = (props: Props) => {
     const baseUrl: string = new URL(baseHref, window.location.origin).toString();
     
     // Construct the redirect URI
-    const redirectUri: string = new URL('/signin-google', baseUrl).toString();
+    const redirectUri: string = new URL('signin-google', baseUrl).toString();
 
 
     var clientId = _DRIVE.REACT_APP_GOOGLE_CLIENT_ID;
