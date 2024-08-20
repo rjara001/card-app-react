@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/context.user';
 import { LoginStatus } from '../../models/Enums';
 import useSessionStorage from '../../hooks/useSessionStorage';
-import { _HOME_PAGE } from '../../constants/constants';
+import config from '../../config/config.json';
 
 // interface Session {
 //   User: {
@@ -17,6 +17,7 @@ import { _HOME_PAGE } from '../../constants/constants';
 // }
 
 const SignInGoogle: React.FC = () => {
+  const { homepage } = config;
   const navigate = useNavigate();
   const { userInfo, updateValue } = useContext(UserContext);
   
@@ -36,7 +37,7 @@ const SignInGoogle: React.FC = () => {
         userInfo.Login.LoginStatus = LoginStatus.SignIn;
 
         if (!userInfo.Login.Redirect)
-          userInfo.Login.Redirect = `${_HOME_PAGE}/signin-google`;
+          userInfo.Login.Redirect = `${homepage}/signin-google`;
 
         updateValue(userInfo);
 

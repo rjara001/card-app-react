@@ -59,8 +59,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build",
-    "prebuild": "export REACT_APP_HOMEPAGE=$npm_package_homepage"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
