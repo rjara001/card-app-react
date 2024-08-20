@@ -34,7 +34,23 @@ jobs:
       run: |
         BASE_URL="/$(basename $GITHUB_REPOSITORY)/"
         sed -i "s|<head>|<head><base href=\"$BASE_URL\" />|" public/index.html
-    
+
+    - name: Create 404 page
+      run: |
+        cp index.html 404.html
+        echo "404 page created."
+
+      # - name: Add script section to files
+      #   run: |
+      #     sed -i 's+</head>+<script src="resources/redirect.js"></script>\n</head>+' 404.html
+      #     sed -i 's+</head>+<script src="resources/redirect.js"></script>\n</head>+' index.html          
+      #     echo "Script section added to files."
+
+    - name: Create .nojekyll file
+      run: |
+        touch .nojekyll
+        echo ".nojekyll file created."
+
     # Build the application with environment variables
     - name: Build React App
       run: CI=false npm run build --if-present
