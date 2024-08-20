@@ -57,7 +57,7 @@ export const HeaderLand = (props: Props) => {
 
   const signIn = () => {
     const { homepage, googleClientId } = getConfig();
-    const baseUrl = homepage; // window.location.href + "/";
+    const baseUrl = homepage + "/";
 
     // updateValue({...userInfo, Login: {...userInfo.Login, Redirect: baseUrl}});
  
