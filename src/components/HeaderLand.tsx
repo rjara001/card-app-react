@@ -56,18 +56,8 @@ export const HeaderLand = (props: Props) => {
 
     // const baseUrl = window.location.origin;
 
-    const baseElement = document.querySelector<HTMLBaseElement>('base');
-    const baseHref: string = baseElement ? baseElement.getAttribute('href') ?? '/' : '/';
-    
-    // Combine the base href with window.location.origin
-    const baseUrl: string = new URL(baseHref, window.location.origin).toString();
-    
-    // Construct the redirect URI
-    const redirectUri: string = new URL('signin-google', baseUrl).toString();
-
-
     var clientId = _DRIVE.REACT_APP_GOOGLE_CLIENT_ID;
-    // const redirectUri = new URL('/signin-google', baseUrl).toString();
+    const redirectUri = new URL('/signin-google', baseUrl).toString();
     const scope = "openid email profile https://www.googleapis.com/auth/drive.file";
     const state = uuidv4().replace(/-/g, '');
 
