@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/context.user';
 import { LoginStatus } from '../../models/Enums';
 import useSessionStorage from '../../hooks/useSessionStorage';
-import { config } from '../../config/config';
+import { config } from '../../config/config.dev';
+import { getConfig } from '../../config/config';
 
 // interface Session {
 //   User: {
@@ -17,7 +18,7 @@ import { config } from '../../config/config';
 // }
 
 const SignInGoogle: React.FC = () => {
-  const { homepage } = config;
+  const { homepage } = getConfig();
   const navigate = useNavigate();
   const { userInfo, updateValue } = useContext(UserContext);
   

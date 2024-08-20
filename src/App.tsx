@@ -25,11 +25,14 @@ import { LandingPage } from './pages/LandingPage/LandingPage';
 import { UserContext } from "./context/context.user";
 import SigninGoogle from './pages/google/SigninGoogle';
 import ErrorBoundaryWrapper from './components/Errors/Fallback';
+import { getConfig } from './config/config';
 
 function App() {
   const { userInfo } = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const { repository } = getConfig();
+  
   useEffect(() => {
     setIsLoggedIn(userInfo.IsInLogin);
 
@@ -54,7 +57,7 @@ function App() {
 
         <CssBaseline />
         <Container>
-          <BrowserRouter basename="/card-app-react">
+          <BrowserRouter basename={repository}>
             <ErrorBoundaryWrapper>
               <UserContextProvider>
                 <Routes>

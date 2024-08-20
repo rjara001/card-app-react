@@ -9,7 +9,7 @@ import useSessionStorage from "../hooks/useSessionStorage";
 import { _DRIVE } from "../constants/drive";
 import { Login } from "@mui/icons-material";
 import { UserContext } from "../context/context.user";
-import { config } from '../config/config';
+import { getConfig } from "../config/config";
 
 interface Props {
   /**
@@ -29,7 +29,6 @@ export const HeaderLand = (props: Props) => {
   // const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [oauthState, setOauthState] = useSessionStorage<string>('oauth_state', '');
-  const { userInfo, updateValue } = useContext(UserContext);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -57,7 +56,7 @@ export const HeaderLand = (props: Props) => {
   const container = () => window.document.body;
 
   const signIn = () => {
-    const { homepage, googleClientId } = config;
+    const { homepage, googleClientId } = getConfig();
     const baseUrl = homepage; // window.location.href + "/";
 
     // updateValue({...userInfo, Login: {...userInfo.Login, Redirect: baseUrl}});
