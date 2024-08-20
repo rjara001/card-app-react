@@ -2,6 +2,7 @@
   "name": "card-app-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://rjara001.github.io/card-app-react",
   "engines": {
     "node": "18.x"
   },
