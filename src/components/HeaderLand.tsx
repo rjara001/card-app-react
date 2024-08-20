@@ -1,11 +1,13 @@
 import { Box, CssBaseline, AppBar, Toolbar, IconButton, Typography, Drawer, Divider, List, Stack, Button } from "@mui/material"
-import { useState } from "react";
+import { useContext, useState } from "react";
 import MenuIcon from '@mui/icons-material/Menu';
 import { v4 as uuidv4 } from 'uuid';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import useSessionStorage from "../hooks/useSessionStorage";
+import { UserContext } from '../../context/context.user';
 import { _DRIVE } from "../constants/drive";
+import { Login } from "@mui/icons-material";
 
 interface Props {
   /**
@@ -25,7 +27,7 @@ export const HeaderLand = (props: Props) => {
   // const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [oauthState, setOauthState] = useSessionStorage<string>('oauth_state', '');
-
+  const { userInfo, updateValue } = useContext(UserContext);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -53,9 +55,10 @@ export const HeaderLand = (props: Props) => {
   const container = () => window.document.body;
 
   const signIn = () => {
-
     const baseUrl = window.location.href + "/";
 
+    updateValue({...userInfo, Login: {...Login, Redirect: baseUrl}});
+ 
     var clientId = _DRIVE.REACT_APP_GOOGLE_CLIENT_ID;
     const redirectUri = new URL('signin-google', baseUrl).toString();
     const scope = "openid email profile https://www.googleapis.com/auth/drive.file";
