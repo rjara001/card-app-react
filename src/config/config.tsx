@@ -1,4 +1,4 @@
-// src/config/getConfig.ts
+
 import { IConfig } from '../interfaces/IConfig';
 import { config as devConfig } from './config.dev';
 import { config as prodConfig } from './config.prod';

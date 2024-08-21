@@ -10,8 +10,7 @@ import { Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { IUserInfo } from '../interfaces/IUserInfo';
 import { UserContext } from '../context/context.user';
-import { useNavigate } from 'react-router-dom';
-import { LoginStatus, StatusChange } from '../models/Enums';
+import { LoginStatus } from '../models/Enums';
 import { signin } from '../locals/auth/signin';
 import { User } from '../models/User';
 
@@ -74,7 +73,6 @@ export const MainPage = () => {
     if (!userInfo) {
         return <div>Loading user information...</div>;
     }
-
 
     const handleGoLoginClick = () => {
         setOpen(true);
