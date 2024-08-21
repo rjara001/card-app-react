@@ -33,7 +33,7 @@ export function UserContextProvider(props: any) {
 
     useEffect(() => {
         loadUser(); // Call loadUser when the component mounts
-    }, [navigate]); // Include navigate in dependency array
+    }, []); // Include navigate in dependency array
 
     const updateValue = (newObj: IUserInfo) => {
         setUserInfo(prevState => ({ ...prevState, ...newObj }));
