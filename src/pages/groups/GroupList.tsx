@@ -45,7 +45,7 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
 
         updateValue(userInfo);
 
-        navigate(`play`);
+        navigate(`/play`);
     }
 
     const handleButtonDelete = (item: IGroup): void => {
@@ -58,7 +58,7 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
     }
 
     const handleSaveButtonEdit = (item: IGroup): void => {
-        navigate(`group/${item.Id.toString()}/${filter}`)
+        navigate(`/group/${item.Id.toString()}/${filter}`)
     }
 
     return (
@@ -172,7 +172,7 @@ export const GroupList = () => {
     }
 
     function handleAddClick(): void {
-        navigate('group');
+        navigate('/group');
     }
 
     const deleteGroup = (item: IGroup) => {

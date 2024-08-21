@@ -97,7 +97,7 @@ export function SettingsPage() {
     };
 
     const handleUploadFile = () => {
-        navigate('upload');
+        navigate('/upload');
     }
     
     // function signInClickHandler(instance) {

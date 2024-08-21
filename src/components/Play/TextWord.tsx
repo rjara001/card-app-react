@@ -17,7 +17,7 @@ export const TextWord: React.FC<TextProps> = ({ word }) => {
 
     const handleWordEditClick = () => {
         let workText = Word.newWord(word).getName(userInfo.FirstShowed);
-        navigate('groups/' + workText);
+        navigate('/groups/' + workText);
     }
 
     return (<Box>

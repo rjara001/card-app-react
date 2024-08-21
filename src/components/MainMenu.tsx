@@ -40,13 +40,13 @@ export const MainMenu = (props: Props) => {
                 navigate('/');
                 break;
             case MENU.Play:
-                navigate('play');
+                navigate('/play');
                 break;
             case MENU.Groups:
-                navigate('groups');
+                navigate('/groups');
                 break;
             case MENU.Settings:
-                navigate('settings');
+                navigate('/settings');
                 break;
         }
 
