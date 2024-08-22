@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/context.user';
 import { LoginStatus } from '../../models/Enums';
 import useSessionStorage from '../../hooks/useSessionStorage';
-import { config } from '../../config/config.dev';
+import { config } from '../../config/config.local';
 import { getConfig } from '../../config/config';
 
 // interface Session {

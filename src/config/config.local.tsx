@@ -1,5 +1,5 @@
 export const config = {
-    homepage: "https://rjara001.github.io/card-app-react"
+    homepage: "https://localhost:3000"
     , googleClientId: "86552858818-uaavifev1toq70ckjp0ddol9lmk0v2oj.apps.googleusercontent.com"
-    , repository: "/card-app-react"
+    , repository: "/"
 }
