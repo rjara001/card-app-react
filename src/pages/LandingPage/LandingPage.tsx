@@ -8,6 +8,7 @@ import { IUserInfo } from "../../interfaces/IUserInfo";
 import { makeStyles } from "@material-ui/styles";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../../context/context.user';
+import { GoogleButtonLogin } from "../../components/Atomic/GoogleButtonLogin";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -87,7 +88,7 @@ export const LandingPage = () => {
             </div>
             <div className={classes.root}>
 
-           { !userInfo.IsInLogin && <Button onClick={handleGoLoginClick}>Go to Login</Button>}
+           { !userInfo.IsInLogin && <GoogleButtonLogin></GoogleButtonLogin>}
            { userInfo.IsInLogin && 'Welcome ' + userInfo.FullName}
 
                 <Typography variant="body1" className={classes.description} style={{ paddingTop: '50px' }}>

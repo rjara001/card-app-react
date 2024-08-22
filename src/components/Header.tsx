@@ -5,9 +5,9 @@ import { useContext, useState } from "react";
 // import { UserContext } from "../context/context.create";
 import PersonIcon from '@mui/icons-material/Person';
 import { blue } from '@mui/material/colors';
-import { GoogleLogout } from "react-google-login";
 import { UserContext } from "../context/context.user";
 import { User } from "../models/User";
+import { GoogleButtonLogout } from "./Atomic/GoogleButtonLogout";
 
 interface Props {
   title: string;
@@ -37,7 +37,9 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
   }
   const handleLogoutSuccess = () => {
     // Perform any necessary logout actions, such as clearing local storage or redirecting to the login page
+    updateValue(User.LoginClean(userInfo));
 
+    navigate('/');
   };
   
   const handleBackClick = () => {
@@ -103,15 +105,7 @@ const Header: React.FC<Props> = ({ title, hasBack }) => {
             <ListItem disableGutters>
               <ListItemButton onClick={handleLogout}>
 
-                    {userInfo.provider === 'google'?<GoogleLogout
-                       clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
-                      buttonText="Logout"
-                      onLogoutSuccess={handleLogoutSuccess}
-                      onFailure={handleLogoutFailure}
-                    />:<Button onClick={facebookLogout}>Logout</Button>
-                  
-                  }
-
+                <GoogleButtonLogout></GoogleButtonLogout>
               </ListItemButton>
             </ListItem>
           </List>

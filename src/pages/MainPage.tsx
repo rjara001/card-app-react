@@ -13,6 +13,7 @@ import { UserContext } from '../context/context.user';
 import { LoginStatus } from '../models/Enums';
 import { signin } from '../locals/auth/signin';
 import { User } from '../models/User';
+import { GoogleButtonLogin } from '../components/Atomic/GoogleButtonLogin';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -108,7 +109,7 @@ export const MainPage = () => {
                     Hey there, Welcome {userInfo.FullName}
                 </Typography>
 
-                {!userInfo.IsInLogin && <Button onClick={handleGoLoginClick}>Go to Login</Button>}
+                {!userInfo.IsInLogin && <GoogleButtonLogin></GoogleButtonLogin>}
 
                 <Typography variant="body1" className={classes.description} style={{ paddingTop: '50px' }}>
                     Expand your vocabulary by learning, memorizing, and playing

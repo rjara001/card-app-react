@@ -2,14 +2,14 @@
 import { Grid, Box, Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import { ReactFacebookLoginProps } from 'react-facebook-login';
+
 import { FC, useContext } from 'react';
 // import { UserContext } from "../../context/context.create";
 import { IUserInfo } from '../../interfaces/IUserInfo';
 import { CustomLogin } from './CustomLogin';
 import { User } from '../../models/User';
 import { UserContext } from '../../context/context.user';
-import { GoogleLogin } from 'react-google-login';
+
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 // import { FaFacebookF } from 'react-icons/fa';
 // import { Fa } from 'react-icons/fa';
@@ -154,7 +154,7 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
                 <Grid container spacing={0} sx={{ justifyContent: 'center' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={6} sx={{ textAlign: '-webkit-right'}}>
-                            <GoogleLogin
+                            {/* <GoogleLogin
                                 clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
                                 render={renderProps => (
                                     <button className={classes.googleButton} onClick={renderProps.onClick} disabled={renderProps.disabled}>
@@ -164,8 +164,10 @@ export const Login: FC<LoginProps> = ({ handleSelectionProvider }): JSX.Element 
                                 onSuccess={handleGoogleLoginSuccess}
                                 onFailure={handleGoogleLoginFailure}
                                 cookiePolicy={'single_host_origin'}
-                            /></Grid>
-                        <Grid item xs={6}>
+                            /> */}
+                            
+                            </Grid>
+                        <Grid item xs={6}>  
                             <FacebookLogin
                                 appId={process.env.REACT_APP_FACEBOOK_CLIENT_ID || ''}
                                 fields="name,email,picture"

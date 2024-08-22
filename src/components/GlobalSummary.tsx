@@ -22,7 +22,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                 {value.Unknow > 0 && <ListItem className={classes.listItem}>
 
                     <ListItemIcon>
-                        {currentCycle == 0 && <AdjustIcon />}
+                        {currentCycle === 0 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Unknow" />
                     <div>{value.Unknow}</div>
@@ -31,7 +31,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                 {value.Discovered + value.Unknow > 0 &&  <ListItem className={classes.listItem}>
 
                     <ListItemIcon>
-                        {currentCycle == 1 && <AdjustIcon />}
+                        {currentCycle === 1 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Discovered" />
                     <div>{value.Discovered}</div>
@@ -39,7 +39,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                 {value.Recongnized + value.Discovered + value.Unknow > 0 &&  <ListItem className={classes.listItem}>
 
                     <ListItemIcon>
-                        {currentCycle == 2 && <AdjustIcon />}
+                        {currentCycle === 2 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Recongnized" />
                     <div>{value.Recongnized}</div>
@@ -47,7 +47,7 @@ export const GlobalSummary: FC<IGlobalSummaryProps> = ({ value, currentCycle }):
                 {value.Known + value.Recongnized + value.Discovered + value.Unknow >0 &&  <ListItem className={classes.listItem}>
 
                     <ListItemIcon>
-                        {currentCycle == 3 && <AdjustIcon />}
+                        {currentCycle === 3 && <AdjustIcon />}
                     </ListItemIcon>
                     <ListItemText primary="Known" />
 
