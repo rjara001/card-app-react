@@ -55,18 +55,34 @@ export const GoogleButtonLogin = () => {
     }
 
     return (
-        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <Button onClick={signIn}
+        <Box sx={{ display: 'block' }}>
+            <Button
+                onClick={signIn}
                 component="label"
                 role={undefined}
                 variant="contained"
                 tabIndex={-1}
                 startIcon={<FontAwesomeIcon icon={faGoogle} />}
+                sx={{
+                    padding: { xs: '6px 12px', sm: '8px 16px', md: '10px 20px' },
+                    fontSize: { xs: '12px', sm: '14px', md: '16px' }, 
+                    minWidth: { xs: '40px', sm: 'auto' }, // Smaller width for icon-only button
+                    '@media (max-width: 600px)': {
+                    padding: '6px', // Padding adjusted for smaller screens
+                    }
+                }}
             >
+            {/* Conditionally show the icon or text based on screen size */}
+            <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>
                 Sign in with Google
+            </Box>
+            <Box sx={{ display: { xs: 'inline', sm: 'none' } }}>
+                <FontAwesomeIcon icon={faGoogle} />
+            </Box>
             </Button>
+      </Box>
+      
 
-        </Box>
     )
 
 }
