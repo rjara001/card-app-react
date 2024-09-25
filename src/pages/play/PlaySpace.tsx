@@ -19,6 +19,7 @@ import { Adapter } from "../../locals/adapter";
 import Header from "../../components/Header";
 import ConfirmationDialog from "../../elements/Dialogs/ConfirmationDialog";
 import { UserContext } from "../../context/context.user";
+import { StatusChange } from "../../models/Enums";
 
 
 const getRandomArbitrary = (min: number, max: number, currentIndex: number): number => {
@@ -50,9 +51,8 @@ export const PlaySpace = () => {
 
     const navigate = useNavigate();
 
-
     const saveGroup = (setGetResult: any, group: IGroup, updateWords: IWord[]) => {
-        const _group = { ...group, Words: updateWords };
+        const _group = { ...group, Words: updateWords, Status: StatusChange.Modified };
 
         setLocalGroup(userInfo, _group);
         setGetResult(_group);

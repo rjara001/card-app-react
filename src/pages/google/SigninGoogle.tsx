@@ -4,18 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/context.user';
 import { LoginStatus } from '../../models/Enums';
 import useSessionStorage from '../../hooks/useSessionStorage';
-import { config } from '../../config/config.local';
 import { getConfig } from '../../config/config';
-
-// interface Session {
-//   User: {
-//     Login: {
-//       Code: string;
-//       LoginStatus: string;
-//       Redirect: string;
-//     };
-//   };
-// }
 
 const SignInGoogle: React.FC = () => {
   const { homepage } = getConfig();
