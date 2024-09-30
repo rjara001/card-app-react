@@ -49,27 +49,27 @@ const useStyles = makeStyles((theme) => ({
 
 export const MainPage = () => {
     const classes = useStyles();
-    const { userInfo , updateValue} = useContext(UserContext);
+    const { userInfo } = useContext(UserContext);
     const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        const handleSignIn = async () => {
-            if (userInfo?.Login.LoginStatus === LoginStatus.SignIn) {
-                try {
+    // useEffect(() => {
+    //     const handleSignIn = async () => {
+    //         if (userInfo?.Login.LoginStatus === LoginStatus.SignIn) {
+    //             try {
                                 
-                    User.LoginGoogle(userInfo);
-                    const userLogged = await signin(userInfo);
-                    updateValue(userLogged);        
+    //                 User.LoginGoogle(userInfo);
+    //                 const userLogged = await signin(userInfo);
+    //                 updateValue(userLogged);        
 
-                } catch (error) {
-                    console.error('An error occurred during sign-in:', error);
-                    // Handle errors as needed
-                }
-            }
-        };
+    //             } catch (error) {
+    //                 console.error('An error occurred during sign-in:', error);
+    //                 // Handle errors as needed
+    //             }
+    //         }
+    //     };
     
-        handleSignIn();
-    }, []);
+    //     handleSignIn();
+    // }, []);
 
     if (!userInfo) {
         return <div>Loading user information...</div>;

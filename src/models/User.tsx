@@ -1,33 +1,30 @@
 import { IGoogleUserInfo } from "../interfaces/AWS/IResponse";
-import { ITokenResponse } from "../interfaces/Google/ITokenResponse";
 import { IGroup } from "../interfaces/IGroup";
 import { IUser } from "../interfaces/IUser";
 import { IUserInfo } from "../interfaces/IUserInfo";
 import { Adapter } from "../locals/adapter";
 
-import { parseCsv } from "../util/csvToJson";
 import { globalUserDefault } from "../util/util";
 import { LoginStatus, StatusChange } from "./Enums";
 
 export class User implements IUser {
-    static SetAuth(user: IUserInfo, googleUser: IGoogleUserInfo, tokens: ITokenResponse) {
+    static SetAuth(googleUser: IGoogleUserInfo) : IUserInfo {
 
-        const minutes = Math.floor(tokens.expires_in / 60);
+        const minutes = Math.floor(googleUser.tokens.expires_in / 60);
 
-        const _user = {...user,
-            AccessToken : tokens?.access_token ?? ''
-            , RefreshToken : tokens?.refresh_token ?? ''
+        const _user = { ...globalUserDefault
+            , AccessToken : googleUser.tokens?.access_token ?? ''
+            , RefreshToken : googleUser.tokens?.refresh_token ?? ''
             , imageUrl : googleUser.picture
             , UserEmail : googleUser.email
             , UserId : googleUser.email
             , FullName : googleUser.name
             , IsInLogin : true
-            , TokenExpiration : new Date(Date.now() + minutes * 60 * 1000)
-            
-            , Login: { ...user.Login, LoginStatus : LoginStatus.Done}
+            , TokenExpiration : new Date(Date.now() + minutes * 60 * 1000)            
+            , Login: { LoginStatus : LoginStatus.Done}
         };
 
-        return _user;
+        return _user as IUserInfo;
 
     }
 

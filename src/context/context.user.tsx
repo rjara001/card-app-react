@@ -19,6 +19,7 @@ export function UserContextProvider(props: any) {
     
     const loadUser = async () => {
         try {
+            
             const user = await Adapter.getUser(); // Fetch the user data
             updateValue(user); // Update the state with the fetched user data
         } catch (error) {

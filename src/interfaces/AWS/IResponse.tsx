@@ -1,3 +1,5 @@
+import { ITokenResponse } from "../Google/ITokenResponse";
+
 export interface IResponseObject {
     message: string;
     Data: IGoogleUserInfo;
@@ -11,7 +13,8 @@ export interface IGoogleUserInfo {
     id: string;
     name: string;
     picture: string;
-    verified_email: boolean;
+    verified_email: boolean;    
+    tokens: ITokenResponse;
 }
 
 export interface IApiResponseWrapper {

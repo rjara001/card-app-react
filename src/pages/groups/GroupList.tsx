@@ -23,6 +23,7 @@ import { UserContext } from '../../context/context.user';
 import { filterWordByWord } from '../../util/util';
 import { User } from '../../models/User';
 import { TokenExpiredError } from '../../models/Error';
+import GoogleAutoPopupLogin from '../../components/Google/GoogleAutoPopupLogin';
 
 const useStyles = makeStyles({
     button: {
@@ -135,6 +136,7 @@ export const GroupList = () => {
     const [groups, setGroups] = useState<IGroup[]>([]);
     // const [dataGroups, setDataGroups] = useState<IGroup[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [requireAuth, setRequireAuth] = useState<boolean>(false);
     const [isActiveMessageSaveData, setIsActiveMessageSaveData] = useState<boolean>(false);
     const [isSyncSuccessful, setIsSyncSuccessful] = useState<boolean>(false);
     const [messageSuccessful, setMessageSuccessful] = useState<string>('');
@@ -183,11 +185,12 @@ export const GroupList = () => {
 
     async function handleUploadCloud(): Promise<void> {
         try {
+ 
             await Adapter.uploadCloud(userInfo);
         } catch (error) {
             if (error instanceof TokenExpiredError) {
-                updateValue(User.LoginClean(userInfo));
-                navigate('/');
+                setRequireAuth(true);
+                
             } else {
                 setIsSyncSuccessful(false);
                 return;
@@ -206,8 +209,7 @@ export const GroupList = () => {
 
         } catch (error) {
             if (error instanceof TokenExpiredError) {
-                updateValue(User.LoginClean(userInfo));
-                navigate('/');
+                setRequireAuth(true);
             } else {
                 setIsSyncSuccessful(false);
                 return;
@@ -221,6 +223,8 @@ export const GroupList = () => {
     return (<div>
 
         <Header title="My Collections" />
+
+        {requireAuth && <GoogleAutoPopupLogin></GoogleAutoPopupLogin>}
 
         <MessageDialog
             open={isSyncSuccessful}
