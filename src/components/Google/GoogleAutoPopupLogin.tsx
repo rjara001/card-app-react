@@ -12,11 +12,7 @@ export const GoogleAutoPopupLogin: React.FC = () => {
       openOAuthWindow(googleClientId, baseUrl, setOauthState);
     }, []);
   
-    return (
-      <div>
-        <h2>Logging in with Google...</h2>
-      </div>
-    );
+    return null;
   };
 
 export default GoogleAutoPopupLogin

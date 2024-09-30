@@ -20,6 +20,7 @@ const saveGroup = async (user: IUserInfo, group: IGroup): Promise<IUserInfo> => 
     if (group.Status === StatusChange.Deleted)
     {
         await deleteFile(user, group.IdDriveFile);
+        group.Status = StatusChange.Synced;
         user.Groups = [...user.Groups.filter(_=>_.Id === group.Id)];
     }
     else{

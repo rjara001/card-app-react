@@ -159,7 +159,7 @@ export const globalUserDefault : IUserInfo = {
     , TokenExpiration: new Date('1900-01-01T12:00:00Z')
     , Login: {
         Code: ''
-        , LoginStatus: LoginStatus.Done
+        , LoginStatus: LoginStatus.Anonymous
         , Redirect: ''
     }
 

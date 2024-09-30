@@ -12,5 +12,6 @@ export enum LoginStatus {
     Done = 2,
     Error = 3,
     Exchange = 4,
-    GetUserInfo = 5
+    GetUserInfo = 5,
+    Anonymous = 6
 }

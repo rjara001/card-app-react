@@ -14,7 +14,7 @@ const SignInGoogle: React.FC = () => {
   const { updateValue } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);  // To manage loading state
   const [error, setError] = useState<string | null>(null);  // To capture error state
-  const [oauthState] = useSessionStorage<string>('oauth_state', '');
+  // const [oauthState] = useSessionStorage<string>('oauth_state', '');
 
   const reloadOpenerSafelyAndClose = (): void => {
     if (window.opener && window.self !== window.top) {
@@ -30,6 +30,29 @@ const SignInGoogle: React.FC = () => {
     }
   };
 
+  const getStorageFromOpener = (storageType: 'localStorage' | 'sessionStorage', key: string): string | null => {
+    if (window.opener) {
+      try {
+
+        const storage = window.opener[storageType];
+        const value = storage.getItem(key);
+  
+        // Check if the value is JSON and parse it if it is
+        if (value && value.startsWith('"') && value.endsWith('"')) {
+          return JSON.parse(value);
+        }
+  
+        return value;
+      } catch (error) {
+        console.error(`Error accessing window.opener ${storageType}:`, error);
+        return null;
+      }
+    } else {
+      console.warn('window.opener is not available');
+      return null;
+    }
+  }
+
   useEffect(() => {
     const handleSignIn = async () => {
       try {
@@ -38,6 +61,8 @@ const SignInGoogle: React.FC = () => {
         const params = new URLSearchParams(url.search);
         const code = params.get('code');
         const state = params.get('state');
+
+        const oauthState = getStorageFromOpener('sessionStorage', 'oauth_state');
 
         if (code && state) {
           // Validate state parameter
@@ -55,7 +80,7 @@ const SignInGoogle: React.FC = () => {
 
           const singInObject : IResponseObject = await signin(code, `${homepage}/signin-google`);
 
-          const userLogged = User.SetAuth(singInObject.Data);
+          const userLogged = await User.SetAuth(singInObject.Data);
 
           updateValue(userLogged);
 
@@ -71,7 +96,7 @@ const SignInGoogle: React.FC = () => {
     };
 
     handleSignIn();
-  }, [oauthState, homepage, updateValue]);
+  }, [homepage, updateValue]);
 
   if (isLoading) {
     // Show loading spinner while signing in

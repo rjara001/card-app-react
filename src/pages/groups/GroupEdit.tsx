@@ -42,10 +42,8 @@ export const GroupEdit = () => {
     const [word, setWord] = useState<IWord>(Word.newWord3());
     const [wordEditing, setWordEditing] = useState<IWord>(Word.newWord3());
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [newGroupElement, setNewGroupElement] = useState<boolean>(false);
     const [isEditingGroupName, setIsEditingGroupName] = useState(false);
     const [tabValue, setTabValue] = useState(0);
-    const [textBatch, setTextBatch] = useState<string>('');
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
@@ -233,6 +231,7 @@ export const GroupEdit = () => {
 
     function persistWord(word: IWord) {
 
+        group.Status = StatusChange.Modified;
         const { updatedUserInfo, updatedGroup } = Adapter.setWordGroup(group, word, userInfo);
 
         setGroup(updatedGroup);
@@ -241,6 +240,8 @@ export const GroupEdit = () => {
     }
     
     function persistGroup(_group: IGroup) {
+
+        _group.Status = StatusChange.Modified;
 
         const { updatedUserInfo, updatedGroup } = Adapter.setGroup(userInfo, _group);
 

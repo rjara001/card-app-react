@@ -8,11 +8,13 @@ import { globalUserDefault } from "../util/util";
 import { LoginStatus, StatusChange } from "./Enums";
 
 export class User implements IUser {
-    static SetAuth(googleUser: IGoogleUserInfo) : IUserInfo {
+    static async SetAuth(googleUser: IGoogleUserInfo) : Promise<IUserInfo> {
 
         const minutes = Math.floor(googleUser.tokens.expires_in / 60);
 
-        const _user = { ...globalUserDefault
+        const currentDataUser = await Adapter.getUser();
+
+        const _user = { ...currentDataUser
             , AccessToken : googleUser.tokens?.access_token ?? ''
             , RefreshToken : googleUser.tokens?.refresh_token ?? ''
             , imageUrl : googleUser.picture
