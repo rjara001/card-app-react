@@ -64,12 +64,12 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
     }
 
     const handleDownloadButton = (item: IGroup): void => {
-        
+
     }
 
     return (
         <ListItem alignItems="flex-start">
-            <ListItemAvatar style={{alignSelf: 'center'}} id='listAvatar'>
+            <ListItemAvatar style={{ alignSelf: 'center' }} id='listAvatar'>
                 {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
                 <CasesOutlinedIcon></CasesOutlinedIcon>
             </ListItemAvatar>
@@ -83,15 +83,15 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
                             variant="body2"
                             color="text.primary"
                         />
-                        <span style={{display:'flex'}}>
+                        <span style={{ display: 'flex' }}>
                             <div>
                                 {item.Words.length} total |
                             </div>
                             <div>
-                                &nbsp;{`${item.Words.filter(_=>_.IsKnowed).length}`} learned |
+                                &nbsp;{`${item.Words.filter(_ => _.IsKnowed).length}`} learned |
                             </div>
                             <div>
-                                &nbsp;{`${item.Words.filter(_=>_.Cycles).length}`} Cycle
+                                &nbsp;{`${item.Words.filter(_ => _.Cycles).length}`} Cycle
                             </div>
                         </span>
                         <span style={{ display: 'flex', alignItems: 'right' }}>
@@ -100,9 +100,9 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
                             <IconButton onClick={() => handleSaveButtonEdit(item)}>
                                 <EditIcon />
                             </IconButton>
-                            <IconButton onClick={() => handleDownloadButton(item)}>
+                            {/* <IconButton onClick={() => handleDownloadButton(item)}>
                                 <DownloadIcon />
-                            </IconButton>
+                            </IconButton> */}
                         </span>
                     </React.Fragment>
                 }
@@ -123,7 +123,7 @@ function GroupListComponent(groupList: any[], filter: string, deleteGroup: (item
         <Box style={{ height: 'calc(100vh - 260px)', overflow: 'auto' }}>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {
-                    
+
                     groupList.map((item, i) => {
                         return (
                             <React.Fragment key={i}>
@@ -169,10 +169,10 @@ export const GroupList = () => {
         if (filter !== undefined) {
 
             let _groups = groups.filter(_group => {
-  
+
                 let _filter = _group.Words.filter(word => filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter));
 
-                return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase())>=0;
+                return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) >= 0;
             });
             setFilteredGroups(_groups.sort((a: IGroup, b: IGroup) => a.Name.localeCompare(b.Name)));
         }
@@ -194,27 +194,35 @@ export const GroupList = () => {
 
     async function handleUploadCloud(): Promise<void> {
         try {
- 
+
             await Adapter.uploadCloud(userInfo);
+
+            setIsActiveMessageSaveData(false);
+            setIsSyncSuccessful(true);
+            setMessageSuccessful('Upload process was complete succesfull.');
+
         } catch (error) {
             if (error instanceof TokenExpiredError) {
                 setRequireAuth(true);
-                
+
             } else {
                 setIsSyncSuccessful(false);
                 return;
             }
         }
-        
-        setIsActiveMessageSaveData(false);
-        setIsSyncSuccessful(true);
-        setMessageSuccessful('Upload process was complete succesfull.');
+
+
     }
 
     const handleDownloadCloud = async () => {
         try {
             const user = await Adapter.downloadCloud(userInfo);
+
             updateValue(user);
+
+
+            setIsSyncSuccessful(true);
+            setMessageSuccessful('Sync process was complete succesfull.');
 
         } catch (error) {
             if (error instanceof TokenExpiredError) {
@@ -225,8 +233,6 @@ export const GroupList = () => {
             }
         }
 
-        setIsSyncSuccessful(true);
-        setMessageSuccessful('Sync process was complete succesfull.');
     }
 
     return (<div>
