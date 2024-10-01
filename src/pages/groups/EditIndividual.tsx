@@ -2,7 +2,6 @@ import { Divider } from "@mui/material"
 import { IndividualEdit } from "./IIndividualProps"
 import { WordList } from "../../components/WordList"
 import { IWord } from "../../interfaces/IWord"
-import { IGroup } from "../../interfaces/IGroup"
 import { useState } from "react"
 import { IUserInfo } from "../../interfaces/IUserInfo"
 import { filterWordByWord } from "../../util/util"
@@ -20,16 +19,14 @@ type EditIndividualType = {
 
 export const EditIndividual : React.FC<EditIndividualType> = ({word, userInfo, words, filter, handleSaveClick, handleDeleteWord, handleEditWord, handleSelectedItem}) => {
     const [filterWord, setFilterWord] = useState(filter);
-    const [type, setType] = useState(userInfo.FirstShowed?'Name':'Value');
 
     const handleWorldChanged = (value:string, type:string)=> {
       
         setFilterWord(value);
-        setType(type);
     }
     const doFilter = (word:IWord)=> {
         if (filterWord.length>0)
-            return filterWordByWord(type==='Name'?word.Name:word.Value, filterWord);
+            return filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter)
         else
             return true;
     }

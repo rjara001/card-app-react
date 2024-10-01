@@ -49,20 +49,25 @@ const getUser = async (): Promise<IUserInfo> => {
     return user;
 };
 
-const setWordGroup = (group: IGroup, word: IWord, userInfo: IUserInfo) => {
+const setWordGroup = (group: IGroup, word: IWord) => {
 
     const updatedGroup = { ...group, Words: [...group.Words.filter(_=>_.Name !== word.Name), word] };
 
-    return setGroup(userInfo, updatedGroup);
+    return setGroup(group, updatedGroup);
 }
 
-const setGroup = (user: IUserInfo, group: IGroup) => {
-    
-    const updatedGroup = { ...group, LastModified: new Date() };
+const setGroup = (group: IGroup, updatedFields: Partial<IGroup>) => {
+    return {
+        ...group,
+        ...updatedFields,                 // Override with any updated fields
+        LastModified: new Date(),         // Always set the LastModified to the current date
+        Status: StatusChange.Modified     // Always set the status to 'Modified'
+    };
+    // const updatedGroup = { ...group, LastModified: new Date(), Status: StatusChange.Modified };
 
-    const updatedUserInfo = { ...user, Groups: [...user.Groups.filter(_=>_.Id !== group.Id), updatedGroup] } as IUserInfo;
+    // const updatedUserInfo = { ...user, Groups: [...user.Groups.filter(_=>_.Id !== group.Id), updatedGroup] } as IUserInfo;
     
-    return { updatedUserInfo, updatedGroup };
+    // return { updatedUserInfo, updatedGroup };
 };
 
 const downloadCloud = async (user: IUserInfo) : Promise<IUserInfo> => {
@@ -94,11 +99,11 @@ const uploadCloud = async (user: IUserInfo) => {
 //     await mutationPutUser(new User(idUser, groups));
 // }
 
-const deleteGroup = (user: IUserInfo, group: IGroup) => {
-    group.Status = StatusChange.Deleted;
+// const deleteGroup = (user: IUserInfo, group: IGroup) => {
+//     group.Status = StatusChange.Deleted;
 
-    return setGroup(user, group);
-};
+//     return setGroup(user, group);
+// };
 
 const historify = async (user: IUserInfo, group: IGroup) => {
     // Find or create the history group
@@ -163,7 +168,7 @@ export const Adapter = {
     , historify
     , setUser
     , getUser
-    , deleteGroup
+    // , deleteGroup
     , setGroup
     , setWordGroup
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from '@mui/icons-material/Download';
 import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
@@ -51,15 +52,19 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
 
     const handleButtonDelete = (item: IGroup): void => {
 
-        const { updatedUserInfo } = Adapter.deleteGroup(userInfo, item);
+        // const { updatedUserInfo } = Adapter.deleteGroup(userInfo, item);
 
-        updateValue(updatedUserInfo);
+        // updateValue(updatedUserInfo);
         deleteGroup(item);
 
     }
 
     const handleSaveButtonEdit = (item: IGroup): void => {
         navigate(`/group/${item.Id.toString()}/${filter}`)
+    }
+
+    const handleDownloadButton = (item: IGroup): void => {
+        
     }
 
     return (
@@ -95,6 +100,9 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
                             <IconButton onClick={() => handleSaveButtonEdit(item)}>
                                 <EditIcon />
                             </IconButton>
+                            <IconButton onClick={() => handleDownloadButton(item)}>
+                                <DownloadIcon />
+                            </IconButton>
                         </span>
                     </React.Fragment>
                 }
@@ -115,6 +123,7 @@ function GroupListComponent(groupList: any[], filter: string, deleteGroup: (item
         <Box style={{ height: 'calc(100vh - 260px)', overflow: 'auto' }}>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {
+                    
                     groupList.map((item, i) => {
                         return (
                             <React.Fragment key={i}>
@@ -165,7 +174,7 @@ export const GroupList = () => {
 
                 return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase())>=0;
             });
-            setFilteredGroups(_groups);
+            setFilteredGroups(_groups.sort((a: IGroup, b: IGroup) => a.Name.localeCompare(b.Name)));
         }
     }, [filter, groups])
 

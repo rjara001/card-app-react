@@ -1,10 +1,7 @@
 import TextField from "@mui/material/TextField"
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import BackButton from "../../components/BackButton";
 
-import { WordList } from "../../components/WordList"
-import { BoxShadow } from "../../elements/BoxShadows/BoxShadows";
 import { IGroup } from "../../interfaces/IGroup";
 import { Word } from "../../models/Word";
 import { getLastGroupId, groupDefault } from "../../util/util";
@@ -12,11 +9,10 @@ import { Adapter } from "../../locals/adapter";
 import { Group } from "../../models/Group";
 import { IWord } from "../../interfaces/IWord.js";
 import Grid from "@mui/material/Grid";
-import { Box, Button, Divider, IconButton, Tab, Tabs, TextareaAutosize, Typography } from "@mui/material";
+import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { makeStyles } from "@material-ui/styles";
 
 // import { UserContext } from "../../context/context.create";
-import { setLocalGroup } from "../../locals/group.local";
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined'
 import EditIcon from '@mui/icons-material/Edit'
 import Header from "../../components/Header";
@@ -25,7 +21,6 @@ import EditBatch from "./EditBatch";
 import { UserContext } from "../../context/context.user";
 import { EditIndividual } from "./EditIndividual";
 import { StatusChange } from "../../models/Enums";
-import { IUserInfo } from "../../interfaces/IUserInfo";
 
 const useStyles = makeStyles({
     rigthButton: {
@@ -81,21 +76,22 @@ export const GroupEdit = () => {
     
     }, []); // Add necessary dependencies
 
-    // useEffect(()=>{
-    //     if (group!=null){
-    //         persistGroup();
-    //     }
-    // }, [group])
+    useEffect(()=>{
+        if (group!=null){
+            updateValue({ ...userInfo, Groups: [...userInfo.Groups.filter(_=>_.Id !== group.Id), group] });
+        }
+            
+    }, [group])
     
     const handleSaveClick = async (word: IWord) => {
 
-        persistWord(word);
+        // persistWord(word);
+        setGroup((prev) => Adapter.setWordGroup(prev, word));
     };
     
     const handleChangeGroupName = (e: any) => {
-        setGroup((prev) => {
-            return { ...prev, Name: e.target.value }
-        })
+
+        setGroup((prev) => Adapter.setGroup(prev, { Name: e.target.value }));
     }
 
     const handleEditGroupNameClick = () => {
@@ -104,23 +100,20 @@ export const GroupEdit = () => {
 
     const handleSaveGroupNameClick = () => {
 
-        persistGroup(group);
+        // persistGroup(group);
         
         setIsEditingGroupName(false);
     }
 
     const handleSaveBatchClick = (text: string) => {
-        // setGroup((prev: IGroup) => {
-        //     return { ...prev, Words: parseCsvBySeparator(text, ';') }
-        // });
 
-        persistGroup({ ...group, Words: parseCsvBySeparator(text, ';') });
+        setGroup((prev) => Adapter.setGroup(prev, { Words: parseCsvBySeparator(text, ';') }));
+
+        // persistGroup({ ...group, Words: parseCsvBySeparator(text, ';') });
     }
 
     const handleDeleteWord = (item: IWord) => {
-        setGroup((prev: IGroup) => {
-            return { ...prev, Words: prev.Words.filter(_ => _.Name !== item.Name) }
-        });
+        setGroup((prev) => Adapter.setGroup(prev, { Words: prev.Words.filter(_ => _.Name !== item.Name) }));
     }
 
     const handleEditWord = (item:IWord) => {
@@ -184,7 +177,7 @@ export const GroupEdit = () => {
                                 userInfo={userInfo} 
                                 filter={filter || ''} 
                                 word={word} 
-                                words={group.Words} 
+                                words={group.Words.sort((a: IWord, b: IWord) => a.Name.localeCompare(b.Name))} 
                                 handleDeleteWord={handleDeleteWord} 
                                 handleSaveClick={handleSaveClick}
                                 handleEditWord={handleEditWord}
@@ -229,26 +222,19 @@ export const GroupEdit = () => {
         );
     }
 
-    function persistWord(word: IWord) {
+    // function persistWord(word: IWord) {
 
-        group.Status = StatusChange.Modified;
-        const { updatedUserInfo, updatedGroup } = Adapter.setWordGroup(group, word, userInfo);
+    //     group.Status = StatusChange.Modified;
+    //     const { updatedUserInfo, updatedGroup } = Adapter.setWordGroup(group, word, userInfo);
 
-        setGroup(updatedGroup);
-        updateValue(updatedUserInfo);
+    //     setGroup(updatedGroup);
+    //     updateValue(updatedUserInfo);
 
-    }
-    
-    function persistGroup(_group: IGroup) {
+    //     setGroup((prev: IGroup) => {
+    //         return { ...prev, Words: prev.Words.filter(_ => _.Name !== item.Name) }
+    //     });
+    // }
 
-        _group.Status = StatusChange.Modified;
-
-        const { updatedUserInfo, updatedGroup } = Adapter.setGroup(userInfo, _group);
-
-        setGroup(updatedGroup);
-        updateValue(updatedUserInfo);
-
-    }
     
 }
 

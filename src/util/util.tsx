@@ -88,9 +88,14 @@ export const getLastGroupId = (groups: IGroup[]) => {
 }
 
 export const filterWordByWord = (word: string, filter: string): boolean => {
-    return word
-        .split(' ')
-        .some(part => part !== null && part.includes(filter));
+    // Split both the word and the filter into parts, filtering out empty strings
+    const wordParts = word.split(' ').filter(part => part !== null && part !== '');
+    const filterParts = filter.split(' ').filter(part => part !== null && part !== '');
+
+    // Ensure every part of the filter is found in some part of the word
+    return filterParts.every(filterPart =>
+        wordParts.some(wordPart => wordPart.includes(filterPart))
+    );
 };
 
 export const filterWordByType = (type: string, word: IWord, filter: string) => {
