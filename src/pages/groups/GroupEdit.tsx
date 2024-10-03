@@ -53,21 +53,9 @@ export const GroupEdit = () => {
             const groups = userInfo?.Groups || [];
     
             // Find the group by ID
-            let group = groups.find(g => g.Id === id) as IGroup | undefined;
-    
-            if (!group || group.Status === StatusChange.None) {
-                // If the group is undefined or its status is `None`, create a new group
-                group = Group.NewGroupCreated(getLastGroupId(groups));
-            } else {
-                // Map over the existing group's words and transform them
-                group = { 
-                    ...group, 
-                    Words: group.Words.map(w => Word.newWord2(w.Name, w.Value)) 
-                };
-            }
-    
-            // Update the state with the group
-            setGroup({...group, Words: group.Words });
+            let group = groups.find(g => g.Id === id) as IGroup;
+                // Update the state with the group
+            setGroup(group);
     
             setIsLoading(false);
         };

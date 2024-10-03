@@ -21,10 +21,11 @@ import DeleteButton from '../../elements/DeleteButton/Index';
 import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
 import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
 import { UserContext } from '../../context/context.user';
-import { filterWordByWord } from '../../util/util';
+import { filterWordByWord, getLastGroupId } from '../../util/util';
 import { User } from '../../models/User';
 import { TokenExpiredError } from '../../models/Error';
 import GoogleAutoPopupLogin from '../../components/Google/GoogleAutoPopupLogin';
+import { Group } from '../../models/Group';
 
 const useStyles = makeStyles({
     button: {
@@ -163,6 +164,11 @@ export const GroupList = () => {
         setFilter(word || '');
     }, [word]);
 
+    useEffect(()=> {
+        if (groups.length>0)
+            if (groups.length!==userInfo.Groups.length)
+                    updateValue({...userInfo, Groups: groups});
+    }, [groups]);
 
     useEffect(() => {
 
@@ -183,13 +189,18 @@ export const GroupList = () => {
     }
 
     function handleAddClick(): void {
-        navigate('/group');
+        const group = Group.NewGroupCreated(getLastGroupId(groups));
+
+        setGroups((prev)=> [...prev, group]);
+
+        // navigate(`/group/${group.Id.toString()}`);
     }
 
     const deleteGroup = (item: IGroup) => {
         setGroups((prev) => {
             return [...prev.filter((_) => _.Id !== item.Id)];
         })
+
     }
 
     async function handleUploadCloud(): Promise<void> {
