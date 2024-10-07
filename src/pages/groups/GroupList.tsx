@@ -21,7 +21,7 @@ import DeleteButton from '../../elements/DeleteButton/Index';
 import ConfirmationDialog from '../../elements/Dialogs/ConfirmationDialog';
 import { MessageDialog } from '../../elements/Dialogs/MessageDialog';
 import { UserContext } from '../../context/context.user';
-import { filterWordByWord, getLastGroupId } from '../../util/util';
+import { filterWordByWord, getLastGroupId, isNullOrUndefinedOrBlank } from '../../util/util';
 import { User } from '../../models/User';
 import { TokenExpiredError } from '../../models/Error';
 import GoogleAutoPopupLogin from '../../components/Google/GoogleAutoPopupLogin';
@@ -172,7 +172,7 @@ export const GroupList = () => {
 
     useEffect(() => {
 
-        if (filter !== undefined) {
+        if (!isNullOrUndefinedOrBlank(filter)) {
 
             let _groups = groups.filter(_group => {
 
@@ -180,8 +180,12 @@ export const GroupList = () => {
 
                 return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) >= 0;
             });
+            
             setFilteredGroups(_groups.sort((a: IGroup, b: IGroup) => a.Name.localeCompare(b.Name)));
         }
+        else
+            setFilteredGroups(groups.sort((a: IGroup, b: IGroup) => a.Name.localeCompare(b.Name)));
+
     }, [filter, groups])
 
     if (!userInfo) {

@@ -26,7 +26,7 @@ export const EditIndividual : React.FC<EditIndividualType> = ({word, userInfo, w
     }
     const doFilter = (word:IWord)=> {
         if (filterWord.length>0)
-            return filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter)
+            return filterWordByWord(word.Name, filterWord) || filterWordByWord(word.Value, filterWord)
         else
             return true;
     }

@@ -89,6 +89,10 @@ export const getLastGroupId = (groups: IGroup[]) => {
 
 export const filterWordByWord = (word: string, filter: string): boolean => {
     // Split both the word and the filter into parts, filtering out empty strings
+
+    if (isNullOrUndefinedOrBlank(word))
+        return false;
+
     const wordParts = word.split(' ').filter(part => part !== null && part !== '');
     const filterParts = filter.split(' ').filter(part => part !== null && part !== '');
 
@@ -98,6 +102,11 @@ export const filterWordByWord = (word: string, filter: string): boolean => {
     );
 };
 
+export const isNullOrUndefinedOrBlank = (value: any): boolean => {
+    return value === null || value === undefined || (typeof value === 'string' && value.trim() === '');
+  }
+
+  
 export const filterWordByType = (type: string, word: IWord, filter: string) => {
 
     if (type === 'Name')
