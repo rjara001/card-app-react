@@ -232,7 +232,7 @@ export const PlaySpace = () => {
 
     useEffect(() => {
 
-        if (userInfo.PlayingGroup == "0")
+        if (userInfo.PlayingGroup === "0")
             navigate(`/groups`);
         else {
             setCurrentCycle(0);

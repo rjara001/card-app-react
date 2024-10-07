@@ -41,6 +41,7 @@ const useStyles = makeStyles({
 const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps): JSX.Element => {
 
     const { userInfo, updateValue } = useContext(UserContext);
+    const [currentCycle] = useState<number>(0);
     const navigate = useNavigate();
     const handlePlayClick = (id: string) => {
 
@@ -92,7 +93,7 @@ const ItemGroup: FC<IGroupProps> = ({ item, filter, deleteGroup }: IGroupProps):
                                 &nbsp;{`${item.Words.filter(_ => _.IsKnowed).length}`} learned |
                             </div>
                             <div>
-                                &nbsp;{`${item.Words.filter(_ => _.Cycles).length}`} Cycle
+                                &nbsp;{`${Math.min(...item.Words.filter(_=>!_.Reveled).map(word => word.Cycles))}`} Cycle
                             </div>
                         </span>
                         <span style={{ display: 'flex', alignItems: 'right' }}>
@@ -180,7 +181,7 @@ export const GroupList = () => {
 
                 return _filter.length > 0 || _group.Name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) >= 0;
             });
-            
+
             setFilteredGroups(_groups.sort((a: IGroup, b: IGroup) => a.Name.localeCompare(b.Name)));
         }
         else
