@@ -10,23 +10,31 @@ import { StatusChange } from "../../models/Enums";
 
 const saveGroup = async (user: IUserInfo, group: IGroup): Promise<IUserInfo> => {
     await TokenValidation(user);
-
     await loadFolder(user);
 
+    // Load or update the IdDriveFile for the group
     group.IdDriveFile = await loadIdFile(user, group.IdDriveFile, group.keyFileName);
 
-    const fileContent = Group.toFlatGroup(group);
+    const fileContent = Group.toFlatGroup(group); // Flatten group data
 
-    if (group.Status === StatusChange.Deleted)
-    {
-        await deleteFile(user, group.IdDriveFile);
-        group.Status = StatusChange.Synced;
-        user.Groups = [...user.Groups.filter(_=>_.Id === group.Id)];
+    // If the group is marked for deletion
+    if (group.Status === StatusChange.Deleted) {
+        await deleteFile(user, group.IdDriveFile);  // Delete the corresponding file
+
+        group.Status = StatusChange.Synced;  // Set status to synced after deletion
+        // Remove the deleted group from user.Groups
+        user.Groups = user.Groups.filter(existingGroup => existingGroup.Id !== group.Id);  
     }
-    else{
+    else {
+        // Upload the updated file content
         await uploadFile(user, group.IdDriveFile, fileContent);
-        group.Status = StatusChange.Synced;
-        user.Groups = [...user.Groups.filter(_=>_.Id === group.Id), group];
+
+        group.Status = StatusChange.Synced;  // Set status to synced after update
+        // Update or add the group in user.Groups
+        user.Groups = [
+            ...user.Groups.filter(existingGroup => existingGroup.Id !== group.Id), // Remove the old group (if exists)
+            group // Add the updated group
+        ];
     }
 
     return user;

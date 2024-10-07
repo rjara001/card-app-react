@@ -95,8 +95,11 @@ export const GroupEdit = () => {
 
     const handleSaveBatchClick = (text: string) => {
 
-        setGroup((prev) => Adapter.setGroup(prev, { Words: parseCsvBySeparator(text, ';') }));
-
+        setGroup((prev) => 
+            Adapter.setGroup(prev, {
+              Words: [...prev.Words, ...parseCsvBySeparator(text, ';')]
+            })
+          );
         // persistGroup({ ...group, Words: parseCsvBySeparator(text, ';') });
     }
 

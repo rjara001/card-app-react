@@ -63,11 +63,7 @@ const setGroup = (group: IGroup, updatedFields: Partial<IGroup>) => {
         LastModified: new Date(),         // Always set the LastModified to the current date
         Status: StatusChange.Modified     // Always set the status to 'Modified'
     };
-    // const updatedGroup = { ...group, LastModified: new Date(), Status: StatusChange.Modified };
 
-    // const updatedUserInfo = { ...user, Groups: [...user.Groups.filter(_=>_.Id !== group.Id), updatedGroup] } as IUserInfo;
-    
-    // return { updatedUserInfo, updatedGroup };
 };
 
 const downloadCloud = async (user: IUserInfo) : Promise<IUserInfo> => {
