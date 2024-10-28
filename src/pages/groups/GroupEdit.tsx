@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 
 import { IGroup } from "../../interfaces/IGroup";
 import { Word } from "../../models/Word";
-import { getLastGroupId, groupDefault } from "../../util/util";
+import { groupDefault } from "../../util/util";
 import { Adapter } from "../../locals/adapter";
-import { Group } from "../../models/Group";
 import { IWord } from "../../interfaces/IWord.js";
 import Grid from "@mui/material/Grid";
 import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
@@ -20,7 +19,7 @@ import { parseCsvBySeparator } from "../../util/csvToJson";
 import EditBatch from "./EditBatch";
 import { UserContext } from "../../context/context.user";
 import { EditIndividual } from "./EditIndividual";
-import { StatusChange } from "../../models/Enums";
+import { Navigation } from "../../models/Navigation";
 
 const useStyles = makeStyles({
     rigthButton: {
@@ -66,7 +65,9 @@ export const GroupEdit = () => {
 
     useEffect(()=>{
         if (group!=null){
-            updateValue({ ...userInfo, Groups: [...userInfo.Groups.filter(_=>_.Id !== group.Id), group] });
+            const userInfoUpdated = { ...userInfo, Groups: [...userInfo.Groups.filter(_=>_.Id !== group.Id), group] };
+            
+            updateValue(Navigation.TrackingAction(userInfoUpdated, "GroupEdit", "Loading"));
         }
             
     }, [group])

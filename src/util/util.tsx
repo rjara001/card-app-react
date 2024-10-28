@@ -7,6 +7,7 @@ import { IWord } from "../interfaces/IWord.js";
 
 import { Group } from "../models/Group";
 import { Word } from "../models/Word";
+import { Navigation } from "../models/Navigation";
 // import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 export const ofuscator = (text: string) => {
@@ -176,5 +177,6 @@ export const globalUserDefault : IUserInfo = {
         , LoginStatus: LoginStatus.Anonymous
         , Redirect: ''
     }
+    , Navigation: new Navigation()
 
 }

@@ -1,14 +1,12 @@
-import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material'
 import React, { FC, useContext } from 'react';
 import { useEffect, useState } from 'react';
 
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import DownloadIcon from '@mui/icons-material/Download';
 import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IGroup, IGroupProps } from '../../interfaces/IGroup';
 // import { UserContext } from "../../context/context.create";
 import { Adapter } from '../../locals/adapter';
@@ -26,6 +24,8 @@ import { User } from '../../models/User';
 import { TokenExpiredError } from '../../models/Error';
 import GoogleAutoPopupLogin from '../../components/Google/GoogleAutoPopupLogin';
 import { Group } from '../../models/Group';
+import { UserInfo } from 'os';
+import { Navigation } from '../../models/Navigation';
 
 const useStyles = makeStyles({
     button: {
@@ -168,7 +168,12 @@ export const GroupList = () => {
     useEffect(()=> {
         if (groups.length>0)
             if (groups.length!==userInfo.Groups.length)
-                    updateValue({...userInfo, Groups: groups});
+            {
+                const userLoggedNav = {...userInfo, Groups: groups};
+
+                updateValue(Navigation.TrackingAction(userLoggedNav, "signin-google", "signin"));
+            }
+                   
     }, [groups]);
 
     useEffect(() => {
@@ -241,6 +246,9 @@ export const GroupList = () => {
             setMessageSuccessful('Sync process was complete succesfull.');
 
         } catch (error) {
+            
+            updateValue({...userInfo, });
+
             if (error instanceof TokenExpiredError) {
                 setRequireAuth(true);
             } else {

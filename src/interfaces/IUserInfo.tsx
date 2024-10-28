@@ -1,4 +1,4 @@
-import { Group } from "../models/Group"
+import { Navigation } from "../models/Navigation"
 import { IUserDriveInfo } from "./Drive/IUserDriveInfo"
 import { IGroup } from "./IGroup"
 import { IUser } from "./IUser"
@@ -21,5 +21,6 @@ export interface IUserInfo extends IUser {
     RefreshToken: string
     Drive: IUserDriveInfo
     Groups: IGroup[]
+    Navigation: Navigation
     TokenExpiration : Date
 }

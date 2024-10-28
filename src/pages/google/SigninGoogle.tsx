@@ -2,12 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';  // Spinner from Material UI
 import Box from '@mui/material/Box';
 import { UserContext } from '../../context/context.user';
-import { LoginStatus } from '../../models/Enums';
-import useSessionStorage from '../../hooks/useSessionStorage';
 import { getConfig } from '../../config/config';
 import { signin } from '../../locals/auth/signin';
 import { IResponseObject } from '../../interfaces/AWS/IResponse';
 import { User } from '../../models/User';
+import { Navigation, Page } from '../../models/Navigation';
 
 const SignInGoogle: React.FC = () => {
   const { homepage } = getConfig();
@@ -16,14 +15,23 @@ const SignInGoogle: React.FC = () => {
   const [error, setError] = useState<string | null>(null);  // To capture error state
   // const [oauthState] = useSessionStorage<string>('oauth_state', '');
 
-  const reloadOpenerSafelyAndClose = (): void => {
+  const reloadOpenerSafelyAndClose = (page: Page): void => {
     if (window.opener && window.self !== window.top) {
       console.log('Reloading parent window and closing the popup...');
-      window.opener.location.reload();  // Reload parent
+      // window.opener.location.reload();  // Reload parent
+      if (page.Name.length===0)
+        window.opener.location.reload();
+      else
+        window.opener.location.href = page.Name;
       window.close();  // Close the popup
     } else if (window.opener) {
       console.log('This is a popup window, reloading parent and closing popup...');
-      window.opener.location.reload();
+      // window.opener.location.reload();
+      if (page.Name.length===0)
+        window.opener.location.reload();
+      else
+        window.opener.location.href = page.Name;
+      
       window.close();  // Close the popup
     } else {
       console.log('This is not a popup window or opener is undefined.');
@@ -70,22 +78,16 @@ const SignInGoogle: React.FC = () => {
             throw new Error('Invalid state parameter');
           }
 
-          // Update session data
-          // userInfo.Login.Code = code;
-          // userInfo.Login.LoginStatus = LoginStatus.SignIn;
-
-          // if (!userInfo.Login.Redirect) {
-          //   userInfo.Login.Redirect = `${homepage}/signin-google`;
-          // }
-
           const singInObject : IResponseObject = await signin(code, `${homepage}/signin-google`);
 
           const userLogged = await User.SetAuth(singInObject.Data);
+          
+          const previuosPage = Navigation.getLastTrackingPage(userLogged);
 
-          updateValue(userLogged);
+          updateValue(Navigation.TrackingAction(userLogged, "signin-google", "signin"));
 
           // Reload parent window and close the popup
-          reloadOpenerSafelyAndClose();
+          reloadOpenerSafelyAndClose(previuosPage);
         }
       } catch (error: any) {
         console.error('Error during sign-in:', error);
