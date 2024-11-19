@@ -1,3 +1,4 @@
+import { _ID_GROUP_DEFAULT } from "../constants/constants";
 import { _DRIVE } from "../constants/drive";
 import { IFlatGroup } from "../interfaces/IFlatGroup";
 import { IGroup } from "../interfaces/IGroup";
@@ -45,7 +46,7 @@ export class Group implements IGroup {
     }
 
     static NewGroupDefault() {
-        return new Group("0", StatusChange.None); // { Id: "0", Name: '', Words: [] }
+        return new Group(_ID_GROUP_DEFAULT, StatusChange.None); // { Id: "0", Name: '', Words: [] }
     }
 
     static NewGroupCreated(id:string) {

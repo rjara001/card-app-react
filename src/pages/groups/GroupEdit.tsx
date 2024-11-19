@@ -20,6 +20,7 @@ import EditBatch from "./EditBatch";
 import { UserContext } from "../../context/context.user";
 import { EditIndividual } from "./EditIndividual";
 import { Navigation } from "../../models/Navigation";
+import { _ID_GROUP_DEFAULT } from "../../constants/constants";
 
 const useStyles = makeStyles({
     rigthButton: {
@@ -64,8 +65,8 @@ export const GroupEdit = () => {
     }, []); // Add necessary dependencies
 
     useEffect(()=>{
-        if (group!=null){
-            const userInfoUpdated = { ...userInfo, Groups: [...userInfo.Groups.filter(_=>_.Id !== group.Id), group] };
+        if ((group!=null || group !==undefined) && group.Id!==_ID_GROUP_DEFAULT){
+            const userInfoUpdated = { ...userInfo, Groups: [...userInfo.Groups?.filter(_=>_.Id !== group.Id), group] };
             
             updateValue(Navigation.TrackingAction(userInfoUpdated, "GroupEdit", "Loading"));
         }

@@ -180,7 +180,7 @@ export const GroupList = () => {
 
         if (!isNullOrUndefinedOrBlank(filter)) {
 
-            let _groups = groups.filter(_group => {
+            let _groups = groups?.filter(_group => {
 
                 let _filter = _group.Words.filter(word => filterWordByWord(word.Name, filter) || filterWordByWord(word.Value, filter));
 

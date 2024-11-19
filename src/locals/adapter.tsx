@@ -33,7 +33,7 @@ const getUserAndAllGroupsFromAPI = async (user: IUserInfo) : Promise<IUserInfo> 
     return _user;
 }
 
-const setUser = (user: IUserInfo) => {
+const setLocalStoreUser = (user: IUserInfo) => {
     // if (user.UserId!=='' && !user.IsInLogin)
     localStorage.setItem(_USER, JSON.stringify(user));
 }
@@ -69,7 +69,7 @@ const setGroup = (group: IGroup, updatedFields: Partial<IGroup>) => {
 const downloadCloud = async (user: IUserInfo) : Promise<IUserInfo> => {
     const userUpdated = await getUserAndAllGroupsFromAPI(user) as IUserInfo;
 
-    setUser(userUpdated);
+    setLocalStoreUser(userUpdated);
 
     return userUpdated;
 }
@@ -86,7 +86,7 @@ const uploadCloud = async (user: IUserInfo) => {
         await saveGroup(user, group);
     }
 
-    setUser(user);
+    setLocalStoreUser(user);
 }
 
 // const setGroups = async (idUser: string) => {
@@ -123,11 +123,19 @@ const historify = async (user: IUserInfo, group: IGroup) => {
         g.Id === group.Id ? updatedGroup : g.Id === historyGroup.Id ? updatedHistoryGroup : g
     );
 
+    const historyGroupExisting = user.Groups.find(_=>_.Id === historyGroup.Id);
+    
+    if (historyGroupExisting ===undefined || historyGroupExisting === null)
+        updatedGroups.push(updatedHistoryGroup);
+
     // Create a new user object with the updated groups
+    user.Groups = [ ... updatedGroups];
+    
     const updatedUser = { ...user, Groups: updatedGroups };
 
     // Update the user state
-    setUser(updatedUser);
+
+    setLocalStoreUser(updatedUser);
 };
 
 // utils.ts or a similar utility file
@@ -162,7 +170,7 @@ export const Adapter = {
     uploadCloud
     , downloadCloud
     , historify
-    , setUser
+    , setUser: setLocalStoreUser
     , getUser
     // , deleteGroup
     , setGroup

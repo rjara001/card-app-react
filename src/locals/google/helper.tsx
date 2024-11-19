@@ -23,7 +23,7 @@ const saveGroup = async (user: IUserInfo, group: IGroup): Promise<IUserInfo> => 
 
         group.Status = StatusChange.Synced;  // Set status to synced after deletion
         // Remove the deleted group from user.Groups
-        user.Groups = user.Groups.filter(existingGroup => existingGroup.Id !== group.Id);  
+        user.Groups = user.Groups?.filter(existingGroup => existingGroup.Id !== group.Id);  
     }
     else {
         // Upload the updated file content
@@ -32,7 +32,7 @@ const saveGroup = async (user: IUserInfo, group: IGroup): Promise<IUserInfo> => 
         group.Status = StatusChange.Synced;  // Set status to synced after update
         // Update or add the group in user.Groups
         user.Groups = [
-            ...user.Groups.filter(existingGroup => existingGroup.Id !== group.Id), // Remove the old group (if exists)
+            ...user.Groups?.filter(existingGroup => existingGroup.Id !== group.Id), // Remove the old group (if exists)
             group // Add the updated group
         ];
     }
