@@ -61,7 +61,7 @@ export const MainMenu = (props: Props) => {
                 onChange={handleChange}
             >
                 <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-                <BottomNavigationAction label="Jugar" icon={<PlayArrowIcon />} />
+                <BottomNavigationAction label="Play" icon={<PlayArrowIcon />} />
                 <BottomNavigationAction label="Collections" icon={<AnimationIcon />} />
                 <BottomNavigationAction label="Settings" icon={<LocationOnIcon />} />
             </BottomNavigation>

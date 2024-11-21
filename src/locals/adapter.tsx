@@ -101,9 +101,18 @@ const uploadCloud = async (user: IUserInfo) => {
 //     return setGroup(user, group);
 // };
 
-const historify = async (user: IUserInfo, group: IGroup) => {
+const historify = (user: IUserInfo, group: IGroup) : IGroup => {
     // Find or create the history group
+    if (group.Id===Group.HISTORY_ID)
+        return group;
+
     const historyGroup = user.Groups.find(g => g.Id === Group.HISTORY_ID) || Group.NewGroupHistory();
+
+    historyGroup.Words.forEach(_ => {
+        _.Reveled = false;
+        _.IsKnowed = false;
+        _.Cycles = 0;
+    })
 
     // Separate words that are learned (IsKnowed and Cycles === 0) from those that aren't
     const wordsLearned = group.Words.filter(word => word.IsKnowed && word.Cycles === 0);
@@ -130,12 +139,15 @@ const historify = async (user: IUserInfo, group: IGroup) => {
 
     // Create a new user object with the updated groups
     user.Groups = [ ... updatedGroups];
-    
+    user.PlayingGroup = "0";
+
     const updatedUser = { ...user, Groups: updatedGroups };
 
     // Update the user state
 
     setLocalStoreUser(updatedUser);
+
+    return updatedGroup;
 };
 
 // utils.ts or a similar utility file

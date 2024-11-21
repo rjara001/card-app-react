@@ -20,6 +20,7 @@ import Header from "../../components/Header";
 import ConfirmationDialog from "../../elements/Dialogs/ConfirmationDialog";
 import { UserContext } from "../../context/context.user";
 import { StatusChange } from "../../models/Enums";
+import { Group } from "../../models/Group";
 
 
 const getRandomArbitrary = (min: number, max: number, currentIndex: number): number => {
@@ -75,9 +76,12 @@ export const PlaySpace = () => {
     }
 
     const handleHistorifyClick = () => {
-        Adapter.historify(userInfo, result);
+        const groupHistorify = Adapter.historify(userInfo, result);
         setIsHistorifyMessageEnable(false);
         setIsHistorified(true);
+        setGetResult(groupHistorify);
+        setIsEndedCycle(false);
+        setIsVeryEndedCycle(false);
     }
 
     const riseTheVoice = async () => {
@@ -117,7 +121,7 @@ export const PlaySpace = () => {
 
     const nextValue = () => {
 
-        let wordsFilterd = result.Words.filter(_ => _.IsKnowed===false && _.Reveled===false && _.Cycles == currentCycle);
+        let wordsFilterd = result.Words.filter(_ => _.IsKnowed === false && _.Reveled === false && _.Cycles == currentCycle);
         let arbitraryIndex = getRandomArbitrary(0, wordsFilterd.length, getLastIndexElement());
 
         let nextElement = wordsFilterd[arbitraryIndex];
@@ -130,7 +134,7 @@ export const PlaySpace = () => {
 
             arbitraryIndex = result.Words.findIndex(
                 (_) => _.Name === nextElement.Name && !_.IsKnowed && !_.Reveled && _.Cycles === currentCycle
-              );
+            );
 
             setIndexWord(_ => [..._, arbitraryIndex]);
 
@@ -190,11 +194,24 @@ export const PlaySpace = () => {
     }
     const getData = async () => {
         const group = userInfo.Groups.find(group => group.Id === userInfo.PlayingGroup) as IGroup;
-        if (group ===undefined || group.Words.length===0)
+        if (group === undefined || group.Words.length === 0) {
             navigate(`/groups`);
-        setGetResult(group);
-        setHasDoNextValue(true);
+        }
+        else {
+            setGetResult(group);
+            setHasDoNextValue(true);
+        }
+
     };
+
+    useEffect(() => {
+        if (isHistorified) {
+            handleRefreshClick();
+            navigate('/');
+        }
+
+
+    }, [isHistorified])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -283,7 +300,7 @@ export const PlaySpace = () => {
             <div>
                 <Subtitle>Group "{result.Name}"</Subtitle>
             </div>
-            {indexWord.length >= 0 && indexWord.length > 0 && <div>
+            {result.Words.length > 0 && indexWord.length >= 0 && indexWord.length > 0 && <div>
 
                 <Play word={result.Words[getLastIndexElement()]}
                     currentCycle={currentCycle}
@@ -306,23 +323,30 @@ export const PlaySpace = () => {
                         You have came at the end — <strong>keep it up!</strong>
 
                     </Alert>}
-                {
-                    isVeryEndedCycle &&
+                {isVeryEndedCycle && (
                     <Alert severity="success" style={{ position: 'fixed', bottom: 30, left: 0, width: '100%' }}>
-                        <AlertTitle>Great Gig!, you learned {summary.Learned} and attain an {Math.ceil(summary.Learned / summary.Total * 100)} of progress</AlertTitle>
+                        <AlertTitle>
+                            Great Gig! You learned {summary.Learned} and attained {Math.ceil((summary.Learned / summary.Total) * 100)}% progress
+                        </AlertTitle>
                         <strong>You have finalized!</strong>
 
                         <Box>
                             <Button variant="outlined" startIcon={<RefreshIcon />} onClick={handleRefreshClick}>
                                 Restart
                             </Button>
-                            <Button disabled={isHistorified} variant="outlined" startIcon={<CallSplitIcon />} onClick={() => setIsHistorifyMessageEnable(true)}>
-                                Historify
-                            </Button>
+                            {result?.Id !== Group.HISTORY_ID && (
+                                <Button
+                                    disabled={isHistorified}
+                                    variant="outlined"
+                                    startIcon={<CallSplitIcon />}
+                                    onClick={() => setIsHistorifyMessageEnable(true)}
+                                >
+                                    Historify
+                                </Button>
+                            )}
                         </Box>
-
                     </Alert>
-                }
+                )}
             </div>
         </div>)
 
